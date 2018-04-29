@@ -95,9 +95,16 @@ namespace csConsoleApplicationSOAP_FR
             Console.WriteLine("5: Monthly Receipt (0x4652000000000005)");
             Console.WriteLine("6: Yearly Receipt (0x4652000000000006)");
             Console.WriteLine("7: Bill (0x4652000000000007)");
+            Console.WriteLine("8: Archive (0x4652000000000008)");
+            Console.WriteLine("9: Log (0x4652000000000009)");
+            Console.WriteLine("10: Copy (0x465200000000000A)");
+            Console.WriteLine("11: Training (0x465200000000000B)");
+            Console.WriteLine("12: Shift Receipt (0x465200000000000C)");
+            Console.WriteLine("13: Start Receipt (0x465200000000000D)");
+            Console.WriteLine("14: Stop Receipt (0x465200000000000E)");
 
-            Console.WriteLine("9: Receipt Journal");
-            Console.WriteLine("10: Number of Tickets (max 999)");
+            Console.WriteLine("15: French LNE Journals");
+            Console.WriteLine("16: Number of Tickets (max 999)");
 
             Console.WriteLine("exit: Exit program");
 
@@ -110,10 +117,10 @@ namespace csConsoleApplicationSOAP_FR
         {
             if (input.ToLower().StartsWith("exit"))
             {
-                var stream = proxy.Journal(0x02, 0, DateTime.UtcNow.Ticks);
+                var stream = proxy.Journal(0xFE, 0, DateTime.UtcNow.Ticks);
                 var sr = new System.IO.StreamReader(stream);
 
-                Console.WriteLine("{0:G} ========== RKSV-DEP ==========", DateTime.Now);
+                Console.WriteLine("{0:G} ========== Default Journal ==========", DateTime.Now);
 
                 Console.WriteLine(sr.ReadToEnd());
 
@@ -171,7 +178,6 @@ namespace csConsoleApplicationSOAP_FR
                 var resp = proxy.Sign(req);
 
                 Response(resp);
-
             }
             else if (inputInt == 6)
             {
@@ -180,7 +186,6 @@ namespace csConsoleApplicationSOAP_FR
                 var resp = proxy.Sign(req);
 
                 Response(resp);
-
             }
             else if (inputInt == 7)
             {
@@ -191,32 +196,96 @@ namespace csConsoleApplicationSOAP_FR
 
                 Response(resp);
             }
+            else if (inputInt == 8)
+            {
+                var req = ZeroReceiptRequest(++i, cashBoxId, 0x4652000000000008);
+                Console.WriteLine("{0:G} Archive Receipt request: {1}", DateTime.Now, JsonConvert.SerializeObject(req));
+                var resp = proxy.Sign(req);
+
+                Response(resp);
+            }
             else if (inputInt == 9)
             {
+                var req = ZeroReceiptRequest(++i, cashBoxId, 0x4652000000000009);
+                Console.WriteLine("{0:G} Log Receipt request: {1}", DateTime.Now, JsonConvert.SerializeObject(req));
+                var resp = proxy.Sign(req);
 
-                string filename = $"c:\\temp\\{cashBoxId}_{DateTime.UtcNow.Ticks}.json";
+                Response(resp);
+            }
+            else if (inputInt == 10)
+            {
+                Console.WriteLine("Enter the receipt reference for the requested copy: [1]");
 
-                Console.Write("{0:G} Receipt Journal export ({1})", DateTime.Now, filename);
+                var req = ZeroReceiptRequest(++i, cashBoxId, 0x465200000000000A);
 
-                string inputFilename = Console.ReadLine();
-                if (!string.IsNullOrWhiteSpace(inputFilename))
+                req.ftReceiptCaseData = Console.ReadLine();
+
+                if (string.IsNullOrWhiteSpace(req.ftReceiptCaseData))
+                    req.ftReceiptCaseData = "1";
+
+                Console.WriteLine("{0:G} Copy Receipt request: {1}", DateTime.Now, JsonConvert.SerializeObject(req));
+                var resp = proxy.Sign(req);
+
+                Response(resp);
+            }
+            else if (inputInt == 11)
+            {
+                var req = TrainingRequest(++i, decimal.Round((decimal)(r.NextDouble() * 100), 2), decimal.Round((decimal)(r.NextDouble() * 100), 2), cashBoxId);
+                Console.WriteLine("{0:G} Trainint request: {1}", DateTime.Now, JsonConvert.SerializeObject(req));
+
+                var resp = proxy.Sign(req);
+
+                Response(resp);
+            }
+            else if (inputInt == 12)
+            {
+                var req = ZeroReceiptRequest(++i, cashBoxId, 0x465200000000000C);
+                Console.WriteLine("{0:G} Shift Receipt request: {1}", DateTime.Now, JsonConvert.SerializeObject(req));
+                var resp = proxy.Sign(req);
+
+                Response(resp);
+            }
+            else if (inputInt == 13)
+            {
+                var req = ZeroReceiptRequest(++i, cashBoxId, 0x465200000000000D);
+                Console.WriteLine("{0:G} Start Receipt request: {1}", DateTime.Now, JsonConvert.SerializeObject(req));
+                var resp = proxy.Sign(req);
+
+                Response(resp);
+            }
+            else if (inputInt == 14)
+            {
+                var req = ZeroReceiptRequest(++i, cashBoxId, 0x465200000000000E);
+                Console.WriteLine("{0:G} Stop Receipt request: {1}", DateTime.Now, JsonConvert.SerializeObject(req));
+                var resp = proxy.Sign(req);
+
+                Response(resp);
+            }
+            else if (inputInt == 15)
+            {
+                string path = $"c:\\temp";
+                string filename = $"{cashBoxId}_{DateTime.UtcNow.Ticks}.json";
+
+                Console.Write("{0:G} Journal export folder ({1})", DateTime.Now, path);
+
+                string inputPath = Console.ReadLine();
+                if (!string.IsNullOrWhiteSpace(inputPath))
                 {
-                    filename = inputFilename;
+                    path = inputPath;
                 }
 
-                using (var file = System.IO.File.Open(filename, System.IO.FileMode.Create))
-                {
-                    using (var journal = proxy.Journal(0x03, 0, 0 /*(new DateTime(2999,12,31)).Ticks*/))
-                    {
-                        journal.CopyTo(file);
-                    }
-
-                    Console.WriteLine("{0:G} Receipt Journal exported to {1} ({2:0.00}Mb)", DateTime.Now, filename, ((decimal)file.Length) / 1024m / 1024m);
-                }
-
+                ExportJournal(path, 0x4652000000000001, "Ticket");
+                ExportJournal(path, 0x4652000000000002, "Payment Prove");
+                ExportJournal(path, 0x4652000000000003, "Invoice");
+                ExportJournal(path, 0x4652000000000004, "Gran Total");
+                ExportJournal(path, 0x4652000000000007, "Bill");
+                ExportJournal(path, 0x4652000000000008, "Archive");
+                ExportJournal(path, 0x4652000000000009, "Log");
+                ExportJournal(path, 0x465200000000000A, "Copy");
+                ExportJournal(path, 0x465200000000000B, "Training");
 
             }
-            else if (inputInt >= 10 && inputInt < 1000)
+            else if (inputInt >= 16 && inputInt < 1000)
             {
                 long max = long.MinValue;
                 long min = long.MaxValue;
@@ -236,7 +305,6 @@ namespace csConsoleApplicationSOAP_FR
                 }
 
                 Console.WriteLine("Performance in ms => max: {0}, min: {1}, avg: {2}", max, min, sum / (decimal)inputInt);
-
             }
             else
             {
@@ -244,6 +312,20 @@ namespace csConsoleApplicationSOAP_FR
             }
 
             Menu();
+        }
+
+        internal static void ExportJournal(string path, long type, string name)
+        {
+            string filename = System.IO.Path.Combine(path, $"{cashBoxId}_{name}_{DateTime.UtcNow.Ticks}.csv");
+            using (var file = System.IO.File.Open(filename, System.IO.FileMode.Create))
+            {
+                using (var journal = proxy.Journal(type, 0, 0))
+                {
+                    journal.CopyTo(file);
+                }
+
+                Console.WriteLine($"{DateTime.Now:G} {name} Journal exported to {filename} ({((decimal)file.Length) / 1024m / 1024m:0.00}Mb)");
+            }
         }
 
         internal static ReceiptRequest TicketRequest(int n, decimal amount1 = 4.8m, decimal amount2 = 3.3m, string cashBoxId = "")
@@ -374,6 +456,51 @@ namespace csConsoleApplicationSOAP_FR
                         Amount=amount1+amount2,
                         Quantity=1.0m,
                         Description="Payment compensation"
+                    }
+                }
+            };
+
+            return reqdata;
+        }
+
+        internal static ReceiptRequest TrainingRequest(int n, decimal amount1 = 4.8m, decimal amount2 = 3.3m, string cashBoxId = "")
+        {
+
+            var reqdata = new ReceiptRequest()
+            {
+                ftCashBoxID = cashBoxId,
+                cbTerminalID = "1",
+                ftReceiptCase = 0x465200000000000B,
+                cbReceiptReference = n.ToString(),
+                cbReceiptMoment = DateTime.UtcNow,
+
+                cbChargeItems = new ChargeItem[]  {
+                    new ChargeItem()
+                    {
+                        ftChargeItemCase=0x4652000000000003,
+                         ProductNumber="1",
+                         Description="Article 1",
+                         Quantity=1.0m,
+                         VATRate=20.0m,
+                         Amount=amount1
+                    },
+                    new ChargeItem()
+                    {
+                        ftChargeItemCase=0x4652000000000003,
+                        ProductNumber="2",
+                        Description="Article 2",
+                        Quantity=1.0m,
+                        VATRate=20.0m,
+                        Amount=amount2
+                    }
+                },
+                cbPayItems = new PayItem[]                {
+                    new PayItem()
+                    {
+                        ftPayItemCase=0x4652000000000001,
+                        Amount=amount1+amount2,
+                        Quantity=1.0m,
+                        Description="Cash"
                     }
                 }
             };
