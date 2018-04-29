@@ -264,7 +264,6 @@ namespace csConsoleApplicationSOAP_FR
             else if (inputInt == 15)
             {
                 string path = $"c:\\temp";
-                string filename = $"{cashBoxId}_{DateTime.UtcNow.Ticks}.json";
 
                 Console.Write("{0:G} Journal export folder ({1})", DateTime.Now, path);
 
