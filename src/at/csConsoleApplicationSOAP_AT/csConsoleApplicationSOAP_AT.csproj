@@ -36,16 +36,16 @@
       <HintPath>..\..\..\packages\BouncyCastle.1.7.0\lib\Net40-Client\BouncyCastle.Crypto.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="fiskaltrust.ifPOS.net40, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\fiskaltrust.interface.1.0.16322.1179\lib\net40\fiskaltrust.ifPOS.net40.dll</HintPath>
+    <Reference Include="fiskaltrust.ifPOS.net40, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\fiskaltrust.interface.1.1.17313.3062\lib\net40\fiskaltrust.ifPOS.net40.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="fiskaltrust.ifPOS.TwoDCode.net40, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\fiskaltrust.interface.twodcode.1.1.17038.1570\lib\net40\fiskaltrust.ifPOS.TwoDCode.net40.dll</HintPath>
+      <HintPath>..\..\..\packages\fiskaltrust.interface.twodcode.1.1.17313.3062\lib\net40\fiskaltrust.ifPOS.TwoDCode.net40.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="fiskaltrust.ifPOS.Utilities.net40, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\fiskaltrust.interface.utilities.1.1.17038.1570\lib\net40\fiskaltrust.ifPOS.Utilities.net40.dll</HintPath>
+      <HintPath>..\..\..\packages\fiskaltrust.interface.utilities.1.1.17313.3062\lib\net40\fiskaltrust.ifPOS.Utilities.net40.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
