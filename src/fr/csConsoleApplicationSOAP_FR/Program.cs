@@ -276,7 +276,7 @@ namespace csConsoleApplicationSOAP_FR
                 ExportJournal(path, 0x4652000000000001, "Ticket");
                 ExportJournal(path, 0x4652000000000002, "Payment Prove");
                 ExportJournal(path, 0x4652000000000003, "Invoice");
-                ExportJournal(path, 0x4652000000000004, "Gran Total");
+                ExportJournal(path, 0x4652000000000004, "Grand Total");
                 ExportJournal(path, 0x4652000000000007, "Bill");
                 ExportJournal(path, 0x4652000000000008, "Archive");
                 ExportJournal(path, 0x4652000000000009, "Log");

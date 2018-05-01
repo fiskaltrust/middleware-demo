@@ -547,6 +547,7 @@ namespace csConsoleApplicationREST_AT
                 {
                     var ms = new System.IO.MemoryStream();
                     respStream.CopyTo(ms);
+                    ms.Position = 0;
                     return ms;
                 }
             }
