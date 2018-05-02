@@ -102,9 +102,16 @@ namespace csConsoleApplicationSOAP_FR
             Console.WriteLine("12: Shift Receipt (0x465200000000000C)");
             Console.WriteLine("13: Start Receipt (0x465200000000000D)");
             Console.WriteLine("14: Stop Receipt (0x465200000000000E)");
+            Console.WriteLine("15: Zero Receipt (0x465200000000000F)");
+            Console.WriteLine("16: Audit Receipt (0x4652000000000010)");
+            Console.WriteLine("17: Protocol Receipt (0x4652000000000011)");
+            Console.WriteLine("18: Delivery Note Receipt (0x4652000000000012)");
+            Console.WriteLine("19: Payout Receipt (0x4652000000000013)");
+            Console.WriteLine("20: Internal Receipt (0x4652000000000014)");
+            Console.WriteLine("21: Foreign Sale Receipt (0x4652000000000015)");
 
-            Console.WriteLine("15: French LNE Journals");
-            Console.WriteLine("16: Number of Tickets (max 999)");
+            Console.WriteLine("22: French LNE Journals");
+            Console.WriteLine("23: Number of Tickets (max 999)");
 
             Console.WriteLine("exit: Exit program");
 
@@ -263,6 +270,65 @@ namespace csConsoleApplicationSOAP_FR
             }
             else if (inputInt == 15)
             {
+                var req = ZeroReceiptRequest(++i, cashBoxId, 0x465200000000000F);
+                Console.WriteLine("{0:G} Zero Receipt request: {1}", DateTime.Now, JsonConvert.SerializeObject(req));
+                var resp = proxy.Sign(req);
+
+                Response(resp);
+            }
+            else if (inputInt == 16)
+            {
+                var req = ZeroReceiptRequest(++i, cashBoxId, 0x4652000000000010);
+                Console.WriteLine("{0:G} Audit Receipt request: {1}", DateTime.Now, JsonConvert.SerializeObject(req));
+                var resp = proxy.Sign(req);
+
+                Response(resp);
+            }
+            else if (inputInt == 17)
+            {
+                var req = ZeroReceiptRequest(++i, cashBoxId, 0x4652000000000011);
+                Console.WriteLine("{0:G} Protocol Receipt request: {1}", DateTime.Now, JsonConvert.SerializeObject(req));
+                var resp = proxy.Sign(req);
+
+                Response(resp);
+            }
+            else if (inputInt == 18)
+            {
+                var req = DeliveryNoteRequest(++i, decimal.Round((decimal)(r.NextDouble() * 100), 2), decimal.Round((decimal)(r.NextDouble() * 100), 2), cashBoxId);
+                Console.WriteLine("{0:G} Delivery Note request: {1}", DateTime.Now, JsonConvert.SerializeObject(req));
+
+                var resp = proxy.Sign(req);
+
+                Response(resp);
+            }
+            else if (inputInt == 19)
+            {
+                var req = PayoutRequest(++i, decimal.Round((decimal)(r.NextDouble() * 100), 2), decimal.Round((decimal)(r.NextDouble() * 100), 2), cashBoxId);
+                Console.WriteLine("{0:G} Payout request: {1}", DateTime.Now, JsonConvert.SerializeObject(req));
+                var resp = proxy.Sign(req);
+
+                Response(resp);
+            }
+            else if (inputInt == 20)
+            {
+                var req = InternalRequest(++i, decimal.Round((decimal)(r.NextDouble() * 100), 2), decimal.Round((decimal)(r.NextDouble() * 100), 2), cashBoxId);
+                Console.WriteLine("{0:G} Internal request: {1}", DateTime.Now, JsonConvert.SerializeObject(req));
+
+                var resp = proxy.Sign(req);
+
+                Response(resp);
+            }
+            else if (inputInt == 21)
+            {
+                var req = ForeignSaleRequest(++i, decimal.Round((decimal)(r.NextDouble() * 100), 2), decimal.Round((decimal)(r.NextDouble() * 100), 2), cashBoxId);
+                Console.WriteLine("{0:G} Foreign Sale request: {1}", DateTime.Now, JsonConvert.SerializeObject(req));
+
+                var resp = proxy.Sign(req);
+
+                Response(resp);
+            }
+            else if (inputInt == 22)
+            {
                 string path = $"c:\\temp";
 
                 Console.Write("{0:G} Journal export folder ({1})", DateTime.Now, path);
@@ -284,7 +350,7 @@ namespace csConsoleApplicationSOAP_FR
                 ExportJournal(path, 0x465200000000000B, "Training");
 
             }
-            else if (inputInt >= 16 && inputInt < 1000)
+            else if (inputInt >= 23 && inputInt < 1000)
             {
                 long max = long.MinValue;
                 long min = long.MaxValue;
@@ -507,6 +573,96 @@ namespace csConsoleApplicationSOAP_FR
             return reqdata;
         }
 
+        internal static ReceiptRequest DeliveryNoteRequest(int n, decimal amount1 = 4.8m, decimal amount2 = 3.3m, string cashBoxId = "")
+        {
+
+            var reqdata = new ReceiptRequest()
+            {
+                ftCashBoxID = cashBoxId,
+                cbTerminalID = "1",
+                ftReceiptCase = 0x4652000000000012,
+                cbReceiptReference = n.ToString(),
+                cbReceiptMoment = DateTime.UtcNow,
+
+                cbChargeItems = new ChargeItem[]  {
+                    new ChargeItem()
+                    {
+                        ftChargeItemCase=0x4652000000000003,
+                         ProductNumber="1",
+                         Description="Article 1",
+                         Quantity=1.0m,
+                         VATRate=20.0m,
+                         Amount=amount1
+                    },
+                    new ChargeItem()
+                    {
+                        ftChargeItemCase=0x4652000000000003,
+                        ProductNumber="2",
+                        Description="Article 2",
+                        Quantity=1.0m,
+                        VATRate=20.0m,
+                        Amount=amount2
+                    }
+                },
+                cbPayItems = new PayItem[]                {
+                    new PayItem()
+                    {
+                        ftPayItemCase=0x4652000000000001,
+                        Amount=amount1+amount2,
+                        Quantity=1.0m,
+                        Description="Cash"
+                    }
+                }
+            };
+
+            return reqdata;
+        }
+
+        internal static ReceiptRequest InternalRequest(int n, decimal amount1 = 4.8m, decimal amount2 = 3.3m, string cashBoxId = "")
+        {
+
+            var reqdata = new ReceiptRequest()
+            {
+                ftCashBoxID = cashBoxId,
+                cbTerminalID = "1",
+                ftReceiptCase = 0x4652000000000014,
+                cbReceiptReference = n.ToString(),
+                cbReceiptMoment = DateTime.UtcNow,
+
+                cbChargeItems = new ChargeItem[]  {
+                    new ChargeItem()
+                    {
+                        ftChargeItemCase=0x4652000000000003,
+                         ProductNumber="1",
+                         Description="Article 1",
+                         Quantity=1.0m,
+                         VATRate=20.0m,
+                         Amount=amount1
+                    },
+                    new ChargeItem()
+                    {
+                        ftChargeItemCase=0x4652000000000003,
+                        ProductNumber="2",
+                        Description="Article 2",
+                        Quantity=1.0m,
+                        VATRate=20.0m,
+                        Amount=amount2
+                    }
+                },
+                cbPayItems = new PayItem[]                {
+                    new PayItem()
+                    {
+                        ftPayItemCase=0x4652000000000001,
+                        Amount=amount1+amount2,
+                        Quantity=1.0m,
+                        Description="Cash"
+                    }
+                }
+            };
+
+            return reqdata;
+        }
+
         internal static void Response(ReceiptResponse data)
         {
             if (data != null)
@@ -571,6 +727,82 @@ namespace csConsoleApplicationSOAP_FR
                     {
                         ftPayItemCase=0x4652000000000011,
                         Amount=-amount1-amount2,
+                        Quantity=1.0m,
+                        Description="Payment compensation"
+                    }
+                }
+            };
+
+            return reqdata;
+        }
+
+        internal static ReceiptRequest PayoutRequest(int n, decimal amount1 = 4.8m, decimal amount2 = 3.3m, string cashBoxId = "")
+        {
+            var reqdata = new ReceiptRequest()
+            {
+                ftCashBoxID = cashBoxId,
+                cbTerminalID = "1",
+                ftReceiptCase = 0x4652000000000013,
+                cbReceiptReference = n.ToString(),
+                cbReceiptMoment = DateTime.UtcNow,
+                cbChargeItems = new ChargeItem[] { },
+                cbPayItems = new PayItem[]                {
+                    new PayItem()
+                    {
+                        ftPayItemCase=0x4652000000000001,
+                        Amount=amount1+amount2,
+                        Quantity=1.0m,
+                        Description="Cash"
+                    },
+                    new PayItem()
+                    {
+                        ftPayItemCase=0x4652000000000011,
+                        Amount=-amount1-amount2,
+                        Quantity=1.0m,
+                        Description="Payment compensation"
+                    }
+                }
+            };
+
+            return reqdata;
+        }
+
+        internal static ReceiptRequest ForeignSaleRequest(int n, decimal amount1 = 4.8m, decimal amount2 = 3.3m, string cashBoxId = "")
+        {
+
+            var reqdata = new ReceiptRequest()
+            {
+                ftCashBoxID = cashBoxId,
+                cbTerminalID = "1",
+                ftReceiptCase = 0x4652000000000015,
+                cbReceiptReference = n.ToString(),
+                cbReceiptMoment = DateTime.UtcNow,
+
+                cbChargeItems = new ChargeItem[]  {
+                    new ChargeItem()
+                    {
+                        ftChargeItemCase=0x4652000000000001,
+                         ProductNumber="1",
+                         Description="Article 1",
+                         Quantity=1.0m,
+                         VATRate=20.0m,
+                         Amount=amount1
+                    },
+                    new ChargeItem()
+                    {
+                        ftChargeItemCase=0x4652000000000001,
+                        ProductNumber="2",
+                        Description="Article 2",
+                        Quantity=1.0m,
+                        VATRate=20.0m,
+                        Amount=amount2
+                    }
+                },
+                cbPayItems = new PayItem[]                {
+                    new PayItem()
+                    {
+                        ftPayItemCase=0x4652000000000011,
+                        Amount=amount1+amount2,
                         Quantity=1.0m,
                         Description="Payment compensation"
                     }
