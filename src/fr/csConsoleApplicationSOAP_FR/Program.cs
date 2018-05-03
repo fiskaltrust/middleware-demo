@@ -110,7 +110,7 @@ namespace csConsoleApplicationSOAP_FR
             Console.WriteLine("20: Internal Receipt (0x4652000000000014)");
             Console.WriteLine("21: Foreign Sale Receipt (0x4652000000000015)");
 
-            Console.WriteLine("22: French LNE Journals");
+            Console.WriteLine("22: French Journals");
             Console.WriteLine("23: Number of Tickets (max 999)");
 
             Console.WriteLine("exit: Exit program");
