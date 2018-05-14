@@ -77,7 +77,7 @@ Lemböckgasse 49/1B/6.OG, 1230 Wien
 ---
 
 # fiskaltrust.Interface
-[see english readme](#fiskaltrust.interface-EN)
+[see english readme](#fiskaltrust-interface-EN)
 
 Beispiel, wie man das fiskaltrust.Interface nutzt.
 
