@@ -70,26 +70,26 @@ Due to security reasons, the fiskaltrust.securitymechanism does not return anyth
 fiskaltrust is under permanent development, so feel free to discuss here your wishes and our bugs with the github-issues feature.
 
 ## fiskaltrust consulting gmbh
-Lemböckgasse 49/1B/6.OG, 1230 Wien  
+LembÃ¶ckgasse 49/1B/6.OG, 1230 Wien  
 [info@fiskaltrust.at]  
 [www.fiskaltrust.at](https://www.fiskaltrust.at)
 
 ---
 
 # fiskaltrust.Interface
-[see english readme](#fiskaltrust-interface-en)
+[see english readme](# fiskaltrust.interface EN)
 
 Beispiel, wie man das fiskaltrust.Interface nutzt.
 
-fiskaltrust bietet eine gesetzeskonforme Sicherheitseinrichtung für Registrierkassen.
+fiskaltrust bietet eine gesetzeskonforme Sicherheitseinrichtung fÃ¼r Registrierkassen.
 
 ##Neuerungen 14.11.2016
-Ab sofort gibt es ein neues Interface (unseren Release Candidate), Version 1.0.nnn. Dieses Interface ist im Nuget Package fiskaltrust.interface und fiskaltrust.interface.utlities Version 1.0.16298.1022-rc enthalten. Ebenfalls geändert hat sich dadurch die Wsdl Datei hier in den Tools.
+Ab sofort gibt es ein neues Interface (unseren Release Candidate), Version 1.0.nnn. Dieses Interface ist im Nuget Package fiskaltrust.interface und fiskaltrust.interface.utlities Version 1.0.16298.1022-rc enthalten. Ebenfalls geÃ¤ndert hat sich dadurch die Wsdl Datei hier in den Tools.
 
 ## Dokumentation
-Die detaillierte Dokumentation ist auf dem fiskaltrust.Portal [https://portal.fiskaltrust.at] nach der Registrierung und Aktivierung der Rolle als Registrierkassenhersteller (in der Übersicht) verfügbar.
+Die detaillierte Dokumentation ist auf dem fiskaltrust.Portal [https://portal.fiskaltrust.at] nach der Registrierung und Aktivierung der Rolle als Registrierkassenhersteller (in der Ãœbersicht) verfÃ¼gbar.
 
-Um Ihren Entwicklung zu erleichtern, stellen wir auch ein nuget-package [https://nuget.org] mit der packageId fiskaltrust.interface zur Verfügung.
+Um Ihren Entwicklung zu erleichtern, stellen wir auch ein nuget-package [https://nuget.org] mit der packageId fiskaltrust.interface zur VerfÃ¼gung.
 
 ## Verbindung mit der fiskaltrust.securitymechanism (Sicherheitseinrichtung)
 Als Basis-Technologie zur Kommunikation wird WCF verwendet. Zur lokalen, internen Kommunikation zwischen queues, signature creation units (Signaturerstellungseinheiten) und benutzerspezifischen Modulen (Sonstigen Modulen) wird am besten das net.pipe protocoll verwendet. Zur Kommunikation zwischen verschiedenen Plattformen wird am besten basic http verwendet.
@@ -97,21 +97,21 @@ Als Basis-Technologie zur Kommunikation wird WCF verwendet. Zur lokalen, interne
 SOAP wird mit dem http-Protokoll der wcf-Kommunikation ausgeliefert. Um die WSDL-Datei zu erhalten, kann man diesen Debug-Build verwenden und auf die konfigurierte http-Adresse gehen. Hierbei wird [http://localhost:1200/0b09d163-82a1-4349-83ed-7081398df504] verwendet. Eine weitere Option besteht darin, die Datei aus dem Ordner tools/wsdl zu verwenden.
 
 ### REST
-REST steht sowohl in XML als auch in JSON zur Verfügung. Es stehen benutzerspezifische Module zur Verfügung, die geladen werden können, um die Basis-Services möglichest schlank zu halten.
+REST steht sowohl in XML als auch in JSON zur VerfÃ¼gung. Es stehen benutzerspezifische Module zur VerfÃ¼gung, die geladen werden kÃ¶nnen, um die Basis-Services mÃ¶glichest schlank zu halten.
 ### native TCP-IP und Serielle RS232/485/422
-Nativen Stream-basierte Kommunikation mit einem definierten Protokoll-Format wird als benutzerspezifische Module zur Verfügung gestellt.
+Nativen Stream-basierte Kommunikation mit einem definierten Protokoll-Format wird als benutzerspezifische Module zur VerfÃ¼gung gestellt.
 ### Benutzerspezifisch
-Mit der Topologie der benutzerspezifischen Module ist es möglich, jedes technische Szenario zu lösen.
+Mit der Topologie der benutzerspezifischen Module ist es mÃ¶glich, jedes technische Szenario zu lÃ¶sen.
 
 ## Hosting auf Linux und Mac OS
 Um fiskaltrust auf Linux und Mac OS laufen zu lassen, wird mono verwenden.
-Für den produktiven Einsatz ist es möglich, ihn mit daemon zu betreiben.
+FÃ¼r den produktiven Einsatz ist es mÃ¶glich, ihn mit daemon zu betreiben.
 
-Für Test und Entwicklung kann der command-line Parameter -test verwendet werden. Details sind in der Entwickler-Dokumentation zu finden.
+FÃ¼r Test und Entwicklung kann der command-line Parameter -test verwendet werden. Details sind in der Entwickler-Dokumentation zu finden.
 
 Neben Mono-complete 3.x / 4.x ist auch SQLite und pcsclite Voraussetzung, wenn eine USB-basierte Signaturerstellungseinheit verwendet werden soll.
 
-Typisch ausführbare Befehle:    
+Typisch ausfÃ¼hrbare Befehle:    
 ```sudo apt-get update```    
 ```sudo apt-get install mono-complete```    
 ```sudo apt-get install sqlite```    
@@ -120,35 +120,35 @@ Typisch ausführbare Befehle:
 ```sudo mono fiskaltrust.mono.exe -caschboxid=0d1269dc-e2ae-42e3-9c57-b686d7832683 -useoffline=true -test```
 
 ## Hosting unter Windows
-Der launcher (fiskaltrust.exe) ist als Windows-Dienst für die Produktionsumgebung entwickelt. Es wird auch die Möglichkeit einer automatisierte Installation durch Befehlszeilenparameter unterstützt. Details sind in der Entwickler-Dokumentation zu finden.
+Der launcher (fiskaltrust.exe) ist als Windows-Dienst fÃ¼r die Produktionsumgebung entwickelt. Es wird auch die MÃ¶glichkeit einer automatisierte Installation durch Befehlszeilenparameter unterstÃ¼tzt. Details sind in der Entwickler-Dokumentation zu finden.
 
-Für die Entwicklung und Prüfung kann der Befehlszeilenparameter -test verwendet werden um den Dienst auszuführen.
+FÃ¼r die Entwicklung und PrÃ¼fung kann der Befehlszeilenparameter -test verwendet werden um den Dienst auszufÃ¼hren.
 
-Hierfür ist nur .net4 Voraussetzung.
+HierfÃ¼r ist nur .net4 Voraussetzung.
 
-Typisch ausführbare Befehle:
+Typisch ausfÃ¼hrbare Befehle:
 (command-line mit Administrationsrecht starten)    
 ```cd fiskaltrust-net40```    
 ```fiskaltrust -cashboxid=0d1269dc-e2ae-42e3-9c57-b686d7832683 -test```
 
 ## Cloud-basiert
-Die gleiche Schnittstellen- und service-Definitionen werden als Cloud-Service unterstützt. Das als lokales Service entwickelte SOAP- und REST-Interface kann nahtlos in einen Cloud-Service gewechselt werden.
+Die gleiche Schnittstellen- und service-Definitionen werden als Cloud-Service unterstÃ¼tzt. Das als lokales Service entwickelte SOAP- und REST-Interface kann nahtlos in einen Cloud-Service gewechselt werden.
 
 ## Informationen zu Tests
-Der Launcher verwendet die Datei configuration.json von seinem Ausführungsverzeichnis um die Basiskonfiguration aufzubauen. Im Produktionsbetrieb wird diese Konfiguration im fiskaltrust-Portal vorgenommen und der launcher versucht, diese vom Upload-Server auszulesen um die cashboxid und den accesstoken zu beziehen. Zur Offline-Nutzung wird diese Konfiguration im Ausführungsverzeichnis gespeichert. Sobald die Konfiguration aus dem Ausführungsverzeichnis oder von Upload-Server ausgelesen wird, wird es im lokalen Service-Ordner gespeichert. Der Standard-Service-Ordner ist unter Windows %Programdata%\fiskaltrust oder in Linux /usr/shared/fiskaltrust. In diesem Ordner werden auch die Datenbankdatei und die ausführbaren Dateien gespeichert.
+Der Launcher verwendet die Datei configuration.json von seinem AusfÃ¼hrungsverzeichnis um die Basiskonfiguration aufzubauen. Im Produktionsbetrieb wird diese Konfiguration im fiskaltrust-Portal vorgenommen und der launcher versucht, diese vom Upload-Server auszulesen um die cashboxid und den accesstoken zu beziehen. Zur Offline-Nutzung wird diese Konfiguration im AusfÃ¼hrungsverzeichnis gespeichert. Sobald die Konfiguration aus dem AusfÃ¼hrungsverzeichnis oder von Upload-Server ausgelesen wird, wird es im lokalen Service-Ordner gespeichert. Der Standard-Service-Ordner ist unter Windows %Programdata%\fiskaltrust oder in Linux /usr/shared/fiskaltrust. In diesem Ordner werden auch die Datenbankdatei und die ausfÃ¼hrbaren Dateien gespeichert.
 
-Um den Dienst vollständig zurückzusetzen, kann das komplette Verzeichnis gelöscht werden.
+Um den Dienst vollstÃ¤ndig zurÃ¼ckzusetzen, kann das komplette Verzeichnis gelÃ¶scht werden.
 
 ## Kartentests
 Im Verzeichnis Tools\cardtest ist ein Werkzeug zum Testen von Karten und Readern, online und offline. Dort befindet sich auch eine README.md mit einer Beschreibung.
 
-## Häufiger Fehler
-Aus Sicherheitsgründen reagiert die fiskaltrust.Sicherheitseinrichtung nur mit einer gültigen Antwort, wenn eine korrekte CashboxID in den Daten übergeben wurde. Wenn eine unbekannte übergeben wird, so kommt keine Antwort zurück.
+## HÃ¤ufiger Fehler
+Aus SicherheitsgrÃ¼nden reagiert die fiskaltrust.Sicherheitseinrichtung nur mit einer gÃ¼ltigen Antwort, wenn eine korrekte CashboxID in den Daten Ã¼bergeben wurde. Wenn eine unbekannte Ã¼bergeben wird, so kommt keine Antwort zurÃ¼ck.
 
 ## Feedback und Bugs
-fiskaltrust wird ständig weiterentwickelt. Nutzen Sie bitte die Möglichkeit, durch Github-Fragen Ihre Wünsche und unsere Fehler zu diskutieren.
+fiskaltrust wird stÃ¤ndig weiterentwickelt. Nutzen Sie bitte die MÃ¶glichkeit, durch Github-Fragen Ihre WÃ¼nsche und unsere Fehler zu diskutieren.
 
 ## Fiscaltrust consulting gmbh
-Lemböckgasse 49/1B/6.OG, 1230 Wien  
+LembÃ¶ckgasse 49/1B/6.OG, 1230 Wien  
 [info@fiskaltrust.at]  
 [www.fiskaltrust.at](https://www.fiskaltrust.at)
