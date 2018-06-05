@@ -34,7 +34,8 @@ namespace csConsoleApplicationSCU
 
             foreach (var property in properties)
             {
-                if (property.GetCustomAttributes(typeof(OptionAttribute), true).FirstOrDefault() is OptionAttribute attr)
+                OptionAttribute attr = property.GetCustomAttributes(typeof(OptionAttribute), true).FirstOrDefault() as OptionAttribute;
+                if (attr != null)
                 {
                     string value = "";
                     while (value == string.Empty)
