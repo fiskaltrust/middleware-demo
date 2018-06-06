@@ -44,13 +44,15 @@ steps:
 - powershell: |
    Get-ChildItem "src/**/**"  -Directory  | ForEach-Object {
      $destinationDirectory = New-Item -ItemType directory -Path "$($env:BUILD_ARTIFACTSTAGINGDIRECTORY)\$($_.Name)" -Force
-     Copy-Item -Path "$($_.FullName)/bin/Release/**" -Destination $destinationDirectory.FullName -Recurse
+     if(Test-Path "$($_.FullName)/bin/Release"){
+       Copy-Item -Path "$($_.FullName)/bin/Release/**" -Destination $destinationDirectory.FullName -Recurse
+     }
    } 
   displayName: Copy Project Buildartifacts to $(build.artifactstagingdirectory)
 
 - task: PublishBuildArtifacts@1
-  displayName: Publish Artifact - drop
+  displayName: Publish Artifact - github-utilities__$(build.BuildNumber)
   inputs:
     PathtoPublish: '$(build.artifactstagingdirectory)'
-    ArtifactName: drop
+    ArtifactName: github-demo__$(build.BuildNumber)
     publishLocation: Container
