@@ -41,14 +41,12 @@ steps:
     platform: '$(BuildPlatform)'
     configuration: '$(BuildConfiguration)'
 
-- task: CopyFiles@2
-  displayName: Copy Files to - $(build.artifactstagingdirectory)
-  inputs:
-    SourceFolder: '$(system.defaultworkingdirectory)'
-    Contents: '**\bin\$(BuildConfiguration)\**\*.exe'
-    TargetFolder: '$(build.artifactstagingdirectory)'
-    CleanTargetFolder: true
-    flattenFolders: true
+- powershell: |
+   Get-ChildItem "src/**/**"  -Directory  | ForEach-Object {
+     $destinationDirectory = New-Item -ItemType directory -Path "$($env:BUILD_ARTIFACTSTAGINGDIRECTORY)\$($_.Name)" -Force
+     Copy-Item -Path "$($_.FullName)/bin/Release/**" -Destination $destinationDirectory.FullName -Recurse
+   } 
+  displayName: Copy Project Buildartifacts to $(build.artifactstagingdirectory)
 
 - task: PublishBuildArtifacts@1
   displayName: Publish Artifact - drop
