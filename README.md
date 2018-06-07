@@ -3,34 +3,34 @@ Examples how to use fiskaltrust.interface.
 
 fiskaltrust offers a legal compliant cash register security mechanism.
 
-##News 14.11.2016
-Per now we published aour release candidate interface, version 1.0.nnn. This interface is included in  This interface is included in the Nuget Package fiskaltrust.interface and fiskaltrust.interface.utlities version 1.0.16298.1022-rc. The Wsdl description file here at Github in the tools directory changed as well.
+## News 14.11.2016
+Per now we published our release candidate interface, version 1.0.nnn. This interface is included in the Nuget Package fiskaltrust.interface and fiskaltrust.interface.utlities version 1.0.16298.1022-rc. The WSDL description file here at Github in the tools directory changed as well.
 
-## documentation
-The detailed documentation is available from fiskaltrust-portal [https://portal.fiskaltrust.at] when after you activate the role possystem-creator (Registrierkassenhersteller).
+## Documentation
+The detailed documentation for Austria is available from fiskaltrust-portal [https://portal.fiskaltrust.at] and for France is available from fiskaltrust-portal [https://portal.fiskaltrust.fr] when after you activate the role possystem-creator (Registrierkassenhersteller).
 
 To speed up development we also deliver a nuget-package [https://nuget.org] with the packageId fiskaltrust.interface.
 
-## connecting to fiskaltrust.securitymechanism
-As a base technology in communication wcf is used. For local internal communication between queues, signature creation units and custom modules the net.pipe protocoll is the best choice. For multi platform communication the basic http may be the best choice.
+## Connecting to fiskaltrust.securitymechanism
+As a base technology in communication WCF is used. For local internal communication between queues, signature creation units and custom modules the net.pipe protocoll is the best choice. For multi platform communication the basic http protocol may be the best choice.
 ### SOAP
-SOAP comes with the http protocol from wcf communication. To get the wsdl file you can use these debug-build and goto the http-address configured, here [http://localhost:1200/0b09d163-82a1-4349-83ed-7081398df504] is used. Another option is to use the file from the folder tools/wsdl.
+SOAP comes with the http protocol from WCF communication. To get the WSDL file you can use these debug-build and goto the http-address configured, here [http://localhost:1200/0b09d163-82a1-4349-83ed-7081398df504] is used. Another option is to use the file from the folder tools/wsdl.
 ### REST
-REST is available in both, in xml and json. there are helpers which can be loaded to keep the base service lightweight.
-### native TCP-IP and serial rs232/485/422
+REST is available in both, in XML and JSON. There are helpers which can be loaded to keep the base service lightweight.
+### native TCP-IP and serial RS232/485/422
 Native stream based communication with a defined protocoll format is provided by helpers.
-### user specific
-With the helper topology it is possible to solve every scenario
+### User specific
+With the helper topology it is possible to solve every scenario.
 
-## hosting on linux and mac os
-For usage on linux and mac os we use mono to run fiskaltrust on it.
+## Hosting on Linux and MacOS
+For usage on Linux and MacOS we use mono to run the fiskaltrust service on it.
 
 For production use it is possible to run it as a daemon.
 
 For test and development, the command-line parameter -test can be used.
 (You can find details in the developer documentation.)
 
-Prerequisites beside mono-complete 3.x / 4.x are also sqlite and pcsclite if you want to use an usb-based signature creation unit.
+Prerequisites beside mono-complete 3.x / 4.x are also SQlite and PCSClite if you want to use an usb-based signature creation unit.
 
 Typical commands to run:
 ```sudo apt-get update```    
@@ -40,34 +40,34 @@ Typical commands to run:
 ```cd fiskaltrust-mono```    
 ```sudo mono fiskaltrust.mono.exe -caschboxid=0d1269dc-e2ae-42e3-9c57-b686d7832683 -useoffline=true -test```
 
-## hosting on windows
-The launcher (fiskaltrust.exe) is constructed to act as an windows service in production environment. For this also automated installation is supported by command-line parameter. ((You can find details in the developer documentation.)
+## Hosting on Microsoft Windows
+The launcher (fiskaltrust.exe) is constructed to act as an Microsoft Windows service in a production environment. For this also automated installation is supported by command-line parameter. ((You can find details in the developer documentation.)
 
 For test and develop the command-line parameter -test can be used to run the service.
 
-Only .net4 is prerequisites.
+The only prerequisites for running the service on a Windows-based machine is .net4.
 
 Typical commands to run:    
 (open command-line with administration permission)    
 ```cd fiskaltrust-net40```    
 ```fiskaltrust -cashboxid=0d1269dc-e2ae-42e3-9c57-b686d7832683 -test```
 
-## cloud based
+## Cloud based
 The same interface and service definition is served as an cloud service. You can use SOAP and REST interface designed for local service to seamless switch over to the cloud service.
 
-## test related informations
-The launcher uses the file configuration.json from its execution directory to make up its basic configuration. In production use this is done in the fiskaltrust-portal and the launcher tries to read it from the upload-server, related to cashboxid and accesstoken. For offline use this configuration is stored in the execution directory. Once the configuration is readed from the execution directory or from upload-server, it is stored localy in the service-folder. The default service-foler ist in windows %ProgramData%\fiskaltrust or in linux /usr/shared/fiskaltrust.
+## Test related informations
+The launcher uses the file configuration.json from its execution directory to make up its basic configuration. In production use this is done in the fiskaltrust-portal and the launcher tries to read it from the upload-server, related to the CashboxID and an generated AccessToken. For offline use this configuration is stored in the execution directory. Once the configuration is readed from the execution directory or from upload-server, it is stored localy in the service-folder. The default service-foler is for Microsoft Windows %ProgramData%\fiskaltrust or on Linux /usr/shared/fiskaltrust.
 
-In this folder also the database file and the executeables are stored, to completly reset the service delete tihs directory.
+In this folder also the database file and the executeables are stored, to completly reset the service delete this directory.
 
-## card testing
-In the tools\cardtest folder is a tool to test card and readers online and offline. See the README.md included there.
+## Card testing
+In the tools\cardtest folder is a tool to test card and readers online and offline. See the README.md included there. The usage of so called cards (a SignatureCreation Unit) is only obligatory when using the service for Austria.
 
-## common error
-Due to security reasons, the fiskaltrust.securitymechanism does not return anything (Null) if the provided CashboxID is wrong. 
+## Common error
+Due to security reasons, the fiskaltrust.securitymechanism does not return anything (null) if the provided CashboxID is wrong. 
 
-## feedback and bugs
-fiskaltrust is under permanent development, so feel free to discuss here your wishes and our bugs with the github-issues feature.
+## Feedback and bugs
+The fiskaltrust service is under permanent development, so feel free to discuss here your wishes and our bugs with the github-issues feature.
 
 ## fiskaltrust consulting gmbh
 Lemböckgasse 49/1B/6.OG, 1230 Wien  
