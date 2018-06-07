@@ -17,7 +17,7 @@ As a base technology in communication WCF is used. For local internal communicat
 SOAP comes with the http protocol from WCF communication. To get the WSDL file you can use these debug-build and goto the http-address configured, here [http://localhost:1200/0b09d163-82a1-4349-83ed-7081398df504] is used. Another option is to use the file from the folder tools/wsdl.
 ### REST
 REST is available in both, in XML and JSON. There are helpers which can be loaded to keep the base service lightweight.
-### Native TCP-IP and serial RS232/485/422
+### Native TCP-IP and serial interface RS232/485/422
 Native stream based communication with a defined protocoll format is provided by helpers.
 ### User specific
 With the helper topology it is possible to solve every scenario.
@@ -83,13 +83,13 @@ Beispiel, wie man das fiskaltrust.Interface nutzt.
 
 fiskaltrust bietet eine gesetzeskonforme Sicherheitseinrichtung für Registrierkassen an.
 
-##Neuerungen 14.11.2016
+## Neuerungen 14.11.2016
 Ab sofort gibt es ein neues Interface (unseren Release Candidate), Version 1.0.nnn. Dieses Interface ist im Nuget Package fiskaltrust.interface und fiskaltrust.interface.utlities Version 1.0.16298.1022-rc enthalten. Ebenfalls geändert hat sich dadurch die WSDL Datei hier in den Tools.
 
 ## Dokumentation
 Die detaillierte Dokumentation ist für Österreich auf dem fiskaltrust.Portal [https://portal.fiskaltrust.at] und für Frankreich  auf [https://portal.fiskaltrust.fr] nach der Registrierung und Aktivierung der Rolle als Registrierkassenhersteller (in der Übersicht) verfügbar.
 
-Um Ihren Entwicklung zu erleichtern, stellen wir auch ein nuget-package [https://nuget.org] mit der packageId fiskaltrust.interface zur Verfügung.
+Um Ihnen die Entwicklung zu erleichtern, stellen wir auch ein nuget-package [https://nuget.org] mit der packageId fiskaltrust.interface zur Verfügung.
 
 ## Verbindung mit der fiskaltrust.securitymechanism (Sicherheitseinrichtung)
 Als Basis-Technologie zur Kommunikation wird WCF verwendet. Zur lokalen, internen Kommunikation zwischen queues, signature creation units (Signaturerstellungseinheiten) und benutzerspezifischen Modulen (Sonstigen Modulen) wird am besten das net.pipe Protokoll verwendet. Zur Kommunikation zwischen verschiedenen Plattformen wird am besten das Protokoll basic http verwendet.
@@ -97,8 +97,8 @@ Als Basis-Technologie zur Kommunikation wird WCF verwendet. Zur lokalen, interne
 SOAP wird mit dem http-Protokoll der WCF-Kommunikation ausgeliefert. Um die WSDL-Datei zu erhalten, kann man diesen Debug-Build verwenden und auf die konfigurierte http-Adresse gehen. Hierbei wird [http://localhost:1200/0b09d163-82a1-4349-83ed-7081398df504] verwendet. Als weitere Option kann die Datei aus dem Ordner tools/wsdl verwendet werden.
 
 ### REST
-REST steht sowohl in XML als auch in JSON zur Verfügung. Es stehen benutzerspezifische Module zur Verfügung, die zusätzlich geladen werden können. Damit werden  die Basis-Services möglichest schlank gehalten.
-### Native TCP-IP und Serielle RS232/485/422
+REST steht sowohl in XML als auch in JSON zur Verfügung. Es stehen benutzerspezifische Module zur Verfügung, die zusätzlich geladen werden können. Damit werden die Basis-Services möglichest schlank gehalten.
+### Natives TCP-IP und serielle Schnittstelle RS232/485/422
 Nativen Stream-basierte Kommunikation mit einem definierten Protokoll-Format werden als benutzerspezifische Module zur Verfügung gestellt.
 ### Benutzerspezifisch
 Mit der Topologie der benutzerspezifischen Module ist es möglich, jedes technische Szenario zu lösen.
@@ -147,6 +147,88 @@ Aus Sicherheitsgründen reagiert die fiskaltrust.Sicherheitseinrichtung nur mit 
 
 ## Feedback und Bugs
 Der fiskaltrust Service wird ständig weiterentwickelt. Nutzen Sie bitte die Möglichkeit, durch Github-Fragen Ihre Wünsche und Fehler zu diskutieren.
+
+## Fiscaltrust consulting gmbh
+Lemböckgasse 49/1B/6.OG, 1230 Wien  
+[info@fiskaltrust.at]  
+[www.fiskaltrust.at](https://www.fiskaltrust.at)
+
+---
+
+# fiskaltrust.Interface
+[see english readme](#fiskaltrust-interface-EN)
+
+Exemple d'utilisation de la fiskaltrust.Interface.
+
+fiskaltrust offre un dispositif de sécurité conforme aux lois et certifier pour les caisses enregistreuses.
+
+## Innovations du 14.11.2016
+Dé maintenant, il y a une nouvelle interface (notre Release Candidate), version 1.0.nnn. Cette interface est incluse dans le Nuget Package fiskaltrust.interface et fiskaltrust.interface.utlities version 1.0.16298.1022-rc. En outre, cela a changé le fichier WSDL ici dans les outils.
+
+## Documentation
+La documentation détaillée est pour l'Autriche sur le fiskaltrust.Portal [https://portal.fiskaltrust.at] et pour la France sur [https://portal.fiskaltrust.fr] après l'enregistrement et l'activation du rôle de fabricant de caisse enregistreuse (dans la vue d'ensemble) disponible.
+
+Pour faciliter le développement, nous fournissons également un nuget-package [https://nuget.org] avec le packageId fiskaltrust.interface.
+
+## Connexion avec le mécanisme de sécurité fiskaltrust.securitymechanism (dispositif de sécurité)
+WCF est la technologie de communication de base. Pour la communication interne locale entre les files d'attente, les unités de création de signature et les modules spécifiques à l'utilisateur (autres modules), le protocole net.pipe est le mieux utilisé.
+La meilleure façon de communiquer entre différentes plates-formes est d'utiliser le protocole basic http.
+
+### SOAP
+SOAP est livré avec le protocole http de la communication WCF. Pour obtenir le fichier WSDL, vous pouvez utiliser cette version de débogage et accéder à l'adresse http configurée. Cela utilisera [http: // localhost: 1200 / 0b09d163-82a1-4349-83ed-7081398df504].
+Une autre option consiste à utiliser le fichier du dossier tools/wsdl.
+
+### REST
+REST est disponible en XML et JSON. Des modules spécifiques à l'utilisateur sont disponibles, qui peuvent être chargés en plus. Cela permettra de garder les services de base aussi légeres que possible.
+
+### TCP-IP natif et interface série RS232 / 485 / 422
+Une communication native basée sur les flux avec un format de protocole défini est fournie en tant que modules spécifiques à l'utilisateur.
+### Spécifiques à l'utilisateur
+Avec la topologie des modules spécifiques à l'utilisateur, il est possible de résoudre n'importe quel scénario technique.
+
+## Hébergement sur Linux et MacOS
+Pour exécuter le service fiskaltrust sur Linux et MacOS, mono est utilisé.
+Pour une utilisation productive, il est possible de l'utiliser comme daemon.
+
+Pour le test et le développement, le paramètre de ligne de commande -test peut être utilisé. Les détails peuvent être trouvés dans la documentation du développeur.
+
+En plus de Mono-complete 3.x / 4.x, SQLite et PCSClite sont également requis si une dispositif de création de signature USB être utilisée en Autriche. Si le service est exploité localement en France, les mêmes conditions s'appliquent.
+
+Commandes exécutables typiques:
+```sudo apt-get update```    
+```sudo apt-get install mono-complete```    
+```sudo apt-get install sqlite```    
+```sudo apt-get install pcsclite```    
+```cd fiskaltrust-mono```    
+```sudo mono fiskaltrust.mono.exe -caschboxid=0d1269dc-e2ae-42e3-9c57-b686d7832683 -useoffline=true -test```
+
+## Hébergement sur Microsoft Windows
+Le lanceur (fiskaltrust.exe) est conçu comme un service Windows pour l'environnement de production. Il prend également en charge la possibilité d'une installation automatisée via les paramètres de ligne de commande. Les détails peuvent être trouvés dans la documentation du développeur.
+Pour le test et le développement, le paramètre de ligne de commande -test peut être utilisé. Les détails peuvent être trouvés dans la documentation du développeur.
+
+L'installation sous Microsoft Windows requiert uniquement .net4 comme prérequis.
+
+Commandes exécutables typiques:
+(démarrer la ligne de commande avec les droits d'administration)    
+```cd fiskaltrust-net40```    
+```fiskaltrust -cashboxid=0d1269dc-e2ae-42e3-9c57-b686d7832683 -test```
+
+## Basé sur Cloud
+Les mêmes définitions d'interface et de service sont prises en charge en tant que service cloud. L'interface SOAP et REST, développée en tant que service local, peut être basculée en toute transparence vers un service cloud.
+
+## Informations sur les tests et l'installation
+Le lanceur utilise le fichier configuration.json depuis son répertoire d'exécution pour créer la configuration de base. En production, cette configuration est effectuée dans le portail fiskaltrust et le lanceur tente de le lire depuis le serveur de téléchargement pour obtenir le CashboxId et l'AccessToken spécifique. Pour une utilisation hors ligne, cette configuration est stockée dans le répertoire d'exécution. Dès que la configuration est lue dans le répertoire d'exécution ou le serveur de téléchargement, elle est enregistrée dans le dossier de service local. Dès que la configuration est lue dans le répertoire d'exécution ou le serveur de téléchargement, elle est enregistrée dans le dossier de service local. Le dossier de service par défaut est sous Microsoft Windows %Programdata%\fiskaltrust ou sous Linux /usr/shared/fiskaltrust. Ce dossier stocke également le fichier de base de données et les exécutables.
+
+Pour réinitialiser complètement le service, le répertoire entier peut être supprimé.
+
+## Tests de cartes
+Dans le répertoire Tools\cardtest est un outil pour tester les cartes et les lecteurs, en ligne et hors ligne. Il y a aussi un fichier README.md avec une description. L'utilisation de cartes (SignatureCreationUnit) est obligatoire si le service est exploité en Autriche.
+
+## Erreur commune
+Pour des raisons de sécurité, le fiskaltrust.securitymechanism répond uniquement avec une réponse valide si un CashboxID correct a été transmis dans les données. Si un identifiant inconnu est passé, aucune réponse (null) n'est générée.
+
+## Commentaires et bugs
+Le service fiskaltrust est en constante évolution. S'il vous plaît profiter de l'occasion pour discuter de vos souhaits et des erreurs à travers des Questions-Github.
 
 ## Fiscaltrust consulting gmbh
 Lemböckgasse 49/1B/6.OG, 1230 Wien  
