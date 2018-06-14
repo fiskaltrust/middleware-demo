@@ -7,8 +7,9 @@
 
 # Console Application für Österreich
 Die vorhandenen Projekte beziehen sich ausschließlich auf den österreichischen Markt und Gesetzgebung.
+Sie benötigen für die Appilkationen eine konfigurierte und aktive Queue, welche Sie im [https://portal.fiskaltrust.at](Portal) erstellen können.
 
-Für alle zur Verfügung gestelleten Applikationen benötigen Sie die CashBoxId und den AccessToken.
+Für alle zur Verfügung gestellten ausführbaren Applikationen benötigen Sie die CashBoxId und den AccessToken.
 Beide Werte finden Sie im Portal [https://portal.fiskaltrust.at].
 
 ## REST
