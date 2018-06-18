@@ -70,8 +70,9 @@ Due to security reasons, the fiskaltrust.securitymechanism does not return anyth
 The fiskaltrust service is under permanent development, so feel free to discuss here your wishes and our bugs with the github-issues feature.
 
 ## Existing modules
-[Testing receipts and SCU for Austria](src/at/README.md)
-[Journals and exports for all markets] (src/common/README.md)
+For further documentation on existing modules, follow these hyperlinks:<br>
+[Testing receipts and SCU for Austria](src/at/README.md)<br>
+[Journals and exports for all markets](src/common/README.md)<br>
 [Testing receipts for France](src/fr/README.md)
 
 ## fiskaltrust consulting gmbh
@@ -154,8 +155,9 @@ Aus Sicherheitsgründen reagiert die fiskaltrust.Sicherheitseinrichtung nur mit 
 Der fiskaltrust Service wird ständig weiterentwickelt. Nutzen Sie bitte die Möglichkeit, durch Github-Fragen Ihre Wünsche und Fehler zu diskutieren.
 
 ## Vorhandene Module
-[Belegtests und SCU-Test für Österreich](src/at/README.md)
-[Journale und Exports für alle Märkte] (src/common/README.md)
+Für die Dokumentation der vorhandenen Module, folgen Sie diesen Links:<br>
+[Belegtests und SCU-Test für Österreich](src/at/README.md)<br>
+[Journale und Exports für alle Märkte](src/common/README.md)<br>
 [Belegtests für Frankreich](src/fr/README.md)
 
 ## Fiscaltrust consulting gmbh
@@ -241,8 +243,9 @@ Pour des raisons de sécurité, le fiskaltrust.securitymechanism répond uniquem
 Le service fiskaltrust est en constante évolution. S'il vous plaît profiter de l'occasion pour discuter de vos souhaits et des erreurs à travers des Questions-Github.
 
 ## Modules existants
-[Test pour les justificatives et SCU en Autriche](src/at/README.md)
-[Journaux et exports pour tous les marchés] (src/common/README.md)
+Pour la documentation des modules existants, suivez ces liens:<br>
+[Test pour les justificatives et SCU en Autriche](src/at/README.md)<br>
+[Journaux et exports pour tous les marchés](src/common/README.md)<br>
 [Test des justificcatives pour la France](src/fr/README.md)
 
 ## Fiscaltrust consulting gmbh
