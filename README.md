@@ -69,6 +69,11 @@ Due to security reasons, the fiskaltrust.securitymechanism does not return anyth
 ## Feedback and bugs
 The fiskaltrust service is under permanent development, so feel free to discuss here your wishes and our bugs with the github-issues feature.
 
+## Existing modules
+[Testing receipts and SCU for Austria](src/at/README.md)
+[Journals and exports for all markets] (src/common/README.md)
+[Testing receipts for France](src/fr/README.md)
+
 ## fiskaltrust consulting gmbh
 Lemböckgasse 49/1B/6.OG, 1230 Wien  
 [info@fiskaltrust.at]  
@@ -148,8 +153,10 @@ Aus Sicherheitsgründen reagiert die fiskaltrust.Sicherheitseinrichtung nur mit 
 ## Feedback und Bugs
 Der fiskaltrust Service wird ständig weiterentwickelt. Nutzen Sie bitte die Möglichkeit, durch Github-Fragen Ihre Wünsche und Fehler zu diskutieren.
 
-## Module
+## Vorhandene Module
 [Belegtests und SCU-Test für Österreich](src/at/README.md)
+[Journale und Exports für alle Märkte] (src/common/README.md)
+[Belegtests für Frankreich](src/fr/README.md)
 
 ## Fiscaltrust consulting gmbh
 Lemböckgasse 49/1B/6.OG, 1230 Wien  
@@ -232,6 +239,11 @@ Pour des raisons de sécurité, le fiskaltrust.securitymechanism répond uniquem
 
 ## Commentaires et bugs
 Le service fiskaltrust est en constante évolution. S'il vous plaît profiter de l'occasion pour discuter de vos souhaits et des erreurs à travers des Questions-Github.
+
+## Modules existants
+[Test pour les justificatives et SCU en Autriche](src/at/README.md)
+[Journaux et exports pour tous les marchés] (src/common/README.md)
+[Test des justificcatives pour la France](src/fr/README.md)
 
 ## Fiscaltrust consulting gmbh
 Lemböckgasse 49/1B/6.OG, 1230 Wien  
