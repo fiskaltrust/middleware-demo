@@ -1,5 +1,16 @@
 # Console Application for Austria
+The existing projects relate exclusively to the Austrian market and legislation.
+You need a configured and active queue for the applications, which is creatable in [https://portal.fiskaltrust.at](Portal).
+
+For all available executable applications you need the CashBoxId and the AccessToken.
+Both values can be found in the portal [https://portal.fiskaltrust.at].
+
 ## REST
+You can create the receipts for cash revenue, zero receipts, start/stop receipt, and the receipts for year/month.
+In addition, you can start an RKSV-DEP export (all existing data).
+To test the queue up to 999 cash sales documents can be generated in a glance.
+
+All possible operations are performed based on the REST protocol.
 
 ## SOAP
 
@@ -7,13 +18,13 @@
 
 # Console Application für Österreich
 Die vorhandenen Projekte beziehen sich ausschließlich auf den österreichischen Markt und Gesetzgebung.
-Sie benötigen für die Appilkationen eine konfigurierte und aktive Queue, welche Sie im [https://portal.fiskaltrust.at](Portal) erstellen können.
+Sie benötigen für die Applikationen eine konfigurierte und aktive Queue, welche Sie im [https://portal.fiskaltrust.at](Portal) erstellen können.
 
-Für alle zur Verfügung gestellten ausführbaren Applikationen benötigen Sie die CashBoxId und den AccessToken.
+Für alle zur Verfügung gestellten und ausführbaren Applikationen benötigen Sie die CashBoxId und den AccessToken.
 Beide Werte finden Sie im Portal [https://portal.fiskaltrust.at].
 
 ## REST
-Sie können die Belege Barumsatz, Null-Belege, Kassen Inbetrieb-/Außerbetriebname und den Jahres-/Monats-Beleg erzeugen.
+Sie können die Belege Barumsatz, Null-Belege, Kassen Inbetrieb-/Außerbetriebnahme und den Jahres-/Monats-Beleg erzeugen.
 Zusätzlich können Sie einen RKSV-DEP Export (alle vorhandenen Daten) starten.
 Um die Queue zu testen können bis zu 999 Barumsatzbelege in einem Durchgang erzeugt werden.
 
