@@ -1,0 +1,58 @@
+resources:
+- repo: self
+queue:
+  name: ft-a240-sandbox
+  demands: 
+  - msbuild
+  - visualstudio
+steps:
+- powershell: |
+   $versionFromFile = Get-Content "version.txt"
+   $majorMinor = $versionFromFile.Split("-")[0]
+   $prerelease = $versionFromFile.Substring($majorMinor.Length, $versionFromFile.Length - $majorMinor.Length)
+   $version = "$majorMinor.$(Get-Date -UFormat "%y%j").$env:BUILD_BUILDID"
+   $gitHash = "+" + (git rev-parse HEAD).SubString(0, 10)
+
+   Write-Host "Version: $version"
+   Write-Host "Inform Version: $version$prerelease$gitHash"
+
+   Get-ChildItem -Recurse -Include "AssemblyInfo.cs" | ForEach-Object {
+       $fileName = $_.FullName;
+       (Get-Content $fileName) -replace "AssemblyVersion\s*\(.*\)", "AssemblyVersion(`"$version`")" | Out-File  $fileName
+       (Get-Content $fileName) -replace "AssemblyFileVersion\s*\(.*\)", "AssemblyFileVersion(`"$version`")"  | Out-File  $fileName
+       (Get-Content $fileName) -replace "AssemblyInformationalVersion\s*\(.*\)", "AssemblyInformationalVersion(`"$version$prerelease$gitHash`")"  | Out-File  $fileName
+   }
+   Write-Output ("##vso[build.updatebuildnumber]$version$prerelease") 
+  displayName: Set Versions
+- task: NuGetToolInstaller@0
+  displayName: Use NuGet 4.4.1
+  inputs:
+    versionSpec: 4.4.1
+
+- task: NuGetCommand@2
+  displayName: NuGet restore
+  inputs:
+    restoreSolution: '**\*.sln'
+
+- task: VSBuild@1
+  displayName: Build solution **\*.sln
+  inputs:
+    solution: '**\*.sln'
+    platform: '$(BuildPlatform)'
+    configuration: '$(BuildConfiguration)'
+
+- powershell: |
+   Get-ChildItem "src/**/**"  -Directory  | ForEach-Object {
+     $destinationDirectory = New-Item -ItemType directory -Path "$($env:BUILD_ARTIFACTSTAGINGDIRECTORY)\$($_.Name)" -Force
+     if(Test-Path "$($_.FullName)/bin/Release"){
+       Copy-Item -Path "$($_.FullName)/bin/Release/**" -Destination $destinationDirectory.FullName -Recurse
+     }
+   } 
+  displayName: Copy Project Buildartifacts to $(build.artifactstagingdirectory)
+
+- task: PublishBuildArtifacts@1
+  displayName: Publish Artifact - github-utilities__$(build.BuildNumber)
+  inputs:
+    PathtoPublish: '$(build.artifactstagingdirectory)'
+    ArtifactName: github-demo__$(build.BuildNumber)
+    publishLocation: Container
