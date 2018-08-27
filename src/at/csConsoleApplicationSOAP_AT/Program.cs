@@ -208,7 +208,6 @@ namespace csConsoleApplicationSOAP_AT
                 {
                     using (var journal = proxy.Journal(0x4154000000000001, 0, 0 /*(new DateTime(2999,12,31)).Ticks*/))
                     {
-                        journal.Position = 0;
                         journal.CopyTo(file);
                     }
 

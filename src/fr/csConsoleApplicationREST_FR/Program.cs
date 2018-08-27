@@ -123,7 +123,6 @@ namespace csConsoleApplicationREST_FR
             if (input.ToLower().StartsWith("exit"))
             {
                 var stream =  journalJson(0xFE, 0, DateTime.UtcNow.Ticks,url,cashboxid,accesstoken);
-                stream.Position = 0;
                 var sr = new System.IO.StreamReader(stream);
 
                 Console.WriteLine("{0:G} ========== Default Journal ==========", DateTime.Now);

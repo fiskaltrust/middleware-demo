@@ -94,7 +94,6 @@ namespace csConsoleApplicationREST_AT
             if (input.ToLower().StartsWith("exit"))
             {
                 var stream =  journalJson(0x4154000000000001, 0, DateTime.UtcNow.Ticks,url,cashboxid,accesstoken);
-                stream.Position = 0;
                 var sr = new System.IO.StreamReader(stream);
 
                 Console.WriteLine("{0:G} ========== RKSV-DEP ==========", DateTime.Now);
@@ -223,7 +222,6 @@ namespace csConsoleApplicationREST_AT
                 {
                     using (var journal= journalJson(0x4154000000000001, 0,0 /*(new DateTime(2999,12,31)).Ticks*/, url, cashboxid, accesstoken))
                     {
-                        journal.Position = 0;
                         journal.CopyTo(file);
                     }
 
