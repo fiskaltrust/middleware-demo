@@ -252,3 +252,4 @@ Pour la documentation des modules existants, suivez ces liens:<br>
 Lemböckgasse 49/1B/6.OG, 1230 Wien  
 [info@fiskaltrust.at]  
 [www.fiskaltrust.at](https://www.fiskaltrust.at)
+
