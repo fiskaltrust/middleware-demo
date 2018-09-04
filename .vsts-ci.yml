@@ -45,7 +45,7 @@ steps:
    Get-ChildItem "src/**/**"  -Directory  | ForEach-Object {
      $destinationDirectory = New-Item -ItemType directory -Path "$($env:BUILD_ARTIFACTSTAGINGDIRECTORY)\$($_.Name)" -Force
      if(Test-Path "$($_.FullName)/bin/Release"){
-       Copy-Item -Path "$($_.FullName)/bin/Release/**" -Destination $destinationDirectory.FullName -Recurse
+       Compress-Archive -Path "$($_.FullName)/bin/Release/**" -DestinationPath "$($env:BUILD_ARTIFACTSTAGINGDIRECTORY)\$($_.Name)-$(build.BuildNumber).zip"
      }
    } 
   displayName: Copy Project Buildartifacts to $(build.artifactstagingdirectory)
