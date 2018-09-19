@@ -83,7 +83,7 @@ Lemböckgasse 49/1B/6.OG, 1230 Wien
 ---
 
 # fiskaltrust.Interface AT
-[see english readme](#fiskaltrust-interface-EN)
+[see english readme](#fiskaltrust-interface-en)
 
 Beispiel, wie man das fiskaltrust.Interface nutzt.
 
@@ -168,7 +168,7 @@ Lemböckgasse 49/1B/6.OG, 1230 Wien
 ---
 
 # fiskaltrust.Interface FR
-[see english readme](#fiskaltrust-interface-EN)
+[see english readme](#fiskaltrust-interface-en)
 
 Exemple d'utilisation de la fiskaltrust.Interface.
 
