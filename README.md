@@ -160,7 +160,7 @@ Für die Dokumentation der vorhandenen Module, folgen Sie diesen Links:<br>
 [Journale und Exports für alle Märkte](src/common/README.md)<br>
 [Belegtests für Frankreich](src/fr/README.md)
 
-## Fiscaltrust consulting gmbh
+## Fiskaltrust consulting gmbh
 Lemböckgasse 49/1B/6.OG, 1230 Wien  
 <info@fiskaltrust.at>  
 [www.fiskaltrust.at](https://www.fiskaltrust.at)
@@ -248,7 +248,7 @@ Pour la documentation des modules existants, suivez ces liens:<br>
 [Journaux et exports pour tous les marchés](src/common/README.md)<br>
 [Test des justificcatives pour la France](src/fr/README.md)
 
-## Fiscaltrust consulting gmbh
+## Fiskaltrust consulting gmbh
 Lemböckgasse 49/1B/6.OG, 1230 Wien  
 <info@fiskaltrust.at>  
 [www.fiskaltrust.at](https://www.fiskaltrust.at)
