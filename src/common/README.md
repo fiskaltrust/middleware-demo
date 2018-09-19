@@ -1,7 +1,7 @@
 # Common Console Application
 The existing projects relate to all markets and can be used in an international context.
 You need a configured and active queue for the applications,
-which you can find in the portal of the respective market (for AT in [https://portal.fiskaltrust.at], for FR in [https://portal.fiskaltrust.fr] and for DE in [https: //portal.fiskaltrust. de]).
+which you can find in the portal of the respective market (for [AT](https://portal.fiskaltrust.at), for [FR](https://portal.fiskaltrust.fr) and for [DE](https://portal.fiskaltrust.de)).
 
 For all available executable applications you need the CashBoxId and the AccessToken.
 Both values can be found in the portal which corresponds to the market.
@@ -61,7 +61,7 @@ You need an existing template for the configuration, which you can execute.
 # Allgemeine Console Application
 Die vorhandenen Projekte beziehen sich auf alle Märkte und können im internationalen Kontext verwendet werden..
 Sie benötigen für die Applikationen eine konfigurierte und aktive Queue,
-welche Sie im Portal des jeweiligen Marktes (für AT in [https://portal.fiskaltrust.at], für FR in [https://portal.fiskaltrust.fr] und für DE in [https://portal.fiskaltrust.de]) erstellen können.
+welche Sie im Portal des jeweiligen Marktes (für [AT](https://portal.fiskaltrust.at), für [FR](https://portal.fiskaltrust.fr) und für [DE](https://portal.fiskaltrust.de)) erstellen können.
 
 Für alle zur Verfügung gestellten ausführbaren Applikationen benötigen Sie die CashBoxId und den AccessToken.
 Beide Werte finden Sie im Portal welches dem Markt entspricht.
@@ -120,7 +120,7 @@ Sie benötigen dafür ein vorhandenes Template für die Konfiguration, welches S
 # Console Application général
 Les projets existants concernent tous les marchés et peuvent être utilisés dans un contexte international.
 Vous avez besoin d'une file d'attente configurée et active pour les applications,
-que vous pouvez trouver dans le portail du marché respectif (pour AT dans [https://portal.fiskaltrust.at], pour FR dans [https://portal.fiskaltrust.fr] et pour DE dans [https: //portal.fiskaltrust. de]).
+que vous pouvez trouver dans le portail du marché respectif (pour [AT](https://portal.fiskaltrust.at), pour [FR](https://portal.fiskaltrust.fr) et pour [DE](https://portal.fiskaltrust.de)).
 
 Pour toutes les applications exécutables disponibles, vous avez besoin de CashBoxId et AccessToken.
 Les deux valeurs peuvent être trouvées dans le portail qui correspond au marché.

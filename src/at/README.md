@@ -1,9 +1,9 @@
 # Console Application for Austria
 The existing projects relate exclusively to the Austrian market and legislation.
-You need a configured and active queue for the applications, which is creatable in [https://portal.fiskaltrust.at](Portal).
+You need a configured and active queue for the applications, which is creatable in the [portal](https://portal.fiskaltrust.at).
 
 For all available executable applications you need the CashBoxId and the AccessToken.
-Both values can be found in the portal [https://portal.fiskaltrust.at].
+Both values can be found in the [portal](https://portal.fiskaltrust.at).
 
 ## REST
 You can create the receipts for cash revenue, zero receipts, start/stop receipt, and the receipts for year/month.
@@ -24,10 +24,10 @@ With this application you can test an existing SCU for its correct function.
 
 # Console Application für Österreich
 Die vorhandenen Projekte beziehen sich ausschließlich auf den österreichischen Markt und Gesetzgebung.
-Sie benötigen für die Applikationen eine konfigurierte und aktive Queue, welche Sie im [https://portal.fiskaltrust.at](Portal) erstellen können.
+Sie benötigen für die Applikationen eine konfigurierte und aktive Queue, welche Sie im [Portal](https://portal.fiskaltrust.at) erstellen können.
 
 Für alle zur Verfügung gestellten und ausführbaren Applikationen benötigen Sie die CashBoxId und den AccessToken.
-Beide Werte finden Sie im Portal [https://portal.fiskaltrust.at].
+Beide Werte finden Sie im [Portal](https://portal.fiskaltrust.at).
 
 ## REST
 Sie können die Belege Barumsatz, Null-Belege, Kassen Inbetrieb-/Außerbetriebnahme und den Jahres-/Monats-Beleg erzeugen.
@@ -49,10 +49,10 @@ Mit dieser Applikation können Sie eine vorhandene SCU auf Ihre korrekte Funktio
 # Console Application pour l'Autriche
 Les projets existants concernent exclusivement le marché et la législation autrichiens.
 Vous avez besoin d'une file d'attente configurée et active pour les applications,
-que vous pouvez créer dans [https://portal.fiskaltrust.at](portail).
+que vous pouvez créer dans [portail](https://portal.fiskaltrust.at).
 
 Pour toutes les applications fournies et exécutables, vous avez besoin du CashBoxId et du AccessToken.
-Les deux valeurs peuvent être trouvées dans le portail [https://portal.fiskaltrust.at].
+Les deux valeurs peuvent être trouvées dans le [portail](https://portal.fiskaltrust.at).
 
 ## REST
 Vous pouvez générer les justificatif pour les revenus en espèces, justificatif à zero, justificatif pour demarrage et arrête et les justificatifs mensuell/annuell.
