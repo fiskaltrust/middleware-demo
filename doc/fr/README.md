@@ -5,7 +5,7 @@ You need a configured and active queue for the applications, which is creatable 
 For all available executable applications you need the CashBoxId and the AccessToken.
 Both values can be found in the [portal](https://portal.fiskaltrust.fr).
 
-## REST
+## [REST](csConsoleApplicationREST_FR.md)
 You can display the documents for the categories for
 * Cash register functions (eg cash deposit)
 * Zero-documents (eg start of the cash register)
@@ -17,7 +17,7 @@ To test the queue up to 999 cash sales documents can be generated in  a glance.
 
 All possible operations are performed based on the REST protocol.
 
-## SOAP
+## [SOAP](csConsoleApplicationSOAP_FR.md)
 You can display the documents for the categories for
 * Cash register functions (eg cash deposit)
 * Zero-documents (eg start of the cash register)
@@ -37,7 +37,7 @@ welche Sie im [Portal](https://portal.fiskaltrust.fr) erstellen können.
 Für alle zur Verfügung gestellten ausführbaren Applikationen benötigen Sie die CashBoxId und den AccessToken.
 Beide Werte finden Sie im [Portal](https://portal.fiskaltrust.fr).
 
-## REST
+## [REST](csConsoleApplicationREST_FR.md)
 Sie können die Belege für die einzelnen Belegtypen  für 
 * Kassenfunktionen (bspw. Bareinlage)
 * Null-Belege (bspw. Start der Kasse)
@@ -49,7 +49,7 @@ Um die Queue zu testen können bis zu 999 Barumsatzbelege in einem Durchgang erz
 
 Alle möglichen Vorgänge werden auf Basis des REST-Protokolls durchgeführt.
 
-## SOAP
+## [SOAP](csConsoleApplicationSOAP_FR.md)
 Sie können die Belege für die einzelnen Belegtypen, die Belege für 
 * Kassenfunktionen (bspw. Bareinlage)
 * Null-Belege (bspw. Start der Kasse)
@@ -69,7 +69,7 @@ que vous pouvez créer dans [portail](https://portal.fiskaltrust.fr).
 Pour toutes les applications fournies et exécutables, vous avez besoin du CashBoxId et du AccessToken.
 Les deux valeurs peuvent être trouvées dans le [portail](https://portal.fiskaltrust.fr).
 
-## REST
+## [REST](csConsoleApplicationREST_FR.md)
 Vous pouvez entrer les documents pour les catégories de documents individuelles pour
 * Les fonctions de la caisse enregistreuse (par exemple dépôt en espèces)
 * Zéro-documents (par exemple, début de la caisse enregistreuse)
@@ -81,7 +81,7 @@ Pour tester la file d'attente jusqu'à 999 documents de vente au comptant peuven
 
 Toutes les opérations possibles sont effectuées sur la base du protocole REST.
 
-## SOAP
+## [SOAP](csConsoleApplicationSOAP_FR.md)
 Vous pouvez entrer les documents pour les catégories de documents individuelles pour
 * Les fonctions de la caisse enregistreuse (par exemple dépôt en espèces)
 * Zéro-documents (par exemple, début de la caisse enregistreuse)

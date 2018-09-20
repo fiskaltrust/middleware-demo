@@ -5,21 +5,21 @@ You need a configured and active queue for the applications, which is creatable 
 For all available executable applications you need the CashBoxId and the AccessToken.
 Both values can be found in the [portal](https://portal.fiskaltrust.at).
 
-## REST
+## [REST](csConsoleApplicationREST_AT.md)
 You can create the receipts for cash revenue, zero receipts, start/stop receipt, and the receipts for year/month.
 In addition, you can start an RKSV-DEP export (all existing data).
 To test the queue up to 999 cash sales documents can be generated in a glance.
 
 All possible operations are performed based on the REST protocol.
 
-## SOAP
+## [SOAP](csConsoleApplicationSOAP_AT.md)
 You can create the receipts for cash revenue, zero receipts, start/stop receipt, and the receipts for year/month.
 In addition, you can start an RKSV-DEP export (all existing data).
 To test the queue up to 999 cash sales documents can be generated in a glance.
 
 All possible operations are performed based on the SOAP protocol.
 
-## SCU - Security Creation Unit
+## [SCU - Security Creation Unit](csConsoleApplicationSCU_AT.md)
 With this application you can test an existing SCU for its correct function.
 
 # Console Application für Österreich
@@ -29,21 +29,21 @@ Sie benötigen für die Applikationen eine konfigurierte und aktive Queue, welch
 Für alle zur Verfügung gestellten und ausführbaren Applikationen benötigen Sie die CashBoxId und den AccessToken.
 Beide Werte finden Sie im [Portal](https://portal.fiskaltrust.at).
 
-## REST
+## [REST](csConsoleApplicationREST_AT.md)
 Sie können die Belege Barumsatz, Null-Belege, Kassen Inbetrieb-/Außerbetriebnahme und den Jahres-/Monats-Beleg erzeugen.
 Zusätzlich können Sie einen RKSV-DEP Export (alle vorhandenen Daten) starten.
 Um die Queue zu testen können bis zu 999 Barumsatzbelege in einem Durchgang erzeugt werden.
 
 Alle möglichen Vorgänge werden auf Basis des REST-Protokolls durchgeführt.
 
-## SOAP
+## [SOAP](csConsoleApplicationSOAP_AT.md)
 Sie können die Belege Barumsatz, Null-Belege, Kassen Inbetrieb-/Außerbetriebname und den Jahres-/Monats-Beleg erzeugen.
 Zusätzlich können Sie einen RKSV-DEP Export (alle vorhandenen Daten) starten.
 Um die Queue zu testen können bis zu 999 Barumsatzbelege in einem Durchgang erzeugt werden.
 
 Alle möglichen Vorgänge werden auf Basis des SOAP-Protokolls durchgeführt.
 
-## SCU - Security Creation Unit
+## [SCU - Security Creation Unit](csConsoleApplicationSCU_AT.md)
 Mit dieser Applikation können Sie eine vorhandene SCU auf Ihre korrekte Funktion testen.
 
 # Console Application pour l'Autriche
@@ -54,19 +54,19 @@ que vous pouvez créer dans [portail](https://portal.fiskaltrust.at).
 Pour toutes les applications fournies et exécutables, vous avez besoin du CashBoxId et du AccessToken.
 Les deux valeurs peuvent être trouvées dans le [portail](https://portal.fiskaltrust.at).
 
-## REST
+## [REST](csConsoleApplicationREST_AT.md)
 Vous pouvez générer les justificatif pour les revenus en espèces, justificatif à zero, justificatif pour demarrage et arrête et les justificatifs mensuell/annuell.
 Vous pouvez démarrer une exportation RKSV-DEP (toutes les données existantes).
 Pour tester la file d'attente jusqu'à 999 documents de vente au comptant peuvent être générés en une seule fois.
 
 Toutes les opérations possibles sont effectuées sur la base du protocole REST.
 
-## SOAP
+## [SOAP](csConsoleApplicationSOAP_AT.md)
 Vous pouvez générer les justificatif pour les revenus en espèces, justificatif à zero, justificatif pour demarrage et arrête et les justificatifs mensuell/annuell.
 Vous pouvez démarrer une exportation RKSV-DEP (toutes les données existantes).
 Pour tester la file d'attente jusqu'à 999 documents de vente au comptant peuvent être générés en une seule fois.
 
 Toutes les opérations possibles sont effectuées sur la base du protocole SOAP.
 
-## SCU - unité de signature
+## [SCU - Security Creation Unit](csConsoleApplicationSCU_AT.md)
 Avec cette application, vous pouvez tester une SCU existante pour sa fonction correcte.

@@ -71,9 +71,9 @@ The fiskaltrust service is under permanent development, so feel free to discuss 
 
 ## Existing modules
 For further documentation on existing modules, follow these hyperlinks:<br>
-[Testing receipts and SCU for Austria](src/at/README.md)<br>
-[Journals and exports for all markets](src/common/README.md)<br>
-[Testing receipts for France](src/fr/README.md)
+[Testing receipts and SCU for Austria](doc/at/README.md)<br>
+[Journals and exports for all markets](doc/common/README.md)<br>
+[Testing receipts for France](doc/fr/README.md)
 
 ## fiskaltrust consulting gmbh
 Lemböckgasse 49/1B/6.OG, 1230 Wien  
@@ -156,9 +156,9 @@ Der fiskaltrust Service wird ständig weiterentwickelt. Nutzen Sie bitte die Mö
 
 ## Vorhandene Module
 Für die Dokumentation der vorhandenen Module, folgen Sie diesen Links:<br>
-[Belegtests und SCU-Test für Österreich](src/at/README.md)<br>
-[Journale und Exports für alle Märkte](src/common/README.md)<br>
-[Belegtests für Frankreich](src/fr/README.md)
+[Belegtests und SCU-Test für Österreich](doc/at/README.md)<br>
+[Journale und Exports für alle Märkte](doc/common/README.md)<br>
+[Belegtests für Frankreich](doc/fr/README.md)
 
 ## Fiskaltrust consulting gmbh
 Lemböckgasse 49/1B/6.OG, 1230 Wien  
@@ -244,9 +244,9 @@ Le service fiskaltrust est en constante évolution. S'il vous plaît profiter de
 
 ## Modules existants
 Pour la documentation des modules existants, suivez ces liens:<br>
-[Test pour les justificatives et SCU en Autriche](src/at/README.md)<br>
-[Journaux et exports pour tous les marchés](src/common/README.md)<br>
-[Test des justificcatives pour la France](src/fr/README.md)
+[Test pour les justificatives et SCU en Autriche](doc/at/README.md)<br>
+[Journaux et exports pour tous les marchés](doc/common/README.md)<br>
+[Test des justificcatives pour la France](doc/fr/README.md)
 
 ## Fiskaltrust consulting gmbh
 Lemböckgasse 49/1B/6.OG, 1230 Wien  

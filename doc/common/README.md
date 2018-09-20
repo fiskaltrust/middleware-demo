@@ -6,7 +6,7 @@ which you can find in the portal of the respective market (for [AT](https://port
 For all available executable applications you need the CashBoxId and the AccessToken.
 Both values can be found in the portal which corresponds to the market.
 
-## Journal REST
+## [Journal REST](csConsoleApplicationJournalREST.md)
 The following general journals and issues can be created with this application:
 * ActionJournal
 * ReceiptJournal
@@ -30,7 +30,7 @@ You can generate the following journals and issues for the French market:
 
 All outputs are generated based on the REST protocol.
 
-## Journal SOAP
+## [Journal SOAP](csConsoleApplicationJournalSOAP.md)
 The following general journals and issues can be created with this application:
 * ActionJournal
 * ReceiptJournal
@@ -55,7 +55,7 @@ You can generate the following journals and issues for the French market:
 All outputs are generated based on the SOAP protocol.
 
 
-## Execute a configuration template
+## Execute a [configuration template](ExecuteConfigurationTemplate.md)
 You need an existing template for the configuration, which you can execute.
 
 # Allgemeine Console Application
@@ -66,7 +66,7 @@ welche Sie im Portal des jeweiligen Marktes (für [AT](https://portal.fiskaltrus
 Für alle zur Verfügung gestellten ausführbaren Applikationen benötigen Sie die CashBoxId und den AccessToken.
 Beide Werte finden Sie im Portal welches dem Markt entspricht.
 
-## Journal REST
+## [Journal REST](csConsoleApplicationJournalREST.md)
 Folgende allgemeinen Journale und Ausgaben können Sie mit dieser Applikation erzeugt werden:
 * ActionJournal
 * ReceiptJournal
@@ -90,7 +90,7 @@ Folgende Journale und Ausgaben für den französischen Markt können Sie erzeugt
 
 Alle Ausgaben werden auf Basis des REST-Protokolls erzeugt.
 
-## Journal SOAP
+## [Journal SOAP](csConsoleApplicationJournalSOAP.md)
 Folgende allgemeinen Journale und Ausgaben können Sie mit dieser Applikation erzeugt werden:
 * ActionJournal
 * ReceiptJournal
@@ -114,7 +114,7 @@ Folgende Journale und Ausgaben für den französischen Markt können Sie erzeugt
 
 Alle Ausgaben werden auf Basis des SOAP-Protokolls erzeugt.
 
-## Ein Konfigurations-Template ausführen
+## Ein [Konfigurations-Template](ExecuteConfigurationTemplate.md) ausführen
 Sie benötigen dafür ein vorhandenes Template für die Konfiguration, welches Sie auzsführen können.
 
 # Console Application général
@@ -125,7 +125,7 @@ que vous pouvez trouver dans le portail du marché respectif (pour [AT](https://
 Pour toutes les applications exécutables disponibles, vous avez besoin de CashBoxId et AccessToken.
 Les deux valeurs peuvent être trouvées dans le portail qui correspond au marché.
 
-## Journal REST
+## [Journal REST](csConsoleApplicationJournalREST.md)
 Les journaux et information suivants peuvent être créés avec cette application:
 * ActionJournal
 * ReceiptJournal
@@ -149,7 +149,7 @@ Vous pouvez générer les journaux et les exports suivants pour le marché fran�
 
 Toutes les sorties sont générées en fonction du protocole REST.
 
-## Journal SOAP
+## [Journal SOAP](csConsoleApplicationJournalSOAP.md)
 Les journaux et information suivants peuvent être créés avec cette application:
 * ActionJournal
 * ReceiptJournal
@@ -173,5 +173,5 @@ Vous pouvez générer les journaux et les exports suivants pour le marché fran�
 
 Toutes les sorties sont générées en fonction du protocole SOAP.
 
-## Exécuter une un modéle de la configuration
+## Exécuter une un [modéle de la configuration](ExecuteConfigurationTemplate.md)
 Vous avez besoin d'un modèle existant pour la configuration, que vous pouvez exécuter.

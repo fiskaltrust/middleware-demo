@@ -1,14 +1,13 @@
-csConsoleApplicationSCU 1.0.0.0
+# csConsoleApplicationSCU 1.0.0.0
+
 Copyright ©  2018
 
-command line parameters:
-
-  -u, --serviceurl     Required. (Default: https://signing-sandbox.fiskaltrust.at/primesignhsm/) Url for fiskaltrust signing service.
-
-  -c, --cashboxid      Required. API Cashbox Id for the accessing the configuration. (GUID formatted)
-
-  -a, --accesstoken    Required. API Accesstoken for the used cashbox.
-
-  --help               Display this help screen.
-
-  --version            Display version information.
+## Command Line Parameters:
+  
+| Parameter 			  	| Mandatory | Description 																						|
+| --------------------------|:---------:|---------------------------------------------------------------------------------------------------|
+| serviceurl, u				| Required  | Url for fiskaltrust signing service. Default: "https://signaturcloud-sandbox.fiskaltrust.at/"		|
+| cashboxid, c	        	| Required	| API Cashbox Id for the accessing the configuration. (GUID formatted)								|
+| accesstoken, a			| Required	| API Accesstoken for the used cashbox.																|
+| help   					| Optional  | Display the help screen.																			|
+| version   				| Optional  | Display version information.																		|
