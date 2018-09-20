@@ -1,36 +1,42 @@
-# fiskaltrust.interface EN
-[Here](../src) you will find the individual console applications for the different protocols.
-General applications (common) and applications specially adapted to one market (ISO-Code of the country) are provided.
-For each application, refer to the corresponding ReadMe files in the subfolders.
+# Demo
+Essential demo projects prepared for a better understanding of the interface fiskaltrust.IPOS .
 
-## Existing modules
-For further documentation on existing modules, follow these hyperlinks:<br>
-[Testing receipts and SCU for Austria](at/README.md)<br>
-[Journals and exports for all markets](common/README.md)<br>
-[Testing receipts for France](fr/README.md)
+## AT folder
+Contains the Austrian localized demos.
+
+### [csConsoleApplicationREST_AT](at/csConsoleApplicationREST_AT.md)
+Connects to a running fiskaltrust.service using REST communication and lets the user create all the types of receipt valid for the Austrian market.
+
+### [csConsoleApplicationSCU_AT](at/csConsoleApplicationSCU_AT.md)
+Connects to a running fiskaltrust.signing service for proofing its correct operativity. 
+
+### [csConsoleApplicationSOAP_AT](at/csConsoleApplicationSOAP_AT.md)
+Connects to a running fiskaltrust.service using SOAP communication and lets the user create all the types of receipt valid for the Austrian market.
+
+## Common folder
+Contains demos that can be used regardless the country where the fiskaltrust.service is configured on.
+
+### [csConsoleApplicationJournalREST](common/csConsoleApplicationJournalREST.md)
+Connects to a running fiskaltrust.service using REST communication and lets the user export all the types of journals, regardless the market.
+
+### [csConsoleApplicationJournalSOAP](common/csConsoleApplicationJournalSOAP.md)
+Connects to a running fiskaltrust.service using SOAP communication and lets the user export all the types of journals, regardless the market.
+
+### [ExecuteConfigurationTemplate](common/ExecuteConfigurationTemplate.md)
+Executes a template to create a cashbox (and its content) logging into the provided url using the provided credentials for the API access.
+
+## FR folder
+Contains the French localized demos.
+
+### [csConsoleApplicationREST_FR](fr/csConsoleApplicationREST_FR.md)
+Connects to a running fiskaltrust.service using REST communication and lets the user create all the types of receipt valid for the French market.
+
+### [csConsoleApplicationSOAP_FR](fr/csConsoleApplicationSOAP_FR.md)
+Connects to a running fiskaltrust.service using SOAP communication and lets the user create all the types of receipt valid for the French market.
 
 
 
-# fiskaltrust.interface AT
-[Hier](../src) finden Sie für die verschiedenen Protokolle die einzelnen Consolen-Applikationen.
-Es werden allgemeine Applikationen (common) und speziell auf einen Markt (ISO-Kürzel des Landes) angepasste Applikationen zur Verfügung gestellt.
-Für die einzelnen Applikation wird auf die entsprechenden ReadMe-Dateien in den Unterordnern verwiesen. 
-
-## Vorhandene Module
-Für die Dokumentation der vorhandenen Module, folgen Sie diesen Links:<br>
-[Belegtests und SCU-Test für Österreich](at/README.md)<br>
-[Journale und Exports für alle Märkte](common/README.md)<br>
-[Belegtests für Frankreich](fr/README.md)
-
-
-
-# fiskaltrust.interface FR
-Vous trouverez [ici](../src) les applications de console individuelles pour les différents protocoles.
-Applications générales (common) et applications spécialement adaptées à un marché (abréviation ISO du pays).
-Pour chaque application, reportez-vous aux fichiers ReadMe correspondants dans les sous-dossiers.
-
-## Modules existants
-Pour la documentation des modules existants, suivez ces liens:<br>
-[Test pour les justificatives et SCU en Autriche](at/README.md)<br>
-[Journaux et exports pour tous les marchés](common/README.md)<br>
-[Test des justificcatives pour la France](fr/README.md)
+## fiskaltrust consulting gmbh
+Lemböckgasse 49/1B/6.OG, 1230 Wien  
+[info@fiskaltrust.at]  
+[www.fiskaltrust.at](https://www.fiskaltrust.at)

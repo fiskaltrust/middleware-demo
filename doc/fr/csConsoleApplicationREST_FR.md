@@ -1,0 +1,13 @@
+csConsoleApplicationREST_FR 1.0.0.0
+Copyright ©  2018
+
+requested parameters:
+
+  -fiskaltrust-service-url (https://signaturcloud-sandbox.fiskaltrust.fr/):   Url of the running fiskaltrust.service
+
+  -cashboxid:                                                                 API Cashbox Id for the accessing the configuration. (GUID formatted)
+
+  -accesstoken:                                                               API Accesstoken for the used cashbox.
+
+  -json (Y/n):                                                                the serialization is in JSON format (Y) or XML format (n)
+  
