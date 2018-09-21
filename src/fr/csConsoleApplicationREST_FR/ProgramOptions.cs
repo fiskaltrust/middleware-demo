@@ -1,34 +1,42 @@
 ﻿using CommandLine;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace ExecuteConfigurationTemplate
+
+namespace csConsoleApplicationREST_FR
 {
-    public class ExecuteConfigurationTemplateOptions
+
+    internal class ProgramOptions
     {
-        [Option('u', "helipadurl", Required = true, HelpText = "Service url for fiskaltrust helipad.", Default = "https://helipad-sandbox.fiskaltrust.at/")]
-        public string HelipadUrl { get; set; }
-        [Option('i', "accountid", Required = true, HelpText = "API Account Id for the accessing the configuration. (GUID formatted)")]
-        public Guid AccountId { get; set; }
-        [Option('a', "accesstoken", Required = true, HelpText = "API Accesstoken for the used account.")]
-        public string AccessToken { get; set; }
-        [Option('t', "template", Required = true, HelpText = "Template for the creation of the cashbox. (JSON serialization)")]
-        public string Template { get; set; }
+
+        [Option(longName: "fiskaltrust-service-url", Default = "https://signaturcloud-sandbox.fiskaltrust.fr/", Required = true, HelpText = "Url of the running fiskaltrust.service.")]
+        public string url { get; set; }
+
+        [Option(longName: "cashboxid", Required = true, HelpText = "API Cashbox Id for the accessing the configuration. (GUID formatted)")]
+        public Guid cashboxid { get; set; } = Guid.Empty;
+
+        [Option(longName: "accesstoken", Required = true, HelpText = "API Accesstoken for the used cashbox.")]
+        public string accesstoken { get; set; }
+
+        [Option(longName: "json", Required = true, HelpText = "Is the serialization in JSON format (true) or XML format (false).")]
+        public bool? json { get; set; }
 
         public const int MaxParamValueLength = 8 * 1024;
 
-        public static ExecuteConfigurationTemplateOptions GetOptionsFromCommandLine(string[] args)
+        public static ProgramOptions GetOptionsFromCommandLine(string[] args)
         {
 
-            var option = new ExecuteConfigurationTemplateOptions();
-            Parser.Default.ParseArguments<ExecuteConfigurationTemplateOptions>(args)
+            var option = new ProgramOptions();
+
+            Parser.Default.ParseArguments<ProgramOptions>(args)
               .WithParsed(opts => { option = opts; })
               .WithNotParsed((errs) =>
               {
-                  option = GetScuOptionsFromReadLineLoop();
+                  option = GetProgramOptionsFromReadLineLoop();
               });
             return option;
         }
@@ -47,10 +55,11 @@ namespace ExecuteConfigurationTemplate
             return result;
         }
 
-        public static ExecuteConfigurationTemplateOptions GetScuOptionsFromReadLineLoop()
+
+        public static ProgramOptions GetProgramOptionsFromReadLineLoop()
         {
-            var option = new ExecuteConfigurationTemplateOptions();
-            var properties = typeof(ExecuteConfigurationTemplateOptions).GetProperties();
+            var option = new ProgramOptions();
+            var properties = typeof(ProgramOptions).GetProperties();
 
             foreach (var property in properties)
             {
@@ -58,7 +67,7 @@ namespace ExecuteConfigurationTemplate
                 if (attr != null)
                 {
                     string value = "";
-                    while (value == string.Empty)
+                    do
                     {
                         if (attr.Default != null)
                             Console.Write($"{attr.LongName} ({attr.Default}):");
@@ -72,16 +81,22 @@ namespace ExecuteConfigurationTemplate
                             value = attr.Default.ToString();
                         }
 
-                        if (string.IsNullOrEmpty(value))
+                        if (string.IsNullOrEmpty(value) && attr.Required)
                         {
                             Console.Error.WriteLine($"Error. Please provide a value for {attr.LongName}.");
                         }
-                    }
 
-                    property.SetValue(option, TypeDescriptor.GetConverter(property.PropertyType).ConvertFromInvariantString(value));
+                        if (!string.IsNullOrEmpty(value))
+                        {
+                            property.SetValue(option, TypeDescriptor.GetConverter(property.PropertyType).ConvertFromInvariantString(value), null);
+                        }
+
+                    } while (value == string.Empty && attr.Required);
                 }
             }
             return option;
         }
+
     }
+
 }

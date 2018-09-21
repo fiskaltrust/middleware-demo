@@ -37,6 +37,9 @@
     <Reference Include="BouncyCastle.Crypto, Version=1.7.4137.9688, Culture=neutral, PublicKeyToken=a4292a325f69b123, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\BouncyCastle.1.7.0\lib\Net40-Client\BouncyCastle.Crypto.dll</HintPath>
     </Reference>
+    <Reference Include="CommandLine, Version=2.3.0.0, Culture=neutral, PublicKeyToken=de6f01bd326f8c32, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\CommandLineParser.2.3.0\lib\net40\CommandLine.dll</HintPath>
+    </Reference>
     <Reference Include="fiskaltrust.ifPOS.net40, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\fiskaltrust.interface.1.0.16322.1179\lib\net40\fiskaltrust.ifPOS.net40.dll</HintPath>
     </Reference>
@@ -69,6 +72,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
+    <Compile Include="ProgramOptions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
