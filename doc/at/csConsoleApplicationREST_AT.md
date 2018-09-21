@@ -3,10 +3,12 @@
 Copyright ©  2018
 
 ## Command Line Parameters:
-  
-| Parameter 			  	| Mandatory | Description 																						|
-| --------------------------|:---------:|---------------------------------------------------------------------------------------------------|
-| fiskaltrust-service-url	| Required  | Url of the running fiskaltrust.service. Example: "https://signaturcloud-sandbox.fiskaltrust.at/"	|
-| cashboxid	        		| Required	| API Cashbox Id for the accessing the configuration. (GUID formatted)								|
-| accesstoken				| Required	| API Accesstoken for the used cashbox.																|
-| json (Y/n)   				| Required  | Is the serialization in JSON format (Y) or XML format (n).										|
+
+| Parameter 			  	| Mandatory | Type		| Description 																						|
+| --------------------------|:---------:|:---------:|---------------------------------------------------------------------------------------------------|
+| --fiskaltrust-service-url	| Required  | String	| Url of the running fiskaltrust.service. Default: "https://signaturcloud-sandbox.fiskaltrust.at/"	|
+| --cashboxid				| Required	| GUID		| API Cashbox Id for the accessing the configuration. (GUID formatted)								|
+| --accesstoken				| Required	| String	| API Accesstoken for the used cashbox.																|
+| --json					| Required  | Boolean	| Is the serialization in JSON format (true) or XML format (false).									|
+| --help					| Optional  | -			| Display the help screen.																			|
+| --version					| Optional  | -			| Display the version information.																	|

@@ -22,46 +22,24 @@ namespace csConsoleApplicationREST_AT
 
         static void Main(string[] args)
         {
-
             ServicePointManager.DefaultConnectionLimit = 65535;
 
-            Console.Write("fiskaltrust-service-url (https://signaturcloud-sandbox.fiskaltrust.at/):");
-            url = Console.ReadLine();
-            if(url.Length==0)
-            {
-                url = "https://signaturcloud-sandbox.fiskaltrust.at/";
-            }
+            var options = ProgramOptions.GetOptionsFromCommandLine(args);
+
+            url = options.url;
             if(!url.EndsWith(url))
             {
                 url += "/";
             }
 
-            Console.Write("cashboxid:");
-            string _cashboxid = Console.ReadLine();
-
-            if (!Guid.TryParse(_cashboxid, out cashboxid))
-            {
-                throw new ArgumentException("cashboxid is not a guid!");
-            }
-
-            Console.Write("accesstoken:");
-            accesstoken = Console.ReadLine();
-
-            Console.Write("json (Y/n):");
-            string _json = Console.ReadLine();
-            if (_json.Length == 0)
-                json = true;
-            else if (_json.ToLower().StartsWith("n"))
-                json = false;
-            else
-                json = true;
-
+            cashboxid = options.cashboxid;
+            accesstoken = options.accesstoken;
+            json = (bool)options.json;
 
             if(json)
-                echoJson(url, cashboxid, accesstoken,null);
+                echoJson(url, cashboxid, accesstoken, null);
             else
                 echoXml(url, cashboxid, accesstoken);
-
 
             while (true)
             {
