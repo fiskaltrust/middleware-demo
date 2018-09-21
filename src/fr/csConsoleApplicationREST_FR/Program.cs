@@ -26,37 +26,17 @@ namespace csConsoleApplicationREST_FR
 
             ServicePointManager.DefaultConnectionLimit = 65535;
 
-            Console.Write("fiskaltrust-service-url (https://signaturcloud-sandbox.fiskaltrust.fr/):");
-            url = Console.ReadLine();
-            if(url.Length==0)
-            {
-                url = "https://signaturcloud-sandbox.fiskaltrust.fr/";
-            }
-            if(!url.EndsWith(url))
+            var options = ProgramOptions.GetOptionsFromCommandLine(args);
+
+            url = options.url;
+            if(!url.EndsWith("/"))
             {
                 url += "/";
             }
 
-            Console.Write("cashboxid:");
-            string _cashboxid = Console.ReadLine();
-
-            if (!Guid.TryParse(_cashboxid, out cashboxid))
-            {
-                throw new ArgumentException("cashboxid is not a guid!");
-            }
-
-            Console.Write("accesstoken:");
-            accesstoken = Console.ReadLine();
-
-            Console.Write("json (Y/n):");
-            string _json = Console.ReadLine();
-            if (_json.Length == 0)
-                json = true;
-            else if (_json.ToLower().StartsWith("n"))
-                json = false;
-            else
-                json = true;
-
+            cashboxid = options.cashboxid;
+            accesstoken = options.accesstoken;
+            json = (bool)options.json;
 
             if(json)
                 echoJson(url, cashboxid, accesstoken,null);

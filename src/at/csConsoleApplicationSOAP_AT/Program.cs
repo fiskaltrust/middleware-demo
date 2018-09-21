@@ -23,17 +23,10 @@ namespace csConsoleApplicationSOAP_AT
 
             ServicePointManager.DefaultConnectionLimit = 65535;
 
-            Console.Write("fiskaltrust-service-url:");
-            url = Console.ReadLine();
+            var options = ProgramOptions.GetOptionsFromCommandLine(args);
 
-            Console.Write("cashboxid:");
-            cashBoxId = Console.ReadLine();
-
-            Guid _tempCashBoxID;
-            if(!Guid.TryParse(cashBoxId, out _tempCashBoxID))
-            {
-                throw new ArgumentException("cashboxid is not a guid!");
-            }
+            url = options.url;
+            cashBoxId = options.cashboxid.ToString();
                 
             System.ServiceModel.Channels.Binding binding = null;
 

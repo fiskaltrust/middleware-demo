@@ -1,32 +1,42 @@
 ﻿using CommandLine;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace csConsoleApplicationSCU
+
+namespace csConsoleApplicationREST_FR
 {
-    public class ScuOptions
+
+    internal class ProgramOptions
     {
-        [Option('u', "fiskaltrust-service-url", Required = true, HelpText = "Url for fiskaltrust signing service.", Default = "https://signing-sandbox.fiskaltrust.at/primesignhsm/")]
-        public string ServiceUrl { get; set; }
-        [Option('c', "cashboxid", Required = true, HelpText = "API Cashbox Id for the accessing the configuration. (GUID formatted)")]
-        public Guid CashboxId { get; set; }
-        [Option('a', "accesstoken", Required = true, HelpText = "API Accesstoken for the used cashbox.")]
-        public string AccessToken { get; set; }
+
+        [Option(longName: "fiskaltrust-service-url", Default = "https://signaturcloud-sandbox.fiskaltrust.fr/", Required = true, HelpText = "Url of the running fiskaltrust.service.")]
+        public string url { get; set; }
+
+        [Option(longName: "cashboxid", Required = true, HelpText = "API Cashbox Id for the accessing the configuration. (GUID formatted)")]
+        public Guid cashboxid { get; set; } = Guid.Empty;
+
+        [Option(longName: "accesstoken", Required = true, HelpText = "API Accesstoken for the used cashbox.")]
+        public string accesstoken { get; set; }
+
+        [Option(longName: "json", Required = true, HelpText = "Is the serialization in JSON format (true) or XML format (false).")]
+        public bool? json { get; set; }
 
         public const int MaxParamValueLength = 8 * 1024;
 
-        public static ScuOptions GetScuOptionsFromCommandLine(string[] args)
+        public static ProgramOptions GetOptionsFromCommandLine(string[] args)
         {
 
-            var option = new ScuOptions();
-            Parser.Default.ParseArguments<ScuOptions>(args)
+            var option = new ProgramOptions();
+
+            Parser.Default.ParseArguments<ProgramOptions>(args)
               .WithParsed(opts => { option = opts; })
               .WithNotParsed((errs) =>
               {
-                  option = GetScuOptionsFromReadLineLoop();
+                  option = GetProgramOptionsFromReadLineLoop();
               });
             return option;
         }
@@ -45,10 +55,11 @@ namespace csConsoleApplicationSCU
             return result;
         }
 
-        public static ScuOptions GetScuOptionsFromReadLineLoop()
+
+        public static ProgramOptions GetProgramOptionsFromReadLineLoop()
         {
-            var option = new ScuOptions();
-            var properties = typeof(ScuOptions).GetProperties();
+            var option = new ProgramOptions();
+            var properties = typeof(ProgramOptions).GetProperties();
 
             foreach (var property in properties)
             {
@@ -56,7 +67,7 @@ namespace csConsoleApplicationSCU
                 if (attr != null)
                 {
                     string value = "";
-                    while (value == string.Empty)
+                    do
                     {
                         if (attr.Default != null)
                             Console.Write($"{attr.LongName} ({attr.Default}):");
@@ -70,16 +81,22 @@ namespace csConsoleApplicationSCU
                             value = attr.Default.ToString();
                         }
 
-                        if (string.IsNullOrEmpty(value))
+                        if (string.IsNullOrEmpty(value) && attr.Required)
                         {
                             Console.Error.WriteLine($"Error. Please provide a value for {attr.LongName}.");
                         }
-                    }
 
-                    property.SetValue(option, TypeDescriptor.GetConverter(property.PropertyType).ConvertFromInvariantString(value));
+                        if (!string.IsNullOrEmpty(value))
+                        {
+                            property.SetValue(option, TypeDescriptor.GetConverter(property.PropertyType).ConvertFromInvariantString(value), null);
+                        }
+
+                    } while (value == string.Empty && attr.Required);
                 }
             }
             return option;
         }
+
     }
+
 }
