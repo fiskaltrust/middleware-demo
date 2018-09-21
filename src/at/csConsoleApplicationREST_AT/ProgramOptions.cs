@@ -22,7 +22,7 @@ namespace csConsoleApplicationREST_AT
         [Option(longName: "accesstoken", Required = true, HelpText = "API Accesstoken for the used cashbox.")]
         public string accesstoken { get; set; }
 
-        [Option(longName: "json", Required = true, HelpText = "Is the serialization in JSON format (Y) or XML format (n).")]
+        [Option(longName: "json", Required = true, HelpText = "Is the serialization in JSON format (true) or XML format (false).")]
         public bool? json { get; set; }
 
         public const int MaxParamValueLength = 8 * 1024;
