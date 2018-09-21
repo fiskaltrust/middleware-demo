@@ -27,7 +27,7 @@ namespace csConsoleApplicationREST_AT
             var options = ProgramOptions.GetOptionsFromCommandLine(args);
 
             url = options.url;
-            if(!url.EndsWith(url))
+            if(!url.EndsWith("/"))
             {
                 url += "/";
             }

@@ -48,7 +48,7 @@ namespace csConsoleApplicationJournalREST
             var options = ProgramOptions.GetOptionsFromCommandLine(args);
 
             url = options.url;
-            if (!url.EndsWith(url))
+            if (!url.EndsWith("/"))
             {
                 url += "/";
             }
