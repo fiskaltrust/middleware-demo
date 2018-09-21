@@ -7,14 +7,14 @@ fiskaltrust offers a legal compliant cash register security mechanism.
 Per now we published our release candidate interface, version 1.0.nnn. This interface is included in the Nuget Package fiskaltrust.interface and fiskaltrust.interface.utlities version 1.0.16298.1022-rc. The WSDL description file here at Github in the tools directory changed as well.
 
 ## Documentation
-The detailed documentation for Austria is available from fiskaltrust-portal [https://portal.fiskaltrust.at] and for France is available from fiskaltrust-portal [https://portal.fiskaltrust.fr] when after you activate the role possystem-creator (Registrierkassenhersteller).
+The detailed documentation for Austria is available from [fiskaltrust-portal](https://portal.fiskaltrust.at) and for France is available from [fiskaltrust-portal](https://portal.fiskaltrust.fr) when after you activate the role possystem-creator (Registrierkassenhersteller).
 
-To speed up development we also deliver a nuget-package [https://nuget.org] with the packageId fiskaltrust.interface.
+To speed up development we also deliver a [nuget-package](https://nuget.org) with the packageId fiskaltrust.interface.
 
 ## Connecting to fiskaltrust.securitymechanism
 As a base technology in communication WCF is used. For local internal communication between queues, signature creation units and custom modules the net.pipe protocoll is the best choice. For multi platform communication the basic http protocol may be the best choice.
 ### SOAP
-SOAP comes with the http protocol from WCF communication. To get the WSDL file you can use these debug-build and goto the http-address configured, here [http://localhost:1200/0b09d163-82a1-4349-83ed-7081398df504] is used. Another option is to use the file from the folder tools/wsdl.
+SOAP comes with the http protocol from WCF communication. To get the WSDL file you can use these debug-build and goto the http-address configured, here "http://localhost:1200/0b09d163-82a1-4349-83ed-7081398df504" is used. Another option is to use the file from the folder tools/wsdl.
 ### REST
 REST is available in both, in XML and JSON. There are helpers which can be loaded to keep the base service lightweight.
 ### Native TCP-IP and serial interface RS232/485/422
@@ -71,19 +71,19 @@ The fiskaltrust service is under permanent development, so feel free to discuss 
 
 ## Existing modules
 For further documentation on existing modules, follow these hyperlinks:<br>
-[Testing receipts and SCU for Austria](src/at/README.md)<br>
-[Journals and exports for all markets](src/common/README.md)<br>
-[Testing receipts for France](src/fr/README.md)
+[Testing receipts and SCU for Austria](doc/at/README.md)<br>
+[Journals and exports for all markets](doc/common/README.md)<br>
+[Testing receipts for France](doc/fr/README.md)
 
 ## fiskaltrust consulting gmbh
 Lemböckgasse 49/1B/6.OG, 1230 Wien  
-[info@fiskaltrust.at]  
+<info@fiskaltrust.at>  
 [www.fiskaltrust.at](https://www.fiskaltrust.at)
 
 ---
 
 # fiskaltrust.Interface AT
-[see english readme](#fiskaltrust-interface-EN)
+[see english readme](#fiskaltrust-interface-en)
 
 Beispiel, wie man das fiskaltrust.Interface nutzt.
 
@@ -93,14 +93,14 @@ fiskaltrust bietet eine gesetzeskonforme Sicherheitseinrichtung für Registrierk
 Ab sofort gibt es ein neues Interface (unseren Release Candidate), Version 1.0.nnn. Dieses Interface ist im Nuget Package fiskaltrust.interface und fiskaltrust.interface.utlities Version 1.0.16298.1022-rc enthalten. Ebenfalls geändert hat sich dadurch die WSDL Datei hier in den Tools.
 
 ## Dokumentation
-Die detaillierte Dokumentation ist für Österreich auf dem fiskaltrust.Portal [https://portal.fiskaltrust.at] und für Frankreich  auf [https://portal.fiskaltrust.fr] nach der Registrierung und Aktivierung der Rolle als Registrierkassenhersteller (in der Übersicht) verfügbar.
+Die detaillierte Dokumentation ist für Österreich auf dem [fiskaltrust.Portal](https://portal.fiskaltrust.at) und für Frankreich auf dem [fiskaltrust.Portal](https://portal.fiskaltrust.fr) nach der Registrierung und Aktivierung der Rolle als Registrierkassenhersteller (in der Übersicht) verfügbar.
 
-Um Ihnen die Entwicklung zu erleichtern, stellen wir auch ein nuget-package [https://nuget.org] mit der packageId fiskaltrust.interface zur Verfügung.
+Um Ihnen die Entwicklung zu erleichtern, stellen wir auch ein [nuget-package](https://nuget.org) mit der packageId fiskaltrust.interface zur Verfügung.
 
 ## Verbindung mit der fiskaltrust.securitymechanism (Sicherheitseinrichtung)
 Als Basis-Technologie zur Kommunikation wird WCF verwendet. Zur lokalen, internen Kommunikation zwischen queues, signature creation units (Signaturerstellungseinheiten) und benutzerspezifischen Modulen (Sonstigen Modulen) wird am besten das net.pipe Protokoll verwendet. Zur Kommunikation zwischen verschiedenen Plattformen wird am besten das Protokoll basic http verwendet.
 ### SOAP
-SOAP wird mit dem http-Protokoll der WCF-Kommunikation ausgeliefert. Um die WSDL-Datei zu erhalten, kann man diesen Debug-Build verwenden und auf die konfigurierte http-Adresse gehen. Hierbei wird [http://localhost:1200/0b09d163-82a1-4349-83ed-7081398df504] verwendet. Als weitere Option kann die Datei aus dem Ordner tools/wsdl verwendet werden.
+SOAP wird mit dem http-Protokoll der WCF-Kommunikation ausgeliefert. Um die WSDL-Datei zu erhalten, kann man diesen Debug-Build verwenden und auf die konfigurierte http-Adresse gehen. Hierbei wird "http://localhost:1200/0b09d163-82a1-4349-83ed-7081398df504" verwendet. Als weitere Option kann die Datei aus dem Ordner tools/wsdl verwendet werden.
 
 ### REST
 REST steht sowohl in XML als auch in JSON zur Verfügung. Es stehen benutzerspezifische Module zur Verfügung, die zusätzlich geladen werden können. Damit werden die Basis-Services möglichest schlank gehalten.
@@ -156,19 +156,19 @@ Der fiskaltrust Service wird ständig weiterentwickelt. Nutzen Sie bitte die Mö
 
 ## Vorhandene Module
 Für die Dokumentation der vorhandenen Module, folgen Sie diesen Links:<br>
-[Belegtests und SCU-Test für Österreich](src/at/README.md)<br>
-[Journale und Exports für alle Märkte](src/common/README.md)<br>
-[Belegtests für Frankreich](src/fr/README.md)
+[Belegtests und SCU-Test für Österreich](doc/at/README.md)<br>
+[Journale und Exports für alle Märkte](doc/common/README.md)<br>
+[Belegtests für Frankreich](doc/fr/README.md)
 
-## Fiscaltrust consulting gmbh
+## fiskaltrust consulting gmbh
 Lemböckgasse 49/1B/6.OG, 1230 Wien  
-[info@fiskaltrust.at]  
+<info@fiskaltrust.at>  
 [www.fiskaltrust.at](https://www.fiskaltrust.at)
 
 ---
 
 # fiskaltrust.Interface FR
-[see english readme](#fiskaltrust-interface-EN)
+[see english readme](#fiskaltrust-interface-en)
 
 Exemple d'utilisation de la fiskaltrust.Interface.
 
@@ -178,16 +178,16 @@ fiskaltrust offre un dispositif de sécurité conforme aux lois et certifier pou
 Dé maintenant, il y a une nouvelle interface (notre Release Candidate), version 1.0.nnn. Cette interface est incluse dans le Nuget Package fiskaltrust.interface et fiskaltrust.interface.utlities version 1.0.16298.1022-rc. En outre, cela a changé le fichier WSDL ici dans les outils.
 
 ## Documentation
-La documentation détaillée est pour l'Autriche sur le fiskaltrust.Portal [https://portal.fiskaltrust.at] et pour la France sur [https://portal.fiskaltrust.fr] après l'enregistrement et l'activation du rôle de fabricant de caisse enregistreuse (dans la vue d'ensemble) disponible.
+La documentation détaillée est pour l'Autriche sur le [fiskaltrust.Portal](https://portal.fiskaltrust.at) et pour la France sur [fiskaltrust.Portal](https://portal.fiskaltrust.fr) après l'enregistrement et l'activation du rôle de fabricant de caisse enregistreuse (dans la vue d'ensemble) disponible.
 
-Pour faciliter le développement, nous fournissons également un nuget-package [https://nuget.org] avec le packageId fiskaltrust.interface.
+Pour faciliter le développement, nous fournissons également un [nuget-package](https://nuget.org) avec le packageId fiskaltrust.interface.
 
 ## Connexion avec le mécanisme de sécurité fiskaltrust.securitymechanism (dispositif de sécurité)
 WCF est la technologie de communication de base. Pour la communication interne locale entre les files d'attente, les unités de création de signature et les modules spécifiques à l'utilisateur (autres modules), le protocole net.pipe est le mieux utilisé.
 La meilleure façon de communiquer entre différentes plates-formes est d'utiliser le protocole basic http.
 
 ### SOAP
-SOAP est livré avec le protocole http de la communication WCF. Pour obtenir le fichier WSDL, vous pouvez utiliser cette version de débogage et accéder à l'adresse http configurée. Cela utilisera [http: // localhost: 1200 / 0b09d163-82a1-4349-83ed-7081398df504].
+SOAP est livré avec le protocole http de la communication WCF. Pour obtenir le fichier WSDL, vous pouvez utiliser cette version de débogage et accéder à l'adresse http configurée. Cela utilisera "http://localhost:1200/0b09d163-82a1-4349-83ed-7081398df504".
 Une autre option consiste à utiliser le fichier du dossier tools/wsdl.
 
 ### REST
@@ -244,11 +244,11 @@ Le service fiskaltrust est en constante évolution. S'il vous plaît profiter de
 
 ## Modules existants
 Pour la documentation des modules existants, suivez ces liens:<br>
-[Test pour les justificatives et SCU en Autriche](src/at/README.md)<br>
-[Journaux et exports pour tous les marchés](src/common/README.md)<br>
-[Test des justificcatives pour la France](src/fr/README.md)
+[Test pour les justificatives et SCU en Autriche](doc/at/README.md)<br>
+[Journaux et exports pour tous les marchés](doc/common/README.md)<br>
+[Test des justificcatives pour la France](doc/fr/README.md)
 
-## Fiscaltrust consulting gmbh
-Lemböckgasse 49/1B/6.OG, 1230 Wien  
-[info@fiskaltrust.at]  
+## fiskaltrust consulting gmbh
+102 Avenue des Champs-Élysées, 75008 Paris  
+<info@fiskaltrust.at>  
 [www.fiskaltrust.at](https://www.fiskaltrust.at)
