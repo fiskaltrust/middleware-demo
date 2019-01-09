@@ -17,8 +17,9 @@ namespace csConsoleApplicationSOAP_AT
         static string cashBoxId;
 
         static IPOS proxy = null;
+		private const int MAX_GENERATED_RECEIPT_COUNT = 100000;
 
-        static void Main(string[] args)
+		static void Main(string[] args)
         {
 
             ServicePointManager.DefaultConnectionLimit = 65535;
@@ -87,9 +88,10 @@ namespace csConsoleApplicationSOAP_AT
             Console.WriteLine("6: Jahres-Beleg (0x4154000000000006)");
 
             Console.WriteLine("9: RKSV-DEP export");
-            Console.WriteLine("10: Anzahl der zu sendenden Barumsatzbelege (max 999)");
+            Console.WriteLine($"10: Anzahl der zu sendenden Barumsatzbelege (max {MAX_GENERATED_RECEIPT_COUNT})");
 
-            Console.WriteLine("exit: Program beenden");
+
+			Console.WriteLine("exit: Program beenden");
 
             string input = Console.ReadLine();
 
@@ -209,7 +211,7 @@ namespace csConsoleApplicationSOAP_AT
 
 
             }
-            else if (inputInt >= 10 && inputInt < 1000)
+            else if (inputInt >= 10 && inputInt < MAX_GENERATED_RECEIPT_COUNT)
             {
                 long max = long.MinValue;
                 long min = long.MaxValue;
