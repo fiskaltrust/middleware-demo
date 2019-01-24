@@ -20,8 +20,9 @@ namespace csConsoleApplicationREST_FR
         private static string accesstoken = "";
         private static bool json = true;
         static bool isTraining = false;
+		private const int MAX_GENERATED_RECEIPT_COUNT = 100000;
 
-        static void Main(string[] args)
+		static void Main(string[] args)
         {
 
             ServicePointManager.DefaultConnectionLimit = 65535;
@@ -84,9 +85,10 @@ namespace csConsoleApplicationREST_FR
             Console.WriteLine("23: Turn on/off Training mode");
 
             Console.WriteLine("24: French Journals");
-            Console.WriteLine("25: Number of Tickets (max 999)");
+            Console.WriteLine($"25: Number of Tickets (max {MAX_GENERATED_RECEIPT_COUNT})");
 
-            Console.WriteLine("exit: Exit program");
+
+			Console.WriteLine("exit: Exit program");
 
             string input = Console.ReadLine();
 
@@ -508,7 +510,7 @@ namespace csConsoleApplicationREST_FR
                 ExportJournal(path, 0x465200000000000A, "Copy");
                 ExportJournal(path, 0x465200000000000B, "Training");
             }
-            else if (inputInt >= 25 && inputInt < 1000)
+            else if (inputInt >= 25 && inputInt < MAX_GENERATED_RECEIPT_COUNT)
             {
                 long max = long.MinValue;
                 long min = long.MaxValue;
