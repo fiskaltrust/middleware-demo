@@ -441,7 +441,26 @@ namespace csConsoleApplicationSOAP_FR
                 {
                     if (item.ftSignatureFormat == 0x03)
                     {
-                        fiskaltrust.ifPOS.TwoDCode.QR_TextChars(item.Data, 96, true);
+                        if (item.Data.Length <= 300)
+                        {
+                            fiskaltrust.ifPOS.TwoDCode.QR_TextChars(item.Data, 80, true);
+                        }
+                        else if (item.Data.Length > 300 && item.Data.Length <= 800)
+                        {
+                            fiskaltrust.ifPOS.TwoDCode.QR_TextChars(item.Data, 100, true);
+                        }
+                        else if (item.Data.Length > 800 && item.Data.Length <= 1000)
+                        {
+                            fiskaltrust.ifPOS.TwoDCode.QR_TextChars(item.Data, 125, true);
+                        }
+                        else if (item.Data.Length > 1000 && item.Data.Length <= 1200)
+                        {
+                            fiskaltrust.ifPOS.TwoDCode.QR_TextChars(item.Data, 150, true);
+                        }
+                        else if (item.Data.Length > 1200)
+                        {
+                            fiskaltrust.ifPOS.TwoDCode.QR_TextChars(item.Data, 200, true);
+                        }
                     }
                     else if (item.ftSignatureFormat == 0x08)
                     {
