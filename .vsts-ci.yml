@@ -10,7 +10,7 @@ steps:
    $versionFromFile = Get-Content "version.txt"
    $majorMinor = $versionFromFile.Split("-")[0]
    $prerelease = $versionFromFile.Substring($majorMinor.Length, $versionFromFile.Length - $majorMinor.Length)
-   $version = "$majorMinor.$(Get-Date -UFormat "%y%j").$env:BUILD_BUILDID"
+   $version = "$majorMinor.$(Get-Date -UFormat "%y")$("{0:D3}" -f (Get-Date).DayofYear).$env:BUILD_BUILDID"
    $gitHash = "+" + (git rev-parse HEAD).SubString(0, 10)
 
    Write-Host "Version: $version"
