@@ -19,8 +19,9 @@ namespace csConsoleApplicationREST_AT
         private static Guid cashboxid = Guid.Empty;
         private static string accesstoken = "";
         private static bool json = true;
+		private const int MAX_GENERATED_RECEIPT_COUNT = 100000;
 
-        static void Main(string[] args)
+		static void Main(string[] args)
         {
             ServicePointManager.DefaultConnectionLimit = 65535;
 
@@ -58,7 +59,7 @@ namespace csConsoleApplicationREST_AT
             Console.WriteLine("6: Jahres-Beleg (0x4154000000000006)");
 
             Console.WriteLine("9: RKSV-DEP export");
-            Console.WriteLine("10: Anzahl der zu sendenden Barumsatzbelege (max 999)");
+            Console.WriteLine($"10: Anzahl der zu sendenden Barumsatzbelege (max {MAX_GENERATED_RECEIPT_COUNT})");
 
             Console.WriteLine("exit: Program beenden");
 
@@ -208,7 +209,7 @@ namespace csConsoleApplicationREST_AT
 
                 
             }
-            else if (inputInt >= 10 && inputInt < 1000)
+            else if (inputInt >= 10 && inputInt < MAX_GENERATED_RECEIPT_COUNT)
             {
                 long max = long.MinValue;
                 long min = long.MaxValue;
@@ -304,7 +305,26 @@ namespace csConsoleApplicationREST_AT
                 {
                     if (item.ftSignatureFormat == 0x03)
                     {
-                        fiskaltrust.ifPOS.TwoDCode.QR_TextChars(item.Data, 64, true);
+                        if (item.Data.Length <= 300)
+                        {
+                            fiskaltrust.ifPOS.TwoDCode.QR_TextChars(item.Data, 80, true);
+                        }
+                        else if (item.Data.Length > 300 && item.Data.Length <= 800)
+                        {
+                            fiskaltrust.ifPOS.TwoDCode.QR_TextChars(item.Data, 100, true);
+                        }
+                        else if (item.Data.Length > 800 && item.Data.Length <= 1000)
+                        {
+                            fiskaltrust.ifPOS.TwoDCode.QR_TextChars(item.Data, 125, true);
+                        }
+                        else if (item.Data.Length > 1000 && item.Data.Length <= 1200)
+                        {
+                            fiskaltrust.ifPOS.TwoDCode.QR_TextChars(item.Data, 150, true);
+                        }
+                        else if (item.Data.Length > 1200)
+                        {
+                            fiskaltrust.ifPOS.TwoDCode.QR_TextChars(item.Data, 200, true);
+                        }
                     }
                     else if (item.ftSignatureFormat == 0x08)
                     {
