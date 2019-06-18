@@ -1,0 +1,52 @@
+﻿<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>fiskaltrust demo webApplicationREST</title>
+</head>
+<body>
+
+    <h1>webApplicationREST</h1>
+    
+    <div>
+        <label for="serviceurl">Service URL</label>
+        <div>
+            <input type="url" id="serviceurl" name="serviceurl" value="https://signaturcloud-sandbox.fiskaltrust.at" />
+        </div>
+    </div>
+
+    <div>
+        <label for="cashboxid">CashBoxId</label>
+        <div>
+            <input type="text" id="cashboxid" name="cashboxid" value="511565f9-eba4-477e-b241-5ab60e36dd29" />
+        </div>
+    </div>
+    <div>
+        <label for="accesstoken">AccessToken</label>
+        <div>
+            <input type="text" id="accesstoken" name="accesstoken" value="BF7MrNYF9CCdrCGCWD8gNH/jsI4L9Ofz3tchTcYcgqajkrRmsTJ1qRER4czldbx6gpppH3sWj8CGbnp+GCliXcM=" />
+        </div>
+    </div>
+    <div>
+        <label for="reqdata">Request Daten</label>
+        <div>
+            <textarea id="reqdata" name="reqdata" cols="80" rows="20">{"ftCashBoxID":"511565f9-eba4-477e-b241-5ab60e36dd29","cbTerminalID":"1","cbReceiptReference":"17","cbReceiptMoment":"\/Date(1452442695134+0100)\/","cbChargeItems": [ {"Quantity":1.0,"Description":"Artikel 1","Amount":4.8,"VATRate":20.0,"ftChargeItemCase":4707387510509010944,"ftChargeItemCaseData":"","AccountNumber":"","CostCenter":"","ProductGroup":"","ProductNumber":"1","ProductBarcode":"","Unit":""}, {"Quantity":1.0,"Description":"Artikel 2","Amount":3.6,"VATRate":20.0,"ftChargeItemCase":4707387510509010944,"ftChargeItemCaseData":"","AccountNumber":"","CostCenter":"","ProductGroup":"","ProductNumber":"2","ProductBarcode":"","Unit":""}], "cbPayItems": [{"Quantity":1.0,"Description":"Bar","Amount":8.4,"ftPayItemCase":4707387510509010944,"ftPayItemCaseData":"","AccountNumber":"","CostCenter":"","MoneyGroup":"","MoneyNumber":""}], "ftReceiptCase":4707387510509010944}</textarea>
+        </div>
+    </div>
+
+    <button id="test" onclick="test()">TEST</button>
+
+    <div>
+        <label for="respdata">Response Daten</label>
+        <div>
+            <textarea id="respdata" name="respdata" cols="80" rows="20" readonly="readonly"></textarea>
+        </div>
+    </div>
+
+
+    <div id="content"></div>
+
+    <script src="fiskaltrust.js"></script>
+</body>
+</html>
