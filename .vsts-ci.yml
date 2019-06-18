@@ -32,17 +32,17 @@ steps:
 - task: NuGetCommand@2
   displayName: NuGet restore
   inputs:
-    restoreSolution: '**\*.sln'
+    restoreSolution: 'c-sharp\**\*.sln'
 
 - task: VSBuild@1
-  displayName: Build solution **\*.sln
+  displayName: Build solution c-sharp\**\*.sln
   inputs:
-    solution: '**\*.sln'
+    solution: 'c-sharp\**\*.sln'
     platform: '$(BuildPlatform)'
     configuration: '$(BuildConfiguration)'
 
 - powershell: |
-   Get-ChildItem "src/**/**"  -Directory  | ForEach-Object {
+   Get-ChildItem "c-sharp\src/**/**"  -Directory  | ForEach-Object {
      $destinationDirectory = New-Item -ItemType directory -Path "$($env:BUILD_ARTIFACTSTAGINGDIRECTORY)\$($_.Name)" -Force
      if(Test-Path "$($_.FullName)/bin/Release"){
        Compress-Archive -Path "$($_.FullName)/bin/Release/**" -DestinationPath "$($env:BUILD_ARTIFACTSTAGINGDIRECTORY)\$($_.Name)-$(build.BuildNumber).zip"
