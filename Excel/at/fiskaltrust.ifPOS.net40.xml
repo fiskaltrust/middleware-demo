@@ -1,0 +1,556 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>fiskaltrust.ifPOS.net40</name>
+    </assembly>
+    <members>
+        <member name="M:fiskaltrust.ifPOS.v0.IATSSCD.Certificate">
+            <summary>
+            Get the certificate of the signaturcreationdevice
+            </summary>
+            <returns>certificate byte data</returns>
+        </member>
+        <member name="M:fiskaltrust.ifPOS.v0.IATSSCD.BeginCertificate(System.AsyncCallback,System.Object)">
+            <summary>
+            Get the certificate of the signaturcreationdevice async begin pattern
+            </summary>
+            <param name="callback"></param>
+            <param name="state"></param>
+            <returns></returns>
+        </member>
+        <member name="M:fiskaltrust.ifPOS.v0.IATSSCD.EndCertificate(System.IAsyncResult)">
+            <summary>
+            Get the certificate of the signaturcreationdevice async end pattern
+            </summary>
+            <param name="result"></param>
+            <returns></returns>
+        </member>
+        <member name="M:fiskaltrust.ifPOS.v0.IATSSCD.ZDA">
+            <summary>
+            Get the certificate service operator short sign for rksv
+            </summary>
+            <returns>operator sign</returns>
+        </member>
+        <member name="M:fiskaltrust.ifPOS.v0.IATSSCD.BeginZDA(System.AsyncCallback,System.Object)">
+            <summary>
+            Get the certificate service operator short sign for rksv async begin pattern
+            </summary>
+            <param name="callback"></param>
+            <param name="state"></param>
+            <returns></returns>
+        </member>
+        <member name="M:fiskaltrust.ifPOS.v0.IATSSCD.EndZDA(System.IAsyncResult)">
+            <summary>
+            Get the certificate service operator short sign for rksv async end pattern
+            </summary>
+            <param name="result"></param>
+            <returns></returns>
+        </member>
+        <member name="M:fiskaltrust.ifPOS.v0.IATSSCD.Sign(System.Byte[])">
+            <summary>
+            Sign data with the signaturcreationdevice
+            </summary>
+            <param name="data">payload data</param>
+            <returns>signature data</returns>
+        </member>
+        <member name="M:fiskaltrust.ifPOS.v0.IATSSCD.BeginSign(System.Byte[],System.AsyncCallback,System.Object)">
+            <summary>
+            Sign data with the signaturcreationdevice async begin pattern
+            </summary>
+            <param name="data"></param>
+            <param name="callback"></param>
+            <param name="state"></param>
+            <returns></returns>
+        </member>
+        <member name="M:fiskaltrust.ifPOS.v0.IATSSCD.EndSign(System.IAsyncResult)">
+            <summary>
+            Sign data with the signaturcreationdevice async end pattern
+            </summary>
+            <param name="result"></param>
+            <returns></returns>
+        </member>
+        <member name="M:fiskaltrust.ifPOS.v0.IATSSCD.Echo(System.String)">
+            <summary>
+            Function to test communication
+            </summary>
+            <param name="Message">The test message</param>
+            <returns>The test message</returns>
+        </member>
+        <member name="M:fiskaltrust.ifPOS.v0.IATSSCD.BeginEcho(System.String,System.AsyncCallback,System.Object)">
+            <summary> 
+            Function to test communication async begin pattern
+            </summary>
+            <param name="message"></param>
+            <param name="callback"></param>
+            <param name="state"></param>
+            <returns></returns>
+        </member>
+        <member name="M:fiskaltrust.ifPOS.v0.IATSSCD.EndEcho(System.IAsyncResult)">
+            <summary>
+            Function to test communication async end pattern
+            </summary>
+            <param name="result"></param>
+            <returns></returns>
+        </member>
+        <member name="T:fiskaltrust.ifPOS.v0.IPOS">
+            <summary>
+            Interface to fiskaltrust.services
+            </summary>
+        </member>
+        <member name="M:fiskaltrust.ifPOS.v0.IPOS.Sign(fiskaltrust.ifPOS.v0.ReceiptRequest)">
+            <summary>
+            Decide the receipt-case and sign the receipt
+            </summary>
+            <param name="data">requestdata representing a receipt</param>
+            <returns>responsedata to be added on receipt</returns>
+        </member>
+        <member name="M:fiskaltrust.ifPOS.v0.IPOS.BeginSign(fiskaltrust.ifPOS.v0.ReceiptRequest,System.AsyncCallback,System.Object)">
+            <summary>
+            Decide the receipt-case and sign the receipt async begin pattern
+            </summary>
+            <param name="data"></param>
+            <param name="callback"></param>
+            <param name="state"></param>
+            <returns></returns>
+        </member>
+        <member name="M:fiskaltrust.ifPOS.v0.IPOS.EndSign(System.IAsyncResult)">
+            <summary>
+            Decide the receipt-case and sign the receipt  async end pattern
+            </summary>
+            <param name="result"></param>
+            <returns></returns>
+        </member>
+        <member name="M:fiskaltrust.ifPOS.v0.IPOS.Journal(System.Int64,System.Int64,System.Int64)">
+            <summary>
+            Stream down a journal
+            </summary>
+            <param name="ftJournalType">Type of the requested journal.</param>
+            <param name="from">Timestamp in utc, starting to stream the journal.</param>
+            <param name="to">Timestamp in utc, stopping to stream the journal.</param>
+            <returns>Journalstream</returns>
+        </member>
+        <member name="M:fiskaltrust.ifPOS.v0.IPOS.BeginJournal(System.Int64,System.Int64,System.Int64,System.AsyncCallback,System.Object)">
+            <summary>
+            Stream down a journal async begin pattern
+            </summary>
+            <param name="ftJournalType"></param>
+            <param name="from"></param>
+            <param name="to"></param>
+            <param name="callback"></param>
+            <param name="state"></param>
+            <returns></returns>
+        </member>
+        <member name="M:fiskaltrust.ifPOS.v0.IPOS.EndJournal(System.IAsyncResult)">
+            <summary>
+            stream down a journal  async end pattern
+            </summary>
+            <param name="result"></param>
+            <returns></returns>
+        </member>
+        <member name="M:fiskaltrust.ifPOS.v0.IPOS.Echo(System.String)">
+            <summary>
+            Function to test communication
+            </summary>
+            <param name="message">The test message</param>
+            <returns>The test message</returns>
+        </member>
+        <member name="M:fiskaltrust.ifPOS.v0.IPOS.BeginEcho(System.String,System.AsyncCallback,System.Object)">
+            <summary> 
+            Function to test communication async begin pattern
+            </summary>
+            <param name="message"></param>
+            <param name="callback"></param>
+            <param name="state"></param>
+            <returns></returns>
+        </member>
+        <member name="M:fiskaltrust.ifPOS.v0.IPOS.EndEcho(System.IAsyncResult)">
+            <summary>
+            Function to test communication async end pattern
+            </summary>
+            <param name="result"></param>
+            <returns></returns>
+        </member>
+        <member name="T:fiskaltrust.ifPOS.v0.ChargeItem">
+            <summary>
+            Leistungseinträge werden sowohl für Beleg-Anfrage als auch für Beleg-Antwort verwen-det
+            </summary>
+        </member>
+        <member name="M:fiskaltrust.ifPOS.v0.ChargeItem.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:fiskaltrust.ifPOS.v0.ChargeItem.Position">
+            <summary>
+            Positionsnummer am Beleg um eine konsistente Reihenfolge sicherzustellen
+            </summary>
+        </member>
+        <member name="P:fiskaltrust.ifPOS.v0.ChargeItem.Quantity">
+            <summary>
+            Menge bzw. Umfang(Anzahl) der Leistung(en)des Eintrags
+            </summary>
+        </member>
+        <member name="P:fiskaltrust.ifPOS.v0.ChargeItem.Description">
+            <summary>
+            Bezeichnung bzw. Beschreibung der handelsübliche Bezeichnung bzw. Art der sonstigen Leistung laut RKSV
+            </summary>
+        </member>
+        <member name="P:fiskaltrust.ifPOS.v0.ChargeItem.Amount">
+            <summary>
+            Gesamtbruttopreis der Leistung. Bruttogesamtpreis der Leis-tung(en). Der Bruttoeinzelpreis, Nettogesamtpreis und Nettoein-zelpreis ist durch Verwendung von Menge und MwStSatz bzw. MwStBetrag zu errechnen.
+            </summary>
+        </member>
+        <member name="P:fiskaltrust.ifPOS.v0.ChargeItem.VATRate">
+            <summary>
+            MwSt Satz der Leistung
+            </summary>
+        </member>
+        <member name="P:fiskaltrust.ifPOS.v0.ChargeItem.ftChargeItemCase">
+            <summary>
+            Art der Leistung nach Referenz-tabelle. Wird verwendet um die Verarbeitungslogik entsprechend dem Geschäftsvorfall zu wählen. 0=unbekannt
+            </summary>
+        </member>
+        <member name="P:fiskaltrust.ifPOS.v0.ChargeItem.ftChargeItemCaseData">
+            <summary>
+            Zusatzdaten zur Leistung, übli-cherweise im JSON Format
+            </summary>
+        </member>
+        <member name="P:fiskaltrust.ifPOS.v0.ChargeItem.VATAmount">
+            <summary>
+            MwSt Betrag der Leistung. Wenn der MwStBetrag angegeben ist kann dieser zur Berechnung des Nettobetrags verwendet wer-den um Rundungsfehler, die spe-ziell bei zeilenbasierter Netto-preis-Addition auftreten können, zu vermeiden.
+            </summary>
+        </member>
+        <member name="P:fiskaltrust.ifPOS.v0.ChargeItem.AccountNumber">
+            <summary>
+            Matching für Buchhaltungsschnittstelle. Kontonummer zu Überführung in das Rechnungswesen
+            </summary>
+        </member>
+        <member name="P:fiskaltrust.ifPOS.v0.ChargeItem.CostCenter">
+            <summary>
+            Matching für Warenwirtschaft. Kennzeichen zur Überführung in die Kostenrechnung (Art, Träger und Stelle)
+            </summary>
+        </member>
+        <member name="P:fiskaltrust.ifPOS.v0.ChargeItem.ProductGroup">
+            <summary>
+            Matching für Warenwirtschaft bzw. Warengruppe zur Gruppierung auf Auswertungen im fiskaltrust Benutzerportal.
+            </summary>
+        </member>
+        <member name="P:fiskaltrust.ifPOS.v0.ChargeItem.ProductNumber">
+            <summary>
+            Kassenartikelnummer, Artikelnummer für Auswertungen im fiskaltrust Benutzerportal
+            </summary>
+        </member>
+        <member name="P:fiskaltrust.ifPOS.v0.ChargeItem.ProductBarcode">
+            <summary>
+            EAN-Nummer / GS1-Nummer
+            </summary>
+        </member>
+        <member name="P:fiskaltrust.ifPOS.v0.ChargeItem.Unit">
+            <summary>
+            Einheit der Leistung des Eintrags. z.B. Kg, l
+            </summary>
+        </member>
+        <member name="P:fiskaltrust.ifPOS.v0.ChargeItem.UnitQuantity">
+            <summary>
+            Menge des Eintrags der Leistung(en) in der angegebenen Einheit/Unit dargestellt 
+            </summary>
+        </member>
+        <member name="P:fiskaltrust.ifPOS.v0.ChargeItem.UnitPrice">
+            <summary>
+            Bruttopreis pro angegebener Ein-heit/Unit
+            </summary>
+        </member>
+        <member name="P:fiskaltrust.ifPOS.v0.ChargeItem.Moment">
+            <summary>
+            Zeitpunkt der Leistung
+            </summary>
+        </member>
+        <member name="T:fiskaltrust.ifPOS.v0.PayItem">
+            <summary>
+            Zahlungmitteleinträge werden sowohl für Beleg-Anfrage als auch für Beleg-Antwort ver-wendet.
+            </summary>
+        </member>
+        <member name="M:fiskaltrust.ifPOS.v0.PayItem.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:fiskaltrust.ifPOS.v0.PayItem.Position">
+            <summary>
+            Positionsnummer am Beleg um eine konsistente Reihenfolge sicherzustellen
+            </summary>
+        </member>
+        <member name="P:fiskaltrust.ifPOS.v0.PayItem.Quantity">
+            <summary>
+            Anzahl der Zahlungen
+            </summary>
+        </member>
+        <member name="P:fiskaltrust.ifPOS.v0.PayItem.Description">
+            <summary>
+            Bezeichnung bzw. Beschrei-bung der Zahlung.
+            </summary>
+        </member>
+        <member name="P:fiskaltrust.ifPOS.v0.PayItem.Amount">
+            <summary>
+            Gesamtbetrag der Zahlung
+            </summary>
+        </member>
+        <member name="P:fiskaltrust.ifPOS.v0.PayItem.ftPayItemCase">
+            <summary>
+            Art der Zahlung nach Refe-renztabelle. Wird verwendet um die Verarbeitungslogik zu wählen. 0=unbekannt
+            </summary>
+        </member>
+        <member name="P:fiskaltrust.ifPOS.v0.PayItem.ftPayItemCaseData">
+            <summary>
+            Zusatzdaten zur Zahlung, üblicherweise im JSON For-mat
+            </summary>
+        </member>
+        <member name="P:fiskaltrust.ifPOS.v0.PayItem.AccountNumber">
+            <summary>
+            Matching für Buchhaltungsschnittstelle. Kontonummer zu Überführung in das Rechnungswesen
+            </summary>
+        </member>
+        <member name="P:fiskaltrust.ifPOS.v0.PayItem.CostCenter">
+            <summary>
+            Matching für Warenwirtschaft. Kennzeichen zur Überführung in die Kostenrechnung (Art, Träger und Stelle)
+            </summary>
+        </member>
+        <member name="P:fiskaltrust.ifPOS.v0.PayItem.MoneyGroup">
+            <summary>
+            Gruppe von Zahlungsmittel zur Gruppierung auf Auswer-tungen im fiskaltrust Benut-zerportal.
+            </summary>
+        </member>
+        <member name="P:fiskaltrust.ifPOS.v0.PayItem.MoneyNumber">
+            <summary>
+            Zahlungsmittelnummer für Auswertungen im fiskaltrust Benutzerportal
+            </summary>
+        </member>
+        <member name="P:fiskaltrust.ifPOS.v0.PayItem.Moment">
+            <summary>
+            Zeitpunkt der Zahlung
+            </summary>
+        </member>
+        <member name="T:fiskaltrust.ifPOS.v0.ReceiptRequest">
+            <summary>
+            Die Beleganfrage wird von der Registrierkasse genutzt um die Daten eines gesamten Beleges an den fiskaltrust.service zu übergeben.
+            </summary>
+        </member>
+        <member name="M:fiskaltrust.ifPOS.v0.ReceiptRequest.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:fiskaltrust.ifPOS.v0.ReceiptRequest.ftCashBoxID">
+            <summary>
+            
+            ftCashBoxId identifiziert den fiskaltrust.service Eindeutig.
+            ALT: RegistrierkassenID, wird verwendet um die Kasse gegen den Dienst zu Identifizieren. Wird vom fiskaltrust-Benutzerportal vergeben und ist ein Teil der Authentifizierung des ft-Users / Unternehmer. Muss in der Datenbank über Sicherheitseinrichtungen hinterlegt werden.
+            </summary>
+        </member>
+        <member name="P:fiskaltrust.ifPOS.v0.ReceiptRequest.ftQueueID">
+            <summary>
+            ftQueueId ist optional. Wird ein fiskaltrust.service mit mehreren Queues verwendet, so kann dieser Wert dazu Verwendet werden die Bearbeitung von einer Bestimmten Queue anzufordern.
+            </summary>
+        </member>
+        <member name="P:fiskaltrust.ifPOS.v0.ReceiptRequest.ftPosSystemId">
+            <summary>
+            ftPosSystemId is optional. Wird vewendet um zu identifizieren von welchem PosSystem die Anfrage gesendet wurde. Wird auch zur späteren Servicegebührberechnung verwendet.
+            </summary>
+        </member>
+        <member name="P:fiskaltrust.ifPOS.v0.ReceiptRequest.cbTerminalID">
+            <summary>
+            Innerhalb einer ftCashBoxID eindeutige Kennzeichnung einer Eingabestati-on/Registrierkasse.
+            </summary>
+        </member>
+        <member name="P:fiskaltrust.ifPOS.v0.ReceiptRequest.cbReceiptReference">
+            <summary>
+            Belegnummer durch die Kasse vergeben. Dient als Referenz zu den Kassendaten in der Datenbank des Kassensystems. Von der Registrierkasse fest-gelegte Referenznummer zur Zuordnung des Rückgabe-werts. Typischerweise ist dies eine für die Kasse ein-deutige Belegnummer, so-dass der Rückgabewert zum Kassendatensatz gespeichert werden kann.
+            </summary>
+        </member>
+        <member name="P:fiskaltrust.ifPOS.v0.ReceiptRequest.cbReceiptMoment">
+            <summary>
+            Datum/Zeit der Belegerzeugung in Zeitzone Österreich. Von der Registrierkasse für den Beleg verwendete Belegzeit
+            </summary>
+        </member>
+        <member name="P:fiskaltrust.ifPOS.v0.ReceiptRequest.cbChargeItems">
+            <summary>
+            Belegleistungen. Von der Registrierkasse für den Beleg verwendete Leistungen
+            </summary>
+        </member>
+        <member name="P:fiskaltrust.ifPOS.v0.ReceiptRequest.cbPayItems">
+            <summary>
+            Belegzahlungsmittel. Von der Registrierkasse für den Beleg verwendete Zahlungsmittel. Es ist auf das Vorzeichen zu achten bei den Zahlungsmittel, Einzahlungen haben üblicherweise ein positives Vorzeichen, Auszahlungen üblicherweise ein negatives. z.B. Gutschein Ausgabe => -50; Bar bezahlt => +50;
+            </summary>
+        </member>
+        <member name="P:fiskaltrust.ifPOS.v0.ReceiptRequest.ftReceiptCase">
+            <summary>
+            Art des Geschäftsfalls nach fiskaltrust Refernztabelle. Art des Geschäftsfalls nach der Referenztabelle. Wird verwendet zur Wahl der Verarbeitungslogik. 0=unbekannt
+            </summary>
+        </member>
+        <member name="P:fiskaltrust.ifPOS.v0.ReceiptRequest.ftReceiptCaseData">
+            <summary>
+            Zusätzliche Daten zum Geschäftsfall. Zusatzdaten zum Geschäfts-fall, üblicherweise im JSON Format
+            </summary>
+        </member>
+        <member name="P:fiskaltrust.ifPOS.v0.ReceiptRequest.cbReceiptAmount">
+            <summary>
+            Gesamtbruttosumme des Belegs. Brutto-Belegbetrag. Wenn nicht angegeben, wird dieser aus den einzelnen Leistungs-positionen errechnet. Kann bei Systemen die in Netto-Beträgen rechnen wichtig sein, da verschiedene Be-rechnungsmethoden verwen-det werden könnten.
+            </summary>
+        </member>
+        <member name="P:fiskaltrust.ifPOS.v0.ReceiptRequest.cbUser">
+            <summary>
+            Identifikation/Name des Bedieners. Identifizierung des Benut-zers, der den Beleg erstellt hat.
+            </summary>
+        </member>
+        <member name="P:fiskaltrust.ifPOS.v0.ReceiptRequest.cbArea">
+            <summary>
+            Identifizierung des Bereichs in dem der Beleg erstellt wurde. z.B. Tischnummer eines Gastronomiebetriebs; Abtei-lung eines Handelsbetriebs, Fahrzeug eines Taxi-Betriebs
+            </summary>
+        </member>
+        <member name="P:fiskaltrust.ifPOS.v0.ReceiptRequest.cbCustomer">
+            <summary>
+            Identifizierung des Kunden dem der Beleg erteilt werden soll. z.B.e-mail Adresse
+            </summary>
+        </member>
+        <member name="P:fiskaltrust.ifPOS.v0.ReceiptRequest.cbSettlement">
+            <summary>
+            Abrechnungsidentifizierung in der dieser Beleg wieder zu finden ist.
+            </summary>
+        </member>
+        <member name="P:fiskaltrust.ifPOS.v0.ReceiptRequest.cbPreviousReceiptReference">
+            <summary>
+            cbReceiptReference des vorhergehenden Belegs
+            </summary>
+        </member>
+        <member name="T:fiskaltrust.ifPOS.v0.ReceiptResponse">
+            <summary>
+            Mit der Belegantwort gibt der fiskaltrust.service die verarbeiteten Daten an die Regist-rierkasse zurück.
+            </summary>
+        </member>
+        <member name="M:fiskaltrust.ifPOS.v0.ReceiptResponse.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:fiskaltrust.ifPOS.v0.ReceiptResponse.ftCashBoxID">
+            <summary>
+            ftCashBoxId von Anfrage, zur Zuordnung der Antwort
+            </summary>
+        </member>
+        <member name="P:fiskaltrust.ifPOS.v0.ReceiptResponse.ftQueueID">
+            <summary>
+            ftQueueID enthält die eindeutige Nummer der Queue duruch welche die ReceiptResponse erzeugt wurde. 
+            </summary>
+        </member>
+        <member name="P:fiskaltrust.ifPOS.v0.ReceiptResponse.ftQueueItemID">
+            <summary>
+            ftQueueItemID enthält die eindeutige Nummer der Detaildaten zum ReceiptRequest und ReceiptResponse.
+            </summary>
+        </member>
+        <member name="P:fiskaltrust.ifPOS.v0.ReceiptResponse.ftQueueRow">
+            <summary>
+            ftQueueRow enthält eine fortlaufende Nummer der Queue welche die Receiptresponse erzeugt hat.
+            </summary>
+        </member>
+        <member name="P:fiskaltrust.ifPOS.v0.ReceiptResponse.cbTerminalID">
+            <summary>
+            Innerhalb einer ftCashBoxID eindeutige Kennzeichnung einer Eingabestation/Registrierkasse. Von Anfrage, zur Zuordnung der Antwort
+            </summary>
+        </member>
+        <member name="P:fiskaltrust.ifPOS.v0.ReceiptResponse.cbReceiptReference">
+            <summary>
+            Belegnummer durch die Kasse vergeben. Von Anfrage, zur Zu-ordnung der Antwort
+            </summary>
+        </member>
+        <member name="P:fiskaltrust.ifPOS.v0.ReceiptResponse.ftCashBoxIdentification">
+            <summary>
+            Durch den fiskaltrust.service und der Queue vorgegebene Kassenidentifikationsnummer (in AT laut RKSV)
+            </summary>
+        </member>
+        <member name="P:fiskaltrust.ifPOS.v0.ReceiptResponse.ftReceiptIdentification">
+            <summary>
+            Durch den fiskaltrust.service vergebene fortlaufende Belegnummer (in AT laut RKSV)
+            </summary>
+        </member>
+        <member name="P:fiskaltrust.ifPOS.v0.ReceiptResponse.ftReceiptMoment">
+            <summary>
+            Datum/Zeit der Belegsignatur in UTC. Zeitpunkt der Verar-beitung durch fis-kaltrust
+            </summary>
+        </member>
+        <member name="P:fiskaltrust.ifPOS.v0.ReceiptResponse.ftReceiptHeader">
+            <summary>
+            Zusätzliche Kopfzeilen für den Beleg. Jede Zeile kann bis zu 4096 Zeichen enthalten, Zeilenumbrüche soll die Registrierkasse eigenständig vorneh-men.
+            </summary>
+        </member>
+        <member name="P:fiskaltrust.ifPOS.v0.ReceiptResponse.ftChargeItems">
+            <summary>
+            Zusätzliche anzudruckende Leistungen. Zusätzliche Datensät-ze im Leistungsblock welche die Registrier-kasse in den Beleg aufnehmen muss. Üb-licherweise haben diese Datensätze ei-nen Betrag (Menge x Preis) von „0“. Falls die Summe der Leis-tungen ungleich dem angegebenen Beleg-betrags ist wird eine Leistungsposition ein-gefügt welche die Differenz ausgleicht.
+            </summary>
+        </member>
+        <member name="P:fiskaltrust.ifPOS.v0.ReceiptResponse.ftChargeLines">
+            <summary>
+            Zusätzliche anzudruckende Leistungen. Zusätzliche Textzeilen für den Leistungsblock welche die Registrier-kasse auf den Beleg drucken muss. Jede Zeile kann bis zu 4096 Zeichen enthalten, Zeilenumbrüche soll die Registrierkasse eigenständig vorneh-men.
+            </summary>
+        </member>
+        <member name="P:fiskaltrust.ifPOS.v0.ReceiptResponse.ftPayItems">
+            <summary>
+            Zusätzliche anzudruckende Zahlungsmittel. Zusätzliche Datensät-ze im Zahlungsmittel-block welche die Re-gistrierkasse in den Beleg aufnehmen muss. Üblicherweise haben diese Datensät-ze einen Betrag von „0“. Falls die Summe der Zahlungsmittel ungleich des Beleg-betrags ist wird eine Leistungsposition ein-gefügt welche die Differenz ausgleicht.
+            </summary>
+        </member>
+        <member name="P:fiskaltrust.ifPOS.v0.ReceiptResponse.ftPayLines">
+            <summary>
+            Zusätzliche anzudruckende Zahlungsmittel. Zusätzliche Textzeilen für den Zahlungsmit-telblock welche die Registrierkasse in den Beleg aufnehmen muss. Jede Zeile kann bis zu 4096 Zeichen enthalten, Zeilenum-brüche soll die Regist-rierkasse eigenständig vornehmen.
+            </summary>
+        </member>
+        <member name="P:fiskaltrust.ifPOS.v0.ReceiptResponse.ftSignatures">
+            <summary>
+            Liste der Signaturen. Signaturblock welchen die Registrierkasse in den Beleg aufnehmen muss.
+            </summary>
+        </member>
+        <member name="P:fiskaltrust.ifPOS.v0.ReceiptResponse.ftReceiptFooter">
+            <summary>
+            Zusätzlich im Fuss anzudruckende Daten. Zusätzliche Fußzeilen für den Beleg. Jede Zeile kann bis zu 4096 Zeichen enthalten, Zeilenumbrüche soll die Registrierkasse eigenständig vorneh-men.
+            </summary>
+        </member>
+        <member name="P:fiskaltrust.ifPOS.v0.ReceiptResponse.ftState">
+            <summary>
+            Status des fiskaltrust Dienst, Flags nach der Tabelle im Anhang. 0=ready
+            </summary>
+        </member>
+        <member name="P:fiskaltrust.ifPOS.v0.ReceiptResponse.ftStateData">
+            <summary>
+            Zusätzliche Statusinformation. Zusätzliche Informati-onen zum Status des fiskaltrust.service, üblicherweise im JSON Format.
+            </summary>
+        </member>
+        <member name="T:fiskaltrust.ifPOS.v0.SignaturItem">
+            <summary>
+            Der Signatureintrag wird nur bei der Beleg-Antwort verwendet.
+            </summary>
+        </member>
+        <member name="M:fiskaltrust.ifPOS.v0.SignaturItem.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:fiskaltrust.ifPOS.v0.SignaturItem.ftSignatureFormat">
+            <summary>
+            Format zur Ausgabe der Signaturdaten laut Referenztabelle.
+            </summary>
+        </member>
+        <member name="P:fiskaltrust.ifPOS.v0.SignaturItem.ftSignatureType">
+            <summary>
+            Art der Signatur laut Referenztabelle.
+            </summary>
+        </member>
+        <member name="P:fiskaltrust.ifPOS.v0.SignaturItem.Caption">
+            <summary>
+            Überschrift welche als Text über den Signaturda-ten auszugeben ist
+            </summary>
+        </member>
+        <member name="P:fiskaltrust.ifPOS.v0.SignaturItem.Data">
+            <summary>
+            Signaturwert welcher im ange-gebenen Format auszuge-ben ist.
+            </summary>
+        </member>
+    </members>
+</doc>
