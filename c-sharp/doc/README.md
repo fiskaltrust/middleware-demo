@@ -40,3 +40,4 @@ Connects to a running fiskaltrust.service using SOAP communication and lets the 
 Lemböckgasse 49/1B/6.OG, 1230 Wien  
 <info@fiskaltrust.at>  
 [www.fiskaltrust.at](https://www.fiskaltrust.at)
+ 
