@@ -20,6 +20,10 @@ namespace csConsoleApplicationJournalREST
         private static Guid cashboxid = Guid.Empty;
         private static string accesstoken;
         private static bool json;
+        private static long readcount;
+        private static int timeout;
+        private static string serviceversion;
+
         static List<MenuItem> menuItems = new List<MenuItem>() {
             new MenuItem() { Number = 1, Description = "ActionJournal", Type = 0x01, InitialSequence = "[", FinalSequence = "]", NeedsChunking = true, FileExtension = FileExtension_JSON, ChunkSeparator = " , " },
             new MenuItem() { Number = 2, Description = "ReceiptJournal", Type = 0x02, InitialSequence = "[", FinalSequence = "]", NeedsChunking = true, FileExtension = FileExtension_JSON, ChunkSeparator = " , " },
@@ -56,6 +60,9 @@ namespace csConsoleApplicationJournalREST
             cashboxid = options.cashboxid;
             accesstoken = options.accesstoken;
             json = (bool)options.json;
+            readcount = options.readcount;
+            timeout = options.timeout;
+            serviceversion = options.serviceversion;
 
             // use echo for communication test
             if (json)
@@ -115,8 +122,8 @@ namespace csConsoleApplicationJournalREST
             if (item.NeedsChunking)
             {
                 long pointer = 0;
-                int readCount = 1000;
-                int maxReadCount = 10000;
+                long readCount = readcount;
+                long maxReadCount = readcount * 10 > long.MaxValue ? long.MaxValue : readcount * 10;
 
                 do
                 {
@@ -133,7 +140,7 @@ namespace csConsoleApplicationJournalREST
                     {
                         readCount = (readCount / 2) + 1;
                     }
-                } while (pointer > 0);
+                } while (pointer >= 0 & readCount > 50);
             }
             else
             {
@@ -419,6 +426,8 @@ namespace csConsoleApplicationJournalREST
             webreq.ContentLength = 0;
             webreq.Headers.Add("cashboxid", cashboxid.ToString());
             webreq.Headers.Add("accesstoken", accesstoken);
+            webreq.Headers.Add("service-version", serviceversion);
+            webreq.Timeout = timeout;
 
             var webresp = (HttpWebResponse)webreq.GetResponse();
             if (webresp.StatusCode == HttpStatusCode.OK)
@@ -428,9 +437,9 @@ namespace csConsoleApplicationJournalREST
                     var ms = new System.IO.MemoryStream();
                     webresp.GetResponseStream().CopyTo(ms);
 
-                    System.IO.StreamReader reader = new System.IO.StreamReader(ms);
-                    string text = reader.ReadToEnd();
-                    Console.WriteLine("{0:G} journal response len {1}", DateTime.Now, text.Length); // to show journal text use text instead of text.length
+                    ms.Position = 0;
+
+                    Console.WriteLine("{0:G} journal response len {1}", DateTime.Now, ms.Length); // to show journal text use text instead of text.length
 
                     ms.Position = 0;
                     return ms;
