@@ -371,9 +371,9 @@ namespace csConsoleApplicationJournalREST
                     var ms = new System.IO.MemoryStream();
                     webresp.GetResponseStream().CopyTo(ms);
 
-                    System.IO.StreamReader reader = new System.IO.StreamReader(ms);
-                    string text = reader.ReadToEnd();
-                    Console.WriteLine("{0:G} journal response len {1}", DateTime.Now, text.Length); // to show journal text use text instead of text.length
+                    ms.Position = 0;
+
+                    Console.WriteLine("{0:G} journal response len {1}", DateTime.Now, ms.Length); // to show journal text use text instead of text.length
 
                     ms.Position = 0;
                     return ms;
