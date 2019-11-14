@@ -49,8 +49,8 @@ void get_input(char *ServiceURL, char *message) {
   printf("Please enter the serviceurl of the fiskaltrust.Service: ");
   fgets(ServiceURL, STRING_LENGTH - 1, stdin);
 
-  // get cashboxID
-  printf("Please enter the messaeg to send in the echo request: ");
+  // get message
+  printf("Please enter the message to send in the echo request: ");
   fgets(message, STRING_LENGTH - 1, stdin);
 
   // trim the input strings
