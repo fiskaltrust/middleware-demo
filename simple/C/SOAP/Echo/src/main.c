@@ -91,7 +91,7 @@ int main() {
   printf("making call ...");
   int response = soap_call___ns1__Echo(ft, ServiceURL, NULL, &Echo_request,
                                        &Echo_response);
-  printf("done response: %d\n", ft->error);
+  printf("done");
 
   if (response == SOAP_OK) {
     printf("Response: %s\n", Echo_response.EchoResult);
