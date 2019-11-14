@@ -3,7 +3,7 @@
 [CmdletBinding()]
 param (
     
-    [parameter(HelpMessage="path inside gSOAP lib folder(example: .\lib\gsoap-2.8")]
+    [parameter(HelpMessage="path inside gSOAP lib folder (default: .\lib\gsoap)")]
     [string]$PATH_gSOAP,
 
     [parameter(HelpMessage="example: path\to\file\name.wsdl")]
@@ -17,9 +17,10 @@ Write-Output "Configuring Project"
 
 #gSOAP
 if(!$PATH_gSOAP) {
-    $PATH_gSOAP = Read-Host -Prompt "Please enter path to gsaop lib(example: .\lib\gsoap-2.8)"
+    $PATH_gSOAP = Read-Host -Prompt "Please enter path to gsaop lib (default: .\lib\gsoap)"
+    if(!($PATH_gSOAP)) { $PATH_gSOAP = ".\lib\gsoap"}
 }
-if(!(Test-Path $PATH_gSOAP)) {
+if(!(Test-Path $(Join-Path -Path $PATH_gSOAP -ChildPath "gsoap"))) {
     Write-Output "gSAOP lib not found at $PATH_gSOAP"
     Exit
 }
@@ -37,7 +38,7 @@ if(!(Test-Path $WSDL_PATH)) {
 #libwsock32.a
 if(!$libwsock32_PATH) {
     Write-Output "If you know were your libwsock32.a libray is please enter the path, if not enter nothing and we will look for it"
-    $libwsock32_PATH = Read-Host -Prompt 'location to libwsock32.a'
+    $libwsock32_PATH = Read-Host -Prompt 'path to libwsock32.a'
 }
 
 If(!$libwsock32_PATH) {
@@ -60,12 +61,11 @@ If(!$libwsock32_PATH) {
         Write-Output "No libwsock32.a found"
         Exit
     }
-    
+    $libwsock32_PATH = "$libwsock32_PATH\libwsock32.a"
 }
 
-$tmp = "$libwsock32_PATH\libwsock32.a"
-if (!(Test-Path $tmp)) {
-    Write-Output "libwsock32.a not found at $libwsock32_PATH\"
+if (!(Test-Path $libwsock32_PATH)) {
+    Write-Output "libwsock32.a not found at $libwsock32_PATH"
     Exit
 }
 
