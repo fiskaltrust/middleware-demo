@@ -1,15 +1,16 @@
 ifeq ($(OS),Windows_NT)
-	echo.exe: src\main.c soapC.c
-		gcc -o build\echo.exe src\main.c "$(PATH_to_gSOAP)\gsoap\stdsoap2.c" "$(PATH_to_gSOAP)\gsoap\bin\win32\soapC.c" "$(PATH_to_gSOAP)\gsoap\bin\win32\soapClient.c" -I"$(PATH_to_gSOAP)\gsoap\bin\win32" -I"$(PATH_to_gSOAP)\gsoap" -L"$(PATH_to_libwsock32)" -l:libwsock32.a -Wall
+echo.exe: src\main.c soapC.c
+	mkdir build || echo "dir exisit"
+	gcc -o build\echo.exe src\main.c "$(PATH_to_gSOAP)\gsoap\stdsoap2.c" "$(PATH_to_gSOAP)\gsoap\bin\win32\soapC.c" "$(PATH_to_gSOAP)\gsoap\bin\win32\soapClient.c" -I"$(PATH_to_gSOAP)\gsoap\bin\win32" -I"$(PATH_to_gSOAP)\gsoap" -L"$(PATH_to_libwsock32)" -l:libwsock32.a -Wall
 
-	soapC.c:
-		"$(PATH_to_gSOAP)\gsoap\bin\win32\wsdl2h.exe" -c -s -o "$(PATH_to_gSOAP)\gsoap\bin\win32\ftservice.h" "$(PATH_to_WSDL)"
-		"$(PATH_to_gSOAP)\gsoap\bin\win32\soapcpp2.exe" -CL -c -1 "$(PATH_to_gSOAP)\gsoap\bin\win32\ftservice.h" -I"$(PATH_to_gSOAP)\gsoap\import" -r  -d"$(PATH_to_gSOAP)\gsoap\bin\win32"
+soapC.c:
+	"$(PATH_to_gSOAP)\gsoap\bin\win32\wsdl2h.exe" -c -s -o "$(PATH_to_gSOAP)\gsoap\bin\win32\ftservice.h" "$(PATH_to_WSDL)"
+	"$(PATH_to_gSOAP)\gsoap\bin\win32\soapcpp2.exe" -CL -c -1 "$(PATH_to_gSOAP)\gsoap\bin\win32\ftservice.h" -I"$(PATH_to_gSOAP)\gsoap\import" -r  -d"$(PATH_to_gSOAP)\gsoap\bin\win32"
 
 else
-	echo: soapC.c
+echo: soapC.c
 
 
-	soapC.c:
+soapC.c:
 
 endif
