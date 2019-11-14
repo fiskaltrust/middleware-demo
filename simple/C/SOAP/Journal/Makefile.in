@@ -1,6 +1,6 @@
 ifeq ($(OS),Windows_NT)
 Journal.exe: src\main.c soapC.c
-	mkdir build -Force
+	mkdir build || echo "dir exisit"
 	gcc -o build\Journal.exe src\main.c "$(PATH_to_gSOAP)\gsoap\stdsoap2.c" "$(PATH_to_gSOAP)\gsoap\bin\win32\soapC.c" "$(PATH_to_gSOAP)\gsoap\bin\win32\soapClient.c" -I"$(PATH_to_gSOAP)\gsoap\bin\win32" -I"$(PATH_to_gSOAP)\gsoap" -L"$(PATH_to_libwsock32)" -l:libwsock32.a -Wall
 
 soapC.c:
