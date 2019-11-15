@@ -2,16 +2,11 @@
 #include <stdio.h>    /* printf, sprintf */
 #include <stdlib.h>   /* exit, atoi, malloc, free */
 #include <string.h>
-//#include "ftservice.h"
-#include "soapH.h"
-//#include "soapStub.h"
-#include "BasicHttpBinding_USCOREIPOS.nsmap"
+#include <soapH.h>
+#include <BasicHttpBinding_USCOREIPOS.nsmap>
 
 #define STRING_LENGTH 256
 #define BODY_SIZE 1024
-
-#define DEBUG
-#define CLOUD
 
 char *ltrim(char *str, const char *seps) {
     size_t totrim;
@@ -47,20 +42,26 @@ char *trim(char *str, const char *seps) {
     return ltrim(rtrim(str, seps), seps);
 }
 
-void get_input(char *ServiceURL, char *message) {
+void get_input(char *ServiceURL, char *conutryCode) {
 
     // Getting all the input
     // ask for Service URL
     printf("Please enter the serviceurl of the fiskaltrust.Service: ");
     fgets(ServiceURL, STRING_LENGTH - 1, stdin);
 
-    // get cashboxID
-    printf("Please enter the messaeg to send in the echo request: ");
-    fgets(message, STRING_LENGTH - 1, stdin);
+    // get county Code
+    printf("Please enter the countyCode of the fiskaltrust.Queue: ");
+    fgets(conutryCode, STRING_LENGTH - 1, stdin);
 
     // trim the input strings
     trim(ServiceURL, NULL);
-    trim(message, NULL);
+    trim(conutryCode, NULL);
+
+    //check countyCode length
+    if(strlen(conutryCode) != 2) {
+        printf("The countrycode must have length two.\n");
+        exit(EXIT_FAILURE);
+    }
 
     // if ServiceURL end with '/' -> delete it
     if (ServiceURL[strlen(ServiceURL) - 1] == '/') {
@@ -99,10 +100,6 @@ int main() {
     printf("making call ...");
     int response = soap_call___ns1__Echo(ft, ServiceURL, NULL, &Echo_request, &Echo_response);
     printf("done response: %d\n", ft->error);
-
-    // int response = soap_send___ns1__Echo(ft, ServiceURL, NULL, &Echo_request);
-    // printf("Send Response: %d\n",ft->error);
-
     if (response == SOAP_OK) {
 
         // soap_recv___ns1__Echo(ft, &Echo_response);

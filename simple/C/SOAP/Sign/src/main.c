@@ -1,10 +1,11 @@
 #include <BasicHttpBinding_USCOREIPOS.nsmap>
-#include <soapH.h>
 #include <inttypes.h> //int64_t, uint64_t
-#include <stdio.h>    /* printf, sprintf */
-#include <stdlib.h>   /* exit, atoi, malloc, free */
+#include <soapH.h>
+#include <stdio.h>  /* printf, sprintf */
+#include <stdlib.h> /* exit, atoi, malloc, free */
 #include <string.h>
 #include <time.h>
+#include <windows.h>
 
 #define STRING_LENGTH 256
 #define BODY_SIZE 1024
@@ -44,8 +45,10 @@ char *trim(char *str, const char *seps) {
 }
 
 void string_to_UPPERcase(char *target) {
-    for(int i = 0; target[i] != 0 ;i++) {
-        if(target[i] <= 'z' && target[i] >= 'a') { target[i] &= (~(1<<5));} //the differenc from UPPER case to lower case is 32 so we unset the 5th bit 
+    for (int i = 0; target[i] != 0; i++) {
+        if (target[i] <= 'z' && target[i] >= 'a') {
+            target[i] &= (~(1 << 5));
+        } //the differenc from UPPER case to lower case is 32 so we unset the 5th bit
     }
 }
 
@@ -83,7 +86,7 @@ void get_input(char *ServiceURL, char *cashBoxId, char *conutryCode) {
     trim(conutryCode, NULL);
 
     //check countyCode length
-    if(strlen(conutryCode) != 2) {
+    if (strlen(conutryCode) != 2) {
         printf("The countrycode must have length two.\n");
         exit(EXIT_FAILURE);
     }
@@ -94,18 +97,19 @@ void get_input(char *ServiceURL, char *cashBoxId, char *conutryCode) {
     }
 }
 
-void init_struct(struct _ns1__SignResponse *Sign_response, struct _ns1__Sign *Sign_request) {
+void init_struct(struct _ns1__Sign *Sign_request) {
 
     //allocate memory for request struct
     Sign_request->data = calloc(1, sizeof(struct ns3__ReceiptRequest));
     Sign_request->data->ftCashBoxID = calloc(128, sizeof(char));
-    Sign_request->data->ftQueueID = NULL; //calloc(128, sizeof(char));
+    Sign_request->data->ftQueueID = NULL;     //calloc(128, sizeof(char));
     Sign_request->data->ftPosSystemId = NULL; //calloc(128, sizeof(char));
     Sign_request->data->cbTerminalID = calloc(128, sizeof(char));
     Sign_request->data->cbReceiptReference = calloc(128, sizeof(char));
     //Sign_request->data->cbReceiptMoment muss be set bevor sending call
     Sign_request->data->cbChargeItems = calloc(1, sizeof(struct ns3__ArrayOfChargeItem));
-    Sign_request->data->cbChargeItems->ChargeItem = NULL; //calloc(1, sizeof(struct ns3__ChargeItem));
+    Sign_request->data->cbChargeItems->__sizeChargeItem = 1; //one empty Charge Item
+    Sign_request->data->cbChargeItems->ChargeItem = NULL;    //calloc(1, sizeof(struct ns3__ChargeItem));
     /*
     Sign_request->data->cbChargeItems->ChargeItem->Position = calloc(1, sizeof(int64_t));
     Sign_request->data->cbChargeItems->ChargeItem->Quantity = calloc(128, sizeof(char));
@@ -127,7 +131,8 @@ void init_struct(struct _ns1__SignResponse *Sign_response, struct _ns1__Sign *Si
     */
 
     Sign_request->data->cbPayItems = calloc(1, sizeof(struct ns3__ArrayOfPayItem));
-    Sign_request->data->cbPayItems->PayItem = NULL; //calloc(1, sizeof(struct ns3__ChargeItem));
+    Sign_request->data->cbPayItems->__sizePayItem = 1; //One empty Pay Item
+    Sign_request->data->cbPayItems->PayItem = NULL;    //calloc(1, sizeof(struct ns3__ChargeItem));
     /*
     Sign_request->data->cbPayItems->PayItem->Position = calloc(1, sizeof(int64_t));
     Sign_request->data->cbPayItems->PayItem->Quantity = calloc(128, sizeof(char));
@@ -143,97 +148,38 @@ void init_struct(struct _ns1__SignResponse *Sign_response, struct _ns1__Sign *Si
     */
 
     Sign_request->data->ftReceiptCase = calloc(1, sizeof(int64_t));
-    Sign_request->data->ftReceiptCaseData = NULL; //calloc(128, sizeof(char));
-    Sign_request->data->cbReceiptAmount = NULL; //calloc(128, sizeof(char));
-    Sign_request->data->cbUser = NULL; //calloc(128, sizeof(char));
-    Sign_request->data->cbArea = NULL; //calloc(128, sizeof(char));
-    Sign_request->data->cbCustomer = NULL; //calloc(128, sizeof(char));
-    Sign_request->data->cbSettlement = NULL; //calloc(128, sizeof(char)); 
+    Sign_request->data->ftReceiptCaseData = NULL;          //calloc(128, sizeof(char));
+    Sign_request->data->cbReceiptAmount = NULL;            //calloc(128, sizeof(char));
+    Sign_request->data->cbUser = NULL;                     //calloc(128, sizeof(char));
+    Sign_request->data->cbArea = NULL;                     //calloc(128, sizeof(char));
+    Sign_request->data->cbCustomer = NULL;                 //calloc(128, sizeof(char));
+    Sign_request->data->cbSettlement = NULL;               //calloc(128, sizeof(char));
     Sign_request->data->cbPreviousReceiptReference = NULL; //calloc(128, sizeof(char));
 
-    //allocate memory for response struct
-    Sign_response->SignResult = calloc(1, sizeof(struct ns3__ReceiptResponse));
-    Sign_response->SignResult->ftCashBoxID = calloc(128, sizeof(char));
-    Sign_response->SignResult->ftQueueID = calloc(128, sizeof(char));
-    Sign_response->SignResult->ftQueueItemID = calloc(128, sizeof(char));
-    Sign_response->SignResult->ftQueueRow = calloc(1, sizeof(int64_t));
-    Sign_response->SignResult->cbTerminalID = calloc(128, sizeof(char));
-    Sign_response->SignResult->cbReceiptReference = calloc(128, sizeof(char));
-    Sign_response->SignResult->ftCashBoxIdentification = calloc(128, sizeof(char));
-    Sign_response->SignResult->ftReceiptIdentification = calloc(128, sizeof(char));
-    //Sign_response->SignResult->cbReceiptMoment muss be set bevor sending call
-    Sign_response->SignResult->ftReceiptHeader = calloc(1, sizeof(struct ns4__ArrayOfstring));
-    Sign_response->SignResult->ftReceiptHeader->string = calloc(1, sizeof(char*)); //time the strings you have
-    // Sign_response->SignResult->ftReceiptHeader->string[0] = calloc(128, sizeof(char)); only example
-
-    Sign_response->SignResult->ftChargeItems = calloc(1, sizeof(struct ns3__ArrayOfChargeItem)); //times the ChargeItem you have 
-    Sign_response->SignResult->ftChargeItems->ChargeItem = calloc(1, sizeof(struct ns3__ChargeItem));
-    Sign_response->SignResult->ftChargeItems->ChargeItem->Position = calloc(1, sizeof(int64_t));
-    Sign_response->SignResult->ftChargeItems->ChargeItem->Quantity = calloc(128, sizeof(char));
-    Sign_response->SignResult->ftChargeItems->ChargeItem->Description = calloc(128, sizeof(char));
-    Sign_response->SignResult->ftChargeItems->ChargeItem->Amount = calloc(128, sizeof(char));
-    Sign_response->SignResult->ftChargeItems->ChargeItem->VATRate = calloc(128, sizeof(char));
-    Sign_response->SignResult->ftChargeItems->ChargeItem->ftChargeItemCase = calloc(1, sizeof(int64_t));
-    Sign_response->SignResult->ftChargeItems->ChargeItem->ftChargeItemCaseData = calloc(128, sizeof(char));
-    Sign_response->SignResult->ftChargeItems->ChargeItem->VATAmount = calloc(128, sizeof(char));
-    Sign_response->SignResult->ftChargeItems->ChargeItem->AccountNumber = calloc(128, sizeof(char));
-    Sign_response->SignResult->ftChargeItems->ChargeItem->CostCenter = calloc(128, sizeof(char));
-    Sign_response->SignResult->ftChargeItems->ChargeItem->ProductGroup = calloc(128, sizeof(char));
-    Sign_response->SignResult->ftChargeItems->ChargeItem->ProductNumber = calloc(128, sizeof(char));
-    Sign_response->SignResult->ftChargeItems->ChargeItem->ProductBarcode = calloc(128, sizeof(char));
-    Sign_response->SignResult->ftChargeItems->ChargeItem->Unit = calloc(128, sizeof(char));
-    Sign_response->SignResult->ftChargeItems->ChargeItem->UnitQuantity = calloc(128, sizeof(char));
-    Sign_response->SignResult->ftChargeItems->ChargeItem->UnitPrice = calloc(128, sizeof(char));
-    Sign_response->SignResult->ftChargeItems->ChargeItem->Moment = calloc(1, sizeof(time_t));
-
-    Sign_response->SignResult->ftChargeLines = calloc(1, sizeof(struct ns4__ArrayOfstring));
-    Sign_response->SignResult->ftReceiptHeader->string = calloc(1, sizeof(char*)); //time the strings you have
-    // Sign_response->SignResult->ftReceiptHeader->string[0] = calloc(128, sizeof(char)); only example
-
-    Sign_response->SignResult->ftPayItems = calloc(1, sizeof(struct ns3__ArrayOfPayItem)); 
-    Sign_response->SignResult->ftPayItems->PayItem = calloc(1, sizeof(struct ns3__ChargeItem));
-    Sign_response->SignResult->ftPayItems->PayItem->Position = calloc(1, sizeof(int64_t));
-    Sign_response->SignResult->ftPayItems->PayItem->Quantity = calloc(128, sizeof(char));
-    Sign_response->SignResult->ftPayItems->PayItem->Description = calloc(128, sizeof(char));
-    Sign_response->SignResult->ftPayItems->PayItem->Amount = calloc(128, sizeof(char));
-    Sign_response->SignResult->ftPayItems->PayItem->ftPayItemCase = calloc(1, sizeof(int64_t));
-    Sign_response->SignResult->ftPayItems->PayItem->ftPayItemCaseData = calloc(128, sizeof(char));
-    Sign_response->SignResult->ftPayItems->PayItem->AccountNumber = calloc(128, sizeof(char));
-    Sign_response->SignResult->ftPayItems->PayItem->CostCenter = calloc(128, sizeof(char));
-    Sign_response->SignResult->ftPayItems->PayItem->MoneyGroup = calloc(128, sizeof(char));
-    Sign_response->SignResult->ftPayItems->PayItem->MoneyNumber = calloc(128, sizeof(char));
-    Sign_response->SignResult->ftPayItems->PayItem->Moment = calloc(1, sizeof(time_t));
-
-    Sign_response->SignResult->ftPayLines = calloc(1, sizeof(struct ns4__ArrayOfstring));
-    Sign_response->SignResult->ftReceiptHeader->string = calloc(1, sizeof(char*)); //time the strings you have
-    // Sign_response->SignResult->ftReceiptHeader->string[0] = calloc(128, sizeof(char)); only example
-
-    Sign_response->SignResult->ftReceiptIdentification = calloc(1, sizeof(int64_t));
-    Sign_response->SignResult->ftState = calloc(1, sizeof(int64_t));
-    Sign_response->SignResult->ftStateData = calloc(128, sizeof(char));
+    //Response struct will be allocated by the call function
 }
 
 void set_request_data(struct _ns1__Sign *Sign_request, char *cashBoxId, int64_t receiptCase) {
-    //char Moment[128];
-    //char Case[128];
-    //time_t t = time(NULL);
-    //struct tm tm = *localtime(&t);
-    //sprintf(Moment,"%d-%d-%dT%d:%d:%d\n", tm.tm_year + 1900, tm.tm_mon + 1,tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
 
     strcat(Sign_request->data->ftCashBoxID, cashBoxId);
-    strcat(Sign_request->data->cbTerminalID, "0");
-    strcat(Sign_request->data->cbReceiptReference, "0");
+    strcat(Sign_request->data->cbTerminalID, "1");
+    strcat(Sign_request->data->cbReceiptReference, "1");
     Sign_request->data->cbReceiptMoment = time(NULL);
     Sign_request->data->ftReceiptCase = (int64_t)receiptCase;
 }
 
 void print_response(struct _ns1__SignResponse *Sign_response) {
     printf("Response:\n");
-    printf("ftStat: %I64d",Sign_response->SignResult->ftState);
-}
-
-void free_structs(struct _ns1__SignResponse *Sign_response, struct _ns1__Sign *Sign_request) {
-    //free structs
+    printf("ftReceiptIdentification: %s\n",Sign_response->SignResult->ftReceiptIdentification);
+    printf("ftStat: %I64d\n", Sign_response->SignResult->ftState);
+    for(int i = 0;i < Sign_response->SignResult->ftSignatures->__sizeSignaturItem; i++) {
+        printf("SignaturItem\n");
+        printf("\tftSignatureFormat: %I64d\n",Sign_response->SignResult->ftSignatures->SignaturItem[i].ftSignatureFormat);
+        printf("\tftSignatureType: %I64d\n",Sign_response->SignResult->ftSignatures->SignaturItem[i].ftSignatureType);
+        printf("\tCaption: %s\n",Sign_response->SignResult->ftSignatures->SignaturItem[i].Caption);
+        printf("\tData: %s\n",Sign_response->SignResult->ftSignatures->SignaturItem[i].Data);
+    }
+    printf("ftStateData: %s\n",Sign_response->SignResult->ftStateData);
 }
 
 int main() {
@@ -253,16 +199,15 @@ int main() {
     struct _ns1__SignResponse Sign_response;
 
     struct soap *ft = soap_new1(SOAP_XML_INDENT); // init handler
-    
 
     // get_input(ServiceURL, cashBoxId, conutryCode);
 
-    init_struct(&Sign_response, &Sign_request);
+    init_struct(&Sign_request);
 
     uint64_t receiptCase = build_receipt_case(conutryCode);
 
     set_request_data(&Sign_request, cashBoxId, receiptCase);
-    printf("%I64d\n",Sign_request.data->ftReceiptCase);
+
     printf("making call ...");
     int response = soap_call___ns1__Sign(ft, ServiceURL, NULL, &Sign_request, &Sign_response);
     printf("done\n");
@@ -276,8 +221,6 @@ int main() {
     soap_destroy(ft); // dealloc serialization data
     soap_end(ft);     // dealloc temp data
     soap_free(ft);    // dealloc 'soap' engine context
-
-    free_structs(&Sign_response, &Sign_request);
 
     return 0;
 }
