@@ -101,8 +101,5 @@ int main() {
     soap_end(ft);     // dealloc temp data
     soap_free(ft);    // dealloc 'soap' engine context
 
-    free(Echo_request.message);
-    free(Echo_response.EchoResult);
-
     return 0;
 }

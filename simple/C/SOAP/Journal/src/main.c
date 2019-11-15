@@ -1,9 +1,9 @@
-#include <inttypes.h> //int64_t, uint64_t
-#include <stdio.h>    /* printf, sprintf */
-#include <stdlib.h>   /* exit, atoi, malloc, free */
-#include <string.h>
-#include <soapH.h>
 #include <BasicHttpBinding_USCOREIPOS.nsmap>
+#include <inttypes.h> //int64_t, uint64_t
+#include <soapH.h>
+#include <stdio.h>  /* printf, sprintf */
+#include <stdlib.h> /* exit, atoi, malloc, free */
+#include <string.h>
 
 #define STRING_LENGTH 256
 #define BODY_SIZE 1024
@@ -42,6 +42,19 @@ char *trim(char *str, const char *seps) {
     return ltrim(rtrim(str, seps), seps);
 }
 
+int64_t build_Journal_type(char *countryCode) {
+    int64_t receipt_case = 0;
+
+    //add county Code
+    receipt_case |= ((int64_t)countryCode[0] << (4 * 14));
+    receipt_case |= ((int64_t)countryCode[1] << (4 * 12));
+
+    //zero receipt
+    receipt_case |= 1;
+
+    return receipt_case;
+}
+
 void get_input(char *ServiceURL, char *conutryCode) {
 
     // Getting all the input
@@ -58,7 +71,7 @@ void get_input(char *ServiceURL, char *conutryCode) {
     trim(conutryCode, NULL);
 
     //check countyCode length
-    if(strlen(conutryCode) != 2) {
+    if (strlen(conutryCode) != 2) {
         printf("The countrycode must have length two.\n");
         exit(EXIT_FAILURE);
     }
@@ -69,43 +82,54 @@ void get_input(char *ServiceURL, char *conutryCode) {
     }
 }
 
-void init_struct(struct _ns1__EchoResponse *Echo_response, struct _ns1__Echo *Echo_request, char *message) {
-    Echo_request->message = malloc(sizeof(char) * (strlen(message) + 1));
+void print_response(struct _ns1__JournalResponse *Journal_response) {
+    if(strlen(Journal_response->JournalResult.__ptr) > 2000) {
+        printf("ptr: %.1000s\n",Journal_response->JournalResult.__ptr);
+    printf("\t*\n\t*\n\t*\n\t*\n\t*\n%s\n",Journal_response->JournalResult.__ptr + (strlen(Journal_response->JournalResult.__ptr) - 1000));
+    }
+    else {printf("ptr: %s\n",Journal_response->JournalResult.__ptr);}
+    printf("Size: %d\n",Journal_response->JournalResult.__size);
+}
 
-    Echo_response->EchoResult = malloc(sizeof(char) * 1024); // we dont know what will come back
-
-    strcat(Echo_request->message, message); // set message
+void Set_request_data(struct _ns1__Journal *Journal_request, int64_t journal_type) {
+    
+    Journal_request->ftJournalType = malloc(sizeof(int64_t));
+    *(Journal_request->ftJournalType) = journal_type;
+    Journal_request->from = malloc(sizeof(int64_t));
+    *(Journal_request->from) = 0;
+    Journal_request->to = malloc(sizeof(int64_t));
+    *(Journal_request->to) = 0;
 }
 
 int main() {
     printf("This example sends a sign request to the fiskaltrust.Service via SOAP\n");
 
     /*
-  char ServiceURL[STRING_LENGTH];
-  char message[STRING_LENGTH];
-  */
+    char ServiceURL[STRING_LENGTH];
+    char countycode[STRING_LENGTH];
+    */
 
     char ServiceURL[] = {"http://localhost:1200/c5b315c4-0e49-46d9-8558-df475fe5c680"};
-    char message[] = {"test_message"};
+    char countycode[] = {"AT"};
 
-    struct _ns1__Echo Echo_request;
-    struct _ns1__EchoResponse Echo_response;
+    struct _ns1__Journal Journal_request;
+    struct _ns1__JournalResponse Journal_response;
 
     struct soap *ft = soap_new1(SOAP_XML_INDENT); // init handler
 
     // get_input(ServiceURL, message);
 
-    init_struct(&Echo_response, &Echo_request, message);
+    int64_t journal_type = build_Journal_type(countycode);
+
+    
+    Set_request_data(&Journal_request, journal_type);
 
     printf("making call ...");
-    int response = soap_call___ns1__Echo(ft, ServiceURL, NULL, &Echo_request, &Echo_response);
-    printf("done response: %d\n", ft->error);
+    int response = soap_call___ns1__Journal(ft, ServiceURL, NULL, &Journal_request, &Journal_response);
+    printf("done\n");
     if (response == SOAP_OK) {
-
-        // soap_recv___ns1__Echo(ft, &Echo_response);
-        // printf("recv Response: %d\n",ft->error);
-        printf("Response: %s\n", Echo_response.EchoResult);
-        // soap_print_fault(ft, stderr);
+        // Print response
+        print_response(&Journal_response);
     } else {
         soap_print_fault(ft, stderr);
     }
@@ -113,9 +137,6 @@ int main() {
     soap_destroy(ft); // dealloc serialization data
     soap_end(ft);     // dealloc temp data
     soap_free(ft);    // dealloc 'soap' engine context
-
-    free(Echo_request.message);
-    free(Echo_response.EchoResult);
 
     return 0;
 }
