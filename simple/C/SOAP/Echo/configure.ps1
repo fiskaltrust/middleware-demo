@@ -70,8 +70,6 @@ if (!(Test-Path $libwsock32_PATH)) {
 }
 
 #write makefile
-
-#load makefile.in
 $IN = (Get-Content -Path .\Makefile.in -Raw)
 
 $VARS = "PATH_to_WSDL = $WSDL_PATH"
