@@ -1,12 +1,12 @@
 #!/bin/bash
 if [ "$1" = "-h" ]; then
     echo "help"
-    #......
-
+    echo "   -WSDL_PATH [PATH/to/file.WSDL]"
+    echo "   -gSOAP [y/n] (if gSOAP should be downloaded"
     exit 0
 fi
 #default
-gSOAP = "n"
+gSOAP="n"
 
 #get parameter if available
 for i in {1..1..2}

@@ -1,5 +1,5 @@
-#include "BasicHttpBinding_USCOREIPOS.nsmap"
-#include "soapH.h"
+#include <BasicHttpBinding_USCOREIPOS.nsmap>
+#include <soapH.h>
 #include <inttypes.h> //int64_t, uint64_t
 #include <stdio.h>    /* printf, sprintf */
 #include <stdlib.h>   /* exit, atoi, malloc, free */
@@ -7,6 +7,16 @@
 
 #define STRING_LENGTH 256
 #define BODY_SIZE 1024
+
+#ifdef _WIN32
+    #define type_Echo_request _ns1__Echo
+    #define type_Echo_response _ns1__EchoResponse
+    #define soap_call_echo(soap, endpoint, action, Echo_request, Echo_response) soap_call___ns1__Echo(soap, endpoint, action, Echo_request, Echo_response)
+#else //Linux
+    #define type_Echo_request _tempuri__Echo
+    #define type_Echo_response _tempuri__EchoResponse
+    #define soap_call_echo(soap, endpoint, action, Echo_request, Echo_response) soap_call___tempuri__Echo(soap, endpoint, action, Echo_request, Echo_response)
+#endif
 
 char *ltrim(char *str, const char *seps) {
     size_t totrim;
@@ -63,7 +73,7 @@ void get_input(char *ServiceURL, char *message) {
   }
 }
 
-void init_struct(struct _ns1__EchoResponse *Echo_response, struct _ns1__Echo *Echo_request, char *message) {
+void init_struct(struct type_Echo_response *Echo_response, struct type_Echo_request *Echo_request, char *message) {
     Echo_request->message = malloc(sizeof(char) * (strlen(message) + 1));
 
     Echo_response->EchoResult =
@@ -78,8 +88,8 @@ int main() {
     char ServiceURL[STRING_LENGTH];
     char message[STRING_LENGTH];
 
-    struct _ns1__Echo Echo_request;
-    struct _ns1__EchoResponse Echo_response;
+    struct type_Echo_request Echo_request;
+    struct type_Echo_response Echo_response;
 
     struct soap *ft = soap_new1(SOAP_XML_INDENT); // init handler
 
@@ -87,13 +97,15 @@ int main() {
 
     init_struct(&Echo_response, &Echo_request, message);
 
-    printf("making call ...");
-    int response = soap_call___ns1__Echo(ft, ServiceURL, NULL, &Echo_request, &Echo_response);
-    printf("done");
+    printf("making call... ");
+    int response = soap_call_echo(ft, ServiceURL, NULL, &Echo_request, &Echo_response);
+    
 
     if (response == SOAP_OK) {
+        printf("OK\n");
         printf("Response: %s\n", Echo_response.EchoResult);
     } else {
+        printf("done\n");
         soap_print_fault(ft, stderr);
     }
 
