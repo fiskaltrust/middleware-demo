@@ -5,10 +5,26 @@
 #include <stdlib.h> /* exit, atoi, malloc, free */
 #include <string.h>
 #include <time.h>
-#include <windows.h>
 
 #define STRING_LENGTH 256
 #define BODY_SIZE 1024
+
+#ifdef _WIN32
+    #define type_Sign_request _ns1__Sign
+    #define type_Sign_response _ns1__SignResponse
+    #define soap_call_Sign(soap, endpoint, action, Sign_request, Sign_response) soap_call___ns1__Sign(soap, endpoint, action, Sign_request, Sign_response)
+
+    //#define flush(STREAM) fflush(STREAM)
+#else //Linux
+    #define type_Sign_request _tempuri__Sign
+    #define type_Sign_response _tempuri__SignResponse
+    #define soap_call_Sign(soap, endpoint, action, Sign_request, Sign_response) soap_call___tempuri__Sign(soap, endpoint, action, Sign_request, Sign_response)
+    #define ns3__ArrayOfPayItem ns1__ArrayOfPayItem
+    #define ns3__ReceiptRequest ns1__ReceiptRequest
+    #define ns3__ArrayOfChargeItem ns1__ArrayOfChargeItem
+
+    //#define flush(STREAM) fflush(STREAM)
+#endif
 
 char *ltrim(char *str, const char *seps) {
     size_t totrim;
@@ -97,7 +113,7 @@ void get_input(char *ServiceURL, char *cashBoxId, char *conutryCode) {
     }
 }
 
-void init_struct(struct _ns1__Sign *Sign_request) {
+void init_struct(struct type_Sign_request *Sign_request) {
 
     //allocate memory for request struct
     Sign_request->data = calloc(1, sizeof(struct ns3__ReceiptRequest));
@@ -159,7 +175,7 @@ void init_struct(struct _ns1__Sign *Sign_request) {
     //Response struct will be allocated by the call function
 }
 
-void set_request_data(struct _ns1__Sign *Sign_request, char *cashBoxId, int64_t receiptCase) {
+void set_request_data(struct type_Sign_request *Sign_request, char *cashBoxId, int64_t receiptCase) {
 
     strcat(Sign_request->data->ftCashBoxID, cashBoxId);
     strcat(Sign_request->data->cbTerminalID, "1");
@@ -168,14 +184,14 @@ void set_request_data(struct _ns1__Sign *Sign_request, char *cashBoxId, int64_t 
     Sign_request->data->ftReceiptCase = (int64_t)receiptCase;
 }
 
-void print_response(struct _ns1__SignResponse *Sign_response) {
+void print_response(struct type_Sign_response *Sign_response) {
     printf("Response:\n");
     printf("ftReceiptIdentification: %s\n",Sign_response->SignResult->ftReceiptIdentification);
-    printf("ftStat: %I64d\n", Sign_response->SignResult->ftState);
+    printf("ftStat: %I64ld\n", Sign_response->SignResult->ftState);
     for(int i = 0;i < Sign_response->SignResult->ftSignatures->__sizeSignaturItem; i++) {
         printf("SignaturItem\n");
-        printf("\tftSignatureFormat: %I64d\n",Sign_response->SignResult->ftSignatures->SignaturItem[i].ftSignatureFormat);
-        printf("\tftSignatureType: %I64d\n",Sign_response->SignResult->ftSignatures->SignaturItem[i].ftSignatureType);
+        printf("\tftSignatureFormat: %I64ld\n",Sign_response->SignResult->ftSignatures->SignaturItem[i].ftSignatureFormat);
+        printf("\tftSignatureType: %I64ld\n",Sign_response->SignResult->ftSignatures->SignaturItem[i].ftSignatureType);
         printf("\tCaption: %s\n",Sign_response->SignResult->ftSignatures->SignaturItem[i].Caption);
         printf("\tData: %s\n",Sign_response->SignResult->ftSignatures->SignaturItem[i].Data);
     }
@@ -191,12 +207,12 @@ int main() {
     char conutryCode[STRING_LENGTH];
     */
 
-    char ServiceURL[] = {"http://localhost:1200/c5b315c4-0e49-46d9-8558-df475fe5c680"};
-    char cashBoxId[] = {"3c44932f-5d4e-4bd0-827b-463b789f34ee"};
+    char ServiceURL[] = {"http://localhost:1201/e025c59e-1f55-47e8-b76c-1acd56d620fc"};
+    char cashBoxId[] = {"979d226d-1a2a-4d38-a518-30b3744630d3"};
     char conutryCode[] = {"AT"};
 
-    struct _ns1__Sign Sign_request;
-    struct _ns1__SignResponse Sign_response;
+    struct type_Sign_request Sign_request;
+    struct type_Sign_response Sign_response;
 
     struct soap *ft = soap_new1(SOAP_XML_INDENT); // init handler
 
@@ -208,8 +224,9 @@ int main() {
 
     set_request_data(&Sign_request, cashBoxId, receiptCase);
 
-    printf("making call ...");
-    int response = soap_call___ns1__Sign(ft, ServiceURL, NULL, &Sign_request, &Sign_response);
+    printf("making call... ");
+    fflush(stdout);
+    int response = soap_call_Sign(ft, ServiceURL, NULL, &Sign_request, &Sign_response);
     printf("done\n");
 
     if (response == SOAP_OK) {

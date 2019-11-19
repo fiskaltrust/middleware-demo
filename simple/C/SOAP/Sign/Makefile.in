@@ -8,9 +8,12 @@ soapC.c:
 	"$(PATH_to_gSOAP)\gsoap\bin\win32\soapcpp2.exe" -CL -c -1 "$(PATH_to_gSOAP)\gsoap\bin\win32\ftservice.h" -I"$(PATH_to_gSOAP)\gsoap\import" -r  -d"$(PATH_to_gSOAP)\gsoap\bin\win32"
 
 else
-Sign: soapC.c
+Sign: src/main.c lib/soapC.c
+	mkdir build -p
+	gcc -o build/Sign src/main.c "./lib/soapC.c" "./lib/soapClient.c" /usr/share/gsoap/custom/duration.c -I"./lib" -Wall -L/usr/lib/x86_64-linux-gnu -l:libgsoap.a
 
-
-soapC.c:
-
+lib/soapC.c:
+	mkdir lib -p
+	wsdl2h -c -s -o "./lib/ftservice.h" "$(PATH_to_WSDL)"
+	soapcpp2 -C -c -1 "./lib/ftservice.h" -I"/usr/share/gsoap" -r -d./lib
 endif
