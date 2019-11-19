@@ -8,6 +8,16 @@
 #define STRING_LENGTH 256
 #define BODY_SIZE 1024
 
+#ifdef _WIN32
+    #define type_Journal_request _ns1__Journal
+    #define type_Journal_response _ns1__JournalResponse
+    #define soap_call_Journal(soap, endpoint, action, Journal_request, Journal_response) soap_call___ns1__Journal(soap, endpoint, action, Journal_request, Journal_response)
+#else //Linux
+    #define type_Journal_request _tempuri__Journal
+    #define type_Journal_response _tempuri__JournalResponse
+    #define soap_call_Journal(soap, endpoint, action, Journal_request, Journal_response) soap_call___tempuri__Journal(soap, endpoint, action, Journal_request, Journal_response)
+#endif
+
 char *ltrim(char *str, const char *seps) {
     size_t totrim;
     if (seps == NULL) {
@@ -82,7 +92,7 @@ void get_input(char *ServiceURL, char *conutryCode) {
     }
 }
 
-void print_response(struct _ns1__JournalResponse *Journal_response) {
+void print_response(struct type_Journal_response *Journal_response) {
     if(strlen(Journal_response->JournalResult.__ptr) > 2000) {
         printf("ptr: %.1000s\n",Journal_response->JournalResult.__ptr);
     printf("\t*\n\t*\n\t*\n\t*\n\t*\n%s\n",Journal_response->JournalResult.__ptr + (strlen(Journal_response->JournalResult.__ptr) - 1000));
@@ -91,7 +101,7 @@ void print_response(struct _ns1__JournalResponse *Journal_response) {
     printf("Size: %d\n",Journal_response->JournalResult.__size);
 }
 
-void Set_request_data(struct _ns1__Journal *Journal_request, int64_t journal_type) {
+void Set_request_data(struct type_Journal_request *Journal_request, int64_t journal_type) {
     
     Journal_request->ftJournalType = malloc(sizeof(int64_t));
     *(Journal_request->ftJournalType) = journal_type;
@@ -109,11 +119,11 @@ int main() {
     char countycode[STRING_LENGTH];
     */
 
-    char ServiceURL[] = {"http://localhost:1200/c5b315c4-0e49-46d9-8558-df475fe5c680"};
+    char ServiceURL[] = {"http://localhost:1201/e025c59e-1f55-47e8-b76c-1acd56d620fc"};
     char countycode[] = {"AT"};
 
-    struct _ns1__Journal Journal_request;
-    struct _ns1__JournalResponse Journal_response;
+    struct type_Journal_request Journal_request;
+    struct type_Journal_response Journal_response;
 
     struct soap *ft = soap_new1(SOAP_XML_INDENT); // init handler
 
@@ -124,13 +134,16 @@ int main() {
     
     Set_request_data(&Journal_request, journal_type);
 
-    printf("making call ...");
-    int response = soap_call___ns1__Journal(ft, ServiceURL, NULL, &Journal_request, &Journal_response);
-    printf("done\n");
+    printf("making call... ");
+    fflush(stdout);
+    int response = soap_call_Journal(ft, ServiceURL, NULL, &Journal_request, &Journal_response);
+    
     if (response == SOAP_OK) {
         // Print response
+        printf("OK\n");
         print_response(&Journal_response);
     } else {
+        printf("done\n");
         soap_print_fault(ft, stderr);
     }
 
