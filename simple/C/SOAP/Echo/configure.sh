@@ -5,8 +5,6 @@ if [ "$1" = "-h" ]; then
     echo "   -gSOAP [y/n] (if gSOAP should be downloaded"
     exit 0
 fi
-#default
-gSOAP="n"
 
 #get parameter if available
 for i in {1..1..2}
@@ -32,6 +30,9 @@ done
 if [ -z $gSOAP ]; then 
     echo "Should gsoap be installed (y/n) (default: 'n'): "
     read gSOAP
+    if [ -z $gSOAP ]; then 
+        gSOAP="n"
+    fi
 fi
 
 if [ -z $WSDL_PATH ]; then 
