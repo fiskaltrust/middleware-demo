@@ -7,13 +7,11 @@
 #include <time.h>
 
 #define STRING_LENGTH 256
-#define BODY_SIZE 1024
 
 #ifdef _WIN32
     #define type_Sign_request _ns1__Sign
     #define type_Sign_response _ns1__SignResponse
     #define soap_call_Sign(soap, endpoint, action, Sign_request, Sign_response) soap_call___ns1__Sign(soap, endpoint, action, Sign_request, Sign_response)
-    #define %I64ld %I64d
 #else //Linux
     #define type_Sign_request _tempuri__Sign
     #define type_Sign_response _tempuri__SignResponse
@@ -184,11 +182,23 @@ void set_request_data(struct type_Sign_request *Sign_request, char *cashBoxId, i
 void print_response(struct type_Sign_response *Sign_response) {
     printf("Response:\n");
     printf("ftReceiptIdentification: %s\n",Sign_response->SignResult->ftReceiptIdentification);
-    printf("ftStat: %I64ld\n", Sign_response->SignResult->ftState);
+    #ifdef _WIN32 
+        printf("ftStat: %I64d\n", Sign_response->SignResult->ftState);
+    #else
+        printf("ftStat: %I64ld\n", Sign_response->SignResult->ftState);
+    #endif
     for(int i = 0;i < Sign_response->SignResult->ftSignatures->__sizeSignaturItem; i++) {
         printf("SignaturItem\n");
-        printf("\tftSignatureFormat: %I64ld\n",Sign_response->SignResult->ftSignatures->SignaturItem[i].ftSignatureFormat);
-        printf("\tftSignatureType: %I64ld\n",Sign_response->SignResult->ftSignatures->SignaturItem[i].ftSignatureType);
+        #ifdef _WIN32 
+            printf("\tftSignatureFormat: %I64d\n",Sign_response->SignResult->ftSignatures->SignaturItem[i].ftSignatureFormat);
+        #else
+            printf("\tftSignatureFormat: %I64ld\n",Sign_response->SignResult->ftSignatures->SignaturItem[i].ftSignatureFormat);
+        #endif
+        #ifdef _WIN32 
+            printf("\tftSignatureType: %I64d\n",Sign_response->SignResult->ftSignatures->SignaturItem[i].ftSignatureType);
+        #else
+            printf("\tftSignatureType: %I64ld\n",Sign_response->SignResult->ftSignatures->SignaturItem[i].ftSignatureType);
+        #endif
         printf("\tCaption: %s\n",Sign_response->SignResult->ftSignatures->SignaturItem[i].Caption);
         printf("\tData: %s\n",Sign_response->SignResult->ftSignatures->SignaturItem[i].Data);
     }
@@ -198,22 +208,16 @@ void print_response(struct type_Sign_response *Sign_response) {
 int main() {
     printf("This example sends a sign request to the fiskaltrust.Service via SOAP\n");
 
-    /*
     char ServiceURL[STRING_LENGTH];
     char cashBoxId[STRING_LENGTH];
     char conutryCode[STRING_LENGTH];
-    */
-
-    char ServiceURL[] = {"http://localhost:1201/e025c59e-1f55-47e8-b76c-1acd56d620fc"};
-    char cashBoxId[] = {"979d226d-1a2a-4d38-a518-30b3744630d3"};
-    char conutryCode[] = {"AT"};
 
     struct type_Sign_request Sign_request;
     struct type_Sign_response Sign_response;
 
     struct soap *ft = soap_new1(SOAP_XML_INDENT); // init handler
 
-    // get_input(ServiceURL, cashBoxId, conutryCode);
+    get_input(ServiceURL, cashBoxId, conutryCode);
 
     init_struct(&Sign_request);
 

@@ -6,7 +6,6 @@
 #include <string.h>
 
 #define STRING_LENGTH 256
-#define BODY_SIZE 1024
 
 #ifdef _WIN32
     #define type_Echo_request _ns1__Echo
@@ -100,7 +99,6 @@ int main() {
     printf("making call... ");
     int response = soap_call_echo(ft, ServiceURL, NULL, &Echo_request, &Echo_response);
     
-
     if (response == SOAP_OK) {
         printf("OK\n");
         printf("Response: %s\n", Echo_response.EchoResult);

@@ -6,7 +6,6 @@
 #include <string.h>
 
 #define STRING_LENGTH 256
-#define BODY_SIZE 1024
 
 char *ltrim(char *str, const char *seps) {
     size_t totrim;
@@ -104,33 +103,29 @@ void Set_request_data(struct _ns1__Journal *Journal_request, int64_t journal_typ
 int main() {
     printf("This example sends a sign request to the fiskaltrust.Service via SOAP\n");
 
-    /*
     char ServiceURL[STRING_LENGTH];
     char countycode[STRING_LENGTH];
-    */
-
-    char ServiceURL[] = {"http://localhost:1200/c5b315c4-0e49-46d9-8558-df475fe5c680"};
-    char countycode[] = {"AT"};
 
     struct _ns1__Journal Journal_request;
     struct _ns1__JournalResponse Journal_response;
 
     struct soap *ft = soap_new1(SOAP_XML_INDENT); // init handler
 
-    // get_input(ServiceURL, message);
+    get_input(ServiceURL, countycode);
 
     int64_t journal_type = build_Journal_type(countycode);
 
-    
     Set_request_data(&Journal_request, journal_type);
 
-    printf("making call ...");
+    printf("making call... ");
     int response = soap_call___ns1__Journal(ft, ServiceURL, NULL, &Journal_request, &Journal_response);
-    printf("done\n");
+    
     if (response == SOAP_OK) {
         // Print response
+        printf("OK\n");
         print_response(&Journal_response);
     } else {
+        printf("done\n");
         soap_print_fault(ft, stderr);
     }
 
