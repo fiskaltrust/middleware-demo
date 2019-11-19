@@ -13,8 +13,7 @@
     #define type_Sign_request _ns1__Sign
     #define type_Sign_response _ns1__SignResponse
     #define soap_call_Sign(soap, endpoint, action, Sign_request, Sign_response) soap_call___ns1__Sign(soap, endpoint, action, Sign_request, Sign_response)
-
-    //#define flush(STREAM) fflush(STREAM)
+    #define %I64ld %I64d
 #else //Linux
     #define type_Sign_request _tempuri__Sign
     #define type_Sign_response _tempuri__SignResponse
@@ -22,8 +21,6 @@
     #define ns3__ArrayOfPayItem ns1__ArrayOfPayItem
     #define ns3__ReceiptRequest ns1__ReceiptRequest
     #define ns3__ArrayOfChargeItem ns1__ArrayOfChargeItem
-
-    //#define flush(STREAM) fflush(STREAM)
 #endif
 
 char *ltrim(char *str, const char *seps) {
