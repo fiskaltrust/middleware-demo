@@ -1,28 +1,28 @@
-#Intro
+# Intro
 
-This is a simple REST example which send and echo string to a fiskaltrust.service and prints the response.
+This is a simple REST example which send an echo string to a fiskaltrust.service and prints the response.
 
-#Install
-##Windows
+# Install
+## Windows
 
-###Library
+### Library
 We do not recommend working with C and REST in Windows because the compilation of the libcurl Library is very long and complicated.
 
 If you get the libcurl Library running the programm works
 
 [This](https://albertino80.github.io/building.html) link is a good starting point but you may have to adapt it a bit.
 
-###Building
+### Building
 To build you first have to run the configure.ps1 and then build with `make`
 
-##Linux
+## Linux
 
-###Library
+### Library
 
 just install the libcurl on your PC
 
 for Ubuntu: `sudo apt install libcurl4*`
 
-###building
+### building
 
 just run `make`
