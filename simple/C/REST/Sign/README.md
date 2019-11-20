@@ -1,6 +1,7 @@
 # Intro
 
 This is a simple REST example which send zero receipt to a fiskaltrust.service and prints the response.
+
 This exaplme can be adapted so that it send real receipts.
 
 # Install
