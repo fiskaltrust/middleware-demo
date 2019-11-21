@@ -2,7 +2,7 @@
 
 This example sends a journal request to the fiskaltrust.Service via SOAP.
 
-A journal request is sent to a specified url and cashbox and the response is printed.
+A journal request is sent to a specified url and CashBox and the response is printed.
 
 This example can be used as a starting point to implement the [fiskaltrust.Interface](https://github.com/fiskaltrust/interface-doc).
 
@@ -20,25 +20,25 @@ To build the example, the [gSOAP library](https://www.genivia.com/products.html#
 
 > _**Note:** We tested the example with version 2.8.x other versions may not work._
 
-## WSDL
-
-To build the SOAP interface the wsdl file for the fiskaltrust.Interface is needed.
-
-You can find this file in the folder [`/dist/WSDL`](https://github.com/fiskaltrust/interface-doc/tree/master/dist/WSDL) in the [fiskaltrust.Interface](https://github.com/fiskaltrust/interface-doc) repository.
-
 ### Windows
 
 Download and unpack the gSOAP library from https://sourceforge.net/projects/gsoap2/.
 
-### linux
+### Linux
 
 Install the library via your distributions package manager.
 
 | Distribution  | Command                      |
 |---------------|------------------------------|
 | Ubuntu/Debian | `apt-get install gsoap`      |
-| Fedora        | `yum install gsoap`          |
+| Fedora        | `dnf install gsoap`          |
 | OpenSUSE      | `zypper install gsoap-devel` |
+
+## WSDL
+
+To build the SOAP interface the wsdl file for the fiskaltrust.Interface is needed.
+
+You can find this file in the folder [`/dist/WSDL`](https://github.com/fiskaltrust/interface-doc/tree/master/dist/WSDL) in the [fiskaltrust.Interface](https://github.com/fiskaltrust/interface-doc) repository.
 
 #### Manual
 
