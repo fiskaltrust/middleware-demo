@@ -141,7 +141,7 @@ void set_body(char *body, char *cashboxid, unsigned long long receipt_case) {
     sprintf(buffer,"\"cbReceiptMoment\": \"/Date(%lu)/\",",(unsigned long)time(NULL));       strcat(body, buffer);
     strcat(body, "\"cbChargeItems\": [],");
     strcat(body, "\"cbPayItems\": [],");
-    sprintf(buffer,"\"ftReceiptCase\": %"PRId64"",receipt_case);               strcat(body, buffer);
+    sprintf(buffer,"\"ftReceiptCase\": %I64lld",receipt_case);               strcat(body, buffer);
     strcat(body, "}");
     #ifdef DEBUG
     printf("Body:\n%s\n",body);
