@@ -9,8 +9,9 @@ libcurl:
 #Linux
 else
 
-main: main.c
-	gcc src/main.c -o build/main -lcurl
+main: src/main.c
+	mkdir build -p
+	gcc src/main.c -o build/echo -lcurl
 
 endif
 
