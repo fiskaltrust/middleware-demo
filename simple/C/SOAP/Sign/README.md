@@ -34,7 +34,6 @@ Install the library via your distributions package manager.
 |---------------|-------------------------|
 | Ubuntu/Debian | `apt-get install gsoap` |
 | Fedora        | `dnf install gsoap`     |
-| OpenSUSE      | `zypper install gsoap-devel`  |
 
 ## WSDL
 
