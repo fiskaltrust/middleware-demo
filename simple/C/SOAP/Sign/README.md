@@ -4,6 +4,8 @@ This example sends a signing request to the fiskaltrust.Service via SOAP.
 
 A zero receipt is sent to a specified url and cashbox and the response is printed.
 
+> _**Note:** If no signatures are returned the CashBox may not yet be activated and you'll need to send a start receipt first. For instructions on how to do this please consult our videos about [sending requests to the fiskaltrust.Service](https://www.youtube.com/playlist?list=PL9QFfhi6nFj94kZBTxxL3kyar2Q7yTejU)_
+
 This example can be used as a starting point to implement the [fiskaltrust.Interface](https://github.com/fiskaltrust/interface-doc).
 
 # Requirements
