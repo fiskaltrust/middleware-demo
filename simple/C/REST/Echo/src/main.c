@@ -227,7 +227,7 @@ int main()
         printf("No Response\n");
     }
     else {
-        printf("Response Code: %d\n",response_code);
+        printf("Response Code: %ld\n",response_code);
         printf("Body:\n%s\n", s.ptr);
         free(s.ptr);
     }

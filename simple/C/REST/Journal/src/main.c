@@ -240,7 +240,7 @@ int main()
     send_request(ServiceURL, cashboxid, accesstoken, &s, &response_code, journal_type);
 
     //print Response
-    printf("Response Code: %d\n",response_code);
+    printf("Response Code: %ld\n",response_code);
     if(s.ptr[0] == 0) {
         printf("No Response\n");
     }
