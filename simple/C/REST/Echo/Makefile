@@ -10,6 +10,7 @@ libcurl:
 else
 
 main: src/main.c
+	mkdir build -p
 	gcc src/main.c -o build/echo -lcurl
 
 endif
