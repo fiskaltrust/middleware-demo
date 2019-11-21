@@ -185,19 +185,19 @@ void print_response(struct type_Sign_response *Sign_response) {
     #ifdef _WIN32 
         printf("ftStat: %I64d\n", Sign_response->SignResult->ftState);
     #else
-        printf("ftStat: %I64ld\n", Sign_response->SignResult->ftState);
+        printf("ftStat: %I64lld\n", Sign_response->SignResult->ftState);
     #endif
     for(int i = 0;i < Sign_response->SignResult->ftSignatures->__sizeSignaturItem; i++) {
         printf("SignaturItem\n");
         #ifdef _WIN32 
             printf("\tftSignatureFormat: %I64d\n",Sign_response->SignResult->ftSignatures->SignaturItem[i].ftSignatureFormat);
         #else
-            printf("\tftSignatureFormat: %I64ld\n",Sign_response->SignResult->ftSignatures->SignaturItem[i].ftSignatureFormat);
+            printf("\tftSignatureFormat: %I64lld\n",Sign_response->SignResult->ftSignatures->SignaturItem[i].ftSignatureFormat);
         #endif
         #ifdef _WIN32 
             printf("\tftSignatureType: %I64d\n",Sign_response->SignResult->ftSignatures->SignaturItem[i].ftSignatureType);
         #else
-            printf("\tftSignatureType: %I64ld\n",Sign_response->SignResult->ftSignatures->SignaturItem[i].ftSignatureType);
+            printf("\tftSignatureType: %I64lld\n",Sign_response->SignResult->ftSignatures->SignaturItem[i].ftSignatureType);
         #endif
         printf("\tCaption: %s\n",Sign_response->SignResult->ftSignatures->SignaturItem[i].Caption);
         printf("\tData: %s\n",Sign_response->SignResult->ftSignatures->SignaturItem[i].Data);
