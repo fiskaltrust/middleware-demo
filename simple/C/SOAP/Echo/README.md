@@ -2,25 +2,70 @@
 
 This is a simple SOAP example which send an echo string to a fiskaltrust.service and prints the response.
 
-# Install
+This example sends a echo request to the fiskaltrust.Service via SOAP.
+
+An echo request with a custom message is sent to a specified url and cashbox and the response is printed.
+
+This example can be used as a starting point to implement the [fiskaltrust.Interface](https://github.com/fiskaltrust/interface-doc).
+
+# Requirements
+
+## Toolchain
+
+To compile the example the `C` compiler [`gcc`](https://gcc.gnu.org/install/) and the buildtool [`make`](https://www.gnu.org/software/make/) is needed.
+
+> _**Note:** On windows we recomend installing these with a package manager like [scoop](https://scoop.sh/) or [chocolatey](https://chocolatey.org/)_
+
+## gSOAP
+
+To build the example, the [gSOAP library](https://www.genivia.com/products.html#gsoap) needs to be available. You can download this library from [here](https://sourceforge.net/projects/gsoap2/).
+
+> _**Note:** We tested the example with version 2.8.x other versions may not work._
+
+## WSDL
+
+To build the SOAP interface the wsdl file for the fiskaltrust.Interface is needed.
+
+You can find this file in the folder [`/dist/WSDL`](https://github.com/fiskaltrust/interface-doc/tree/master/dist/WSDL) in the [fiskaltrust.Interface](https://github.com/fiskaltrust/interface-doc) repository.
+
+### Windows
+
+Download and unpack the gSOAP library from https://sourceforge.net/projects/gsoap2/.
+
+### linux
+
+Install the library via your distributions package manager.
+
+| Distribution  | Command                      |
+|---------------|------------------------------|
+| Ubuntu/Debian | `apt-get install gsoap`      |
+| Fedora        | `yum install gsoap`          |
+| OpenSUSE      | `zypper install gsoap-devel` |
+
+#### Manual
+
+You can manually install the library according to [these instructions](https://www.genivia.com/downloads.html#unix).
+
+# Building
+
 ## Windows
 
-### Library
+  1. Run the powershell script `configure.ps1` and follow the instructions.
+  2. Run the `make` command.
 
-Download and unpack the gSOAP library from https://www.genivia.com/downloads.html and point to it in the `configure.ps1`.
-
-### Building
-
-To build you first have to run the configure.ps1 and then build with `make`
+> _**Example:**_
+> ```
+> ./configure.ps1
+> make
+> ```
 
 ## Linux
 
-### Library
+  1. Run the powershell script `configure.sh` and follow the instructions.
+  2. Run the `make` command.
 
-just install the gSOAP on your PC
-
-for Ubuntu: `sudo apt install gsoap*`
-
-### building
-
-Run the `configure.sh` and then `make`
+> _**Example:**_
+> ```
+> ./configure.sh
+> make
+> ```
