@@ -66,6 +66,6 @@ You can manually install the library according to [these instructions](https://w
 
 > _**Example:**_
 > ```
-> ./configure.ps1
+> ./configure.sh
 > make
 > ```
