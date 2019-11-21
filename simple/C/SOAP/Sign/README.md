@@ -40,7 +40,7 @@ Install the library via your distributions package manager.
 |---------------|-------------------------|
 | Ubuntu/Debian | `apt-get install gsoap` |
 | Fedora        | `yum install gsoap`     |
-| OpenSUSE      | `zypper install gsoap`  |
+| OpenSUSE      | `zypper install gsoap-devel`  |
 
 #### Manual
 
