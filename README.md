@@ -10,7 +10,9 @@ This repository contains programs and example code demonstrating how to implemen
 
 Our complete demo programs can be found in the [/C-sharp/demo/](/C-sharp/demo/) folder of this repo.
 
-These demp programs are meant to showcase the [fiskaltrust.Interface](https://github.com/fiskaltrust/interface-doc).
+These demo programs are meant to showcase the full functionality [fiskaltrust.Interface](https://github.com/fiskaltrust/interface-doc). They provide a complete implementation of the [fiskaltrust.Interface](https://github.com/fiskaltrust/interface-doc) and can be used as a reference point.
+
+> _**Note:** Take a look ath these examples to see what is possible with the [fiskaltrust.Interface](https://github.com/fiskaltrust/interface-doc)._
 
 ### Examples
 
@@ -18,9 +20,9 @@ We provide a SOAP and a REST example program for each endpoint of the [fiskaltru
 
 These examples can be found at the following location `/<programming-language>/<SOAP|REST>/<Echo|Sign|Journal>/`.
 
-> _**Example:** [`/C/REST/Sign/`](/C/REST/Sign)_
+These examples are meant to provide a simple starting point for implementing the [fiskaltrust.Interface](https://github.com/fiskaltrust/interface-doc). They do not implement the full functionality of the [fiskaltrust.Interface](https://github.com/fiskaltrust/interface-doc) but provide the technological baseline to start the implementation.
 
-These examples are meant to provide a simple starting point for implementing the [fiskaltrust.Interface](https://github.com/fiskaltrust/interface-doc).
+> _**Note:** For a complete implementation of the [fiskaltrust.Interface](https://github.com/fiskaltrust/interface-doc) please take a look at the demo programs._
 
 > _**Note:** We are in the process of writing these examples. Please check back later or open a [github issue](./issues) for your desired language._
 
