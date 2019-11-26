@@ -2,12 +2,12 @@ VERSION 5.00
 Begin VB.Form journal 
    Caption         =   "Form1"
    ClientHeight    =   6225
-   ClientLeft      =   60
-   ClientTop       =   450
-   ClientWidth     =   14790
+   ClientLeft      =   165
+   ClientTop       =   555
+   ClientWidth     =   14925
    LinkTopic       =   "Form1"
    ScaleHeight     =   6225
-   ScaleWidth      =   14790
+   ScaleWidth      =   14925
    StartUpPosition =   3  'Windows Default
    Begin VB.Frame Frame5 
       Caption         =   "County code"
@@ -112,7 +112,6 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-'Private Const HTTPREQUEST_PROXYSETTING_PROXY& = 2
 
 Private WithEvents rest As WinHttp.WinHttpRequest
 Attribute rest.VB_VarHelpID = -1
@@ -124,10 +123,13 @@ End Sub
 Private Sub Form_Load()
     Set rest = New WinHttp.WinHttpRequest
     
-    'load colloms'
+    'load colloms for county code selection'
     ComboCC.AddItem "AT"
     ComboCC.AddItem "DE"
     ComboCC.AddItem "FR"
+    
+    
+    
 End Sub
 
 Private Function Set_URL(ServiceURL As String, endpoint As String) As String
@@ -142,46 +144,71 @@ End Function
 
 Private Function VtS(num As Variant) As String 'Convert Variant to String'
     Dim resault As String
+    resault = ""
+    Dim dec As String
+    Dim counter As Integer
+    Dim zeros As Integer
+    Dim temp As Integer
     
-    Do
-        resault = num(1)
+    'get length of decimal'
+    dec = CStr(num)
+    counter = CInt(Right(dec, 2))
+    
+    'build string'
+    Dim index As Integer
+    Dim j As Integer
+    For index = 1 To counter
+        j = 0
+        dec = CStr(num)
+        resault = resault & Left(dec, 1)
+        num = num - (CInt(Left(dec, 1)) * (10 ^ (counter - (index - 1))))
+        dec = CStr(num)
+        If InStr(1, dec, "E") = 0 Then
+            resault = resault & CStr(num)
+            Exit For
+        End If
+        zeros = (counter - (index)) - (CInt(Mid(dec, InStr(1, dec, "E") + 1)))
         
-    Loop While num > 9
-    
+        While j < zeros
+            resault = resault & "0"
+            index = index + 1
+            j = j + 1
+        Wend
+    Next
+    VtS = resault
     
 End Function
 
 Private Function build_journalType(CountyCode As String) As String
     Dim journalType As Variant
     Dim temp As Integer
-    Dim char() As Byte
+    Dim Jtype As Variant
+    Dim Char() As Byte
     Dim char1 As Byte
     Dim char2 As Byte
+    Dim Jreturn As String
     
+    Jtype = 1
     journalType = 0
-    char = StrConv(CountyCode, vbFromUnicode)
+    Char = StrConv(CountyCode, vbFromUnicode)
     
-    char1 = char(0)
-    char2 = char(1)
+    char1 = Char(0)
+    char2 = Char(1)
     
     temp = CInt(char1)
-    'MsgBox temp, vbInformation
-    journalType = journalType + (temp * (2 ^ 56)) 'shift first letter to beginning'
+    journalType = journalType + (temp * (2 ^ 56)) 'Add first letter of county code'
     temp = CInt(char2)
-    'MsgBox temp, vbInformation
-    journalType = journalType + (temp * (2 ^ 48)) 'shift second after first'
-    'MsgBox journalType, vbInformation
+    journalType = journalType + (temp * (2 ^ 48)) 'Add second letter of county code
+    'MsgBox VtS(journalType), vbInformation
     journalType = journalType + 1 'Add journal type'
-    
-    'MsgBox journalType, vbInformation
-    
+    'MsgBox VtS(journalType), vbInformation
     build_journalType = VtS(journalType)
 
 End Function
 
 
 Private Sub send_Click()
-    'MousePointer = vbHourglass
+    MousePointer = vbHourglass
     'txtQuery.Locked = True'
     Dim echo As String
     Dim ServiceURL As String
@@ -192,6 +219,7 @@ Private Sub send_Click()
     'Set Methode and Add Parameter to URL'
     ServiceURL = Set_URL(URL.Text, "json/journal")
     journalType = build_journalType(ComboCC.Text)
+    MsgBox journalType, vbInformation
     ServiceURL = ServiceURL & "?type=" & journalType
     ServiceURL = ServiceURL & "&from=0&to=0"
     
@@ -204,14 +232,20 @@ Private Sub send_Click()
     rest.SetRequestHeader "accesstoken", Trim(accesstoken.Text)
     
     'send journal request'
-    rest.Send ""
-    
-    rest.WaitForResponse
+    rest.send ""
+    output.Text = "Request send" & vbCrLf
+     
+End Sub
+
+Private Sub rest_OnResponseFinished()
+    Dim response As Object
+    output.Text = output.Text & "Status " & CStr(rest.Status)
     If rest.Status = 200 Then
-        output.Text = "Status " & CStr(rest.Status) & vbCrLf & rest.ResponseText
-    Else
-        output.Text = "Status " & CStr(rest.Status)
+        output.Text = output.Text & vbCrLf & rest.ResponseText
+        'MsgBox rest.ResponseText, vbInformation
+        Set response = JSON.parse(rest.ResponseText)
+        MsgBox "Kassen-ID: " & response.Item("Belege-Gruppe")(1).Item("Kassen-ID"), vbInformation
+        
     End If
-    
-    
+    MousePointer = vbDefault
 End Sub
