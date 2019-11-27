@@ -1,13 +1,13 @@
 VERSION 5.00
-Begin VB.Form journal 
+Begin VB.Form sign 
    Caption         =   "Form1"
    ClientHeight    =   6225
    ClientLeft      =   165
    ClientTop       =   555
-   ClientWidth     =   18615
+   ClientWidth     =   14925
    LinkTopic       =   "Form1"
    ScaleHeight     =   6225
-   ScaleWidth      =   18615
+   ScaleWidth      =   14925
    StartUpPosition =   3  'Windows Default
    Begin VB.Frame Frame5 
       Caption         =   "Country code"
@@ -40,7 +40,7 @@ Begin VB.Form journal
       MultiLine       =   -1  'True
       TabIndex        =   8
       Top             =   240
-      Width           =   9135
+      Width           =   5535
    End
    Begin VB.Frame Frame3 
       Caption         =   "Accesstoken"
@@ -99,7 +99,7 @@ Begin VB.Form journal
       Width           =   2535
    End
    Begin VB.Label Label1 
-      Caption         =   "This example sends a journal request to a fiskaltrust.service via REST and downloads the DEP7 of the queue"
+      Caption         =   "This example sends a sign request to a fiskaltrust.service via REST"
       Height          =   735
       Left            =   360
       TabIndex        =   7
@@ -107,12 +107,12 @@ Begin VB.Form journal
       Width           =   8535
    End
 End
-Attribute VB_Name = "journal"
+Attribute VB_Name = "sign"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-Private journalCase As Dictionary
+Private signCase As Dictionary
 
 Private WithEvents rest As WinHttp.WinHttpRequest
 Attribute rest.VB_VarHelpID = -1
@@ -121,23 +121,25 @@ Private Sub close_Click()
     Unload Me
 End Sub
 
-Private Function create_journalcase_dictionary(journalCase As Dictionary)
+Private Function create_receiptcase_dictionary(signCase As Dictionary)
     Dim AT As Dictionary
     Set AT = New Dictionary
     AT.Add "unknown", "4707387510509010944"
-    AT.Add "DEP7", "4707387510509010945"
+    AT.Add "zero_receipt", "4707387510509010946"
     
     Dim DE As Dictionary
     Set DE = New Dictionary
     DE.Add "unknown", "4919338167972134912"
+    DE.Add "zero_receipt", "4919338167972134914"
     
     Dim FR As Dictionary
     Set FR = New Dictionary
     FR.Add "unknown", "5067112530745229312"
+    FR.Add "zero_receipt", "5067112530745229327"
     
-    journalCase.Add "AT", AT
-    journalCase.Add "DE", DE
-    journalCase.Add "FR", FR
+    signCase.Add "AT", AT
+    signCase.Add "DE", DE
+    signCase.Add "FR", FR
     
 End Function
 
@@ -149,10 +151,8 @@ Private Sub Form_Load()
     ComboCC.AddItem "DE"
     ComboCC.AddItem "FR"
     
-    'set values for journalType'
-    Set journalCase = New Dictionary
-    create_journalcase_dictionary journalCase
-    
+    Set signCase = New Dictionary
+    create_receiptcase_dictionary signCase
     
 End Sub
 
@@ -166,6 +166,22 @@ Private Function Set_URL(ServiceURL As String, endpoint As String) As String
     End If
 End Function
 
+Private Function Set_object(sign As Dictionary)
+    Dim ChargeItem As Collection
+    Set ChargeItem = New Collection
+    Dim PayItem As Collection
+    Set PayItem = New Collection
+    
+    sign.Add "ftcashboxid", Trim(cashboxid.Text)
+    sign.Add "cbTerminalID", "1"
+    sign.Add "cbReceiptReference", "1"
+    sign.Add "cbChargeItems", ChargeItem
+    sign.Add "cbPayItems", PayItem
+    sign.Add "cbReceiptMoment", Format(Now, "mm/dd/yyyy") & "Z" & Format(Now, "hh:mm:ss")
+    sign.Add "ftReceiptCase", signCase.Item(ComboCC.Text).Item("zero_receipt")
+    
+End Function
+
 Private Sub send_Click()
     
     'lock input fields'
@@ -175,15 +191,16 @@ Private Sub send_Click()
     accesstoken.Locked = True
     ComboCC.Locked = True
     
-    Dim echo As String
     Dim ServiceURL As String
     
-    Set rest = New WinHttp.WinHttpRequest
+    'Set rest = New WinHttp.WinHttpRequest
+    Dim sign As Dictionary
+    Set sign = New Dictionary
+    Set_object sign
+    
     
     'Set Methode and Add Parameter to URL'
-    ServiceURL = Set_URL(URL.Text, "json/journal")
-    ServiceURL = ServiceURL & "?type=" & journalCase.Item(ComboCC.Text).Item("DEP7")
-    ServiceURL = ServiceURL & "&from=0&to=0"
+    ServiceURL = Set_URL(URL.Text, "json/sign")
     
     'set URL and methode'
     rest.Open "POST", ServiceURL, True
@@ -194,24 +211,20 @@ Private Sub send_Click()
     rest.SetRequestHeader "accesstoken", Trim(accesstoken.Text)
     
     'send journal request'
-    rest.send ""
+    rest.send JSON.toString(sign)
     output.Text = "Request sent" & vbCrLf
      
 End Sub
 
 Private Sub rest_OnResponseFinished()
     Dim response As Object
-    output.Text = output.Text & "Status " & CStr(rest.Status)
+    output.Text = output.Text & "Status " & CStr(rest.Status) & vbCrLf
     If rest.Status = 200 Then
-        output.Text = output.Text & vbCrLf & Left(rest.ResponseText, 1000) & vbCrLf
-        output.Text = output.Text & "*" & vbCrLf & "*" & vbCrLf & "*" & vbCrLf & "*" & vbCrLf & "*" & vbCrLf
-        output.Text = output.Text & Right(rest.ResponseText, 1000) & vbCrLf
+        
         Set response = JSON.parse(rest.ResponseText)
         'print one object of journal response'
-        MsgBox "Kassen-ID: " & response.Item("Belege-Gruppe")(1).Item("Kassen-ID"), vbInformation
+        output.Text = output.Text & "State: " & response.Item("ftState")
         
-    Else
-        output.Text = output.Text & vbCrLf & rest.ResponseText
     End If
     
     'unlock input fields'
