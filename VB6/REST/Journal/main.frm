@@ -10,7 +10,7 @@ Begin VB.Form journal
    ScaleWidth      =   14925
    StartUpPosition =   3  'Windows Default
    Begin VB.Frame Frame5 
-      Caption         =   "County code"
+      Caption         =   "Country code"
       Height          =   615
       Left            =   360
       TabIndex        =   10
@@ -99,7 +99,7 @@ Begin VB.Form journal
       Width           =   2535
    End
    Begin VB.Label Label1 
-      Caption         =   "This .."
+      Caption         =   "This example sends a journal request to a fiskaltrust.service via REST and downloads the DEP7 of the queue"
       Height          =   735
       Left            =   360
       TabIndex        =   7
@@ -112,6 +112,34 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+'declare journaltype object'
+Private Type Austria_type
+    Status As String
+    RKSV_DEP_Export As String
+End Type
+Private Type Germany_type
+    Status As String
+    GdPdU_Export As String
+End Type
+Private Type France_type
+    Status As String
+    Ticket As String
+    Payment_Prove As String
+    Invoice As String
+    Grand_Total As String
+    Bill As String
+    Archive As String
+    Log As String
+    Copy As String
+    Training As String
+End Type
+Private Type Jtype
+    AT As Austria_type
+    DE As Germany_type
+    FR As France_type
+End Type
+
+Private journalType As Jtype
 
 Private WithEvents rest As WinHttp.WinHttpRequest
 Attribute rest.VB_VarHelpID = -1
@@ -128,6 +156,21 @@ Private Sub Form_Load()
     ComboCC.AddItem "DE"
     ComboCC.AddItem "FR"
     
+    'set values for journalType'
+    journalType.AT.Status = "4707387510509010944"
+    journalType.AT.RKSV_DEP_Export = "4707387510509010945"
+    journalType.DE.Status = "4919338167972134912"
+    journalType.DE.GdPdU_Export = "4919338167972134913"
+    journalType.FR.Status = "5067112530745229312"
+    journalType.FR.Ticket = "5067112530745229313"
+    journalType.FR.Payment_Prove = "5067112530745229314"
+    journalType.FR.Invoice = "5067112530745229315"
+    journalType.FR.Grand_Total = "5067112530745229316"
+    journalType.FR.Bill = "5067112530745229317"
+    journalType.FR.Archive = "5067112530745229318"
+    journalType.FR.Log = "5067112530745229319"
+    journalType.FR.Copy = "5067112530745229320"
+    journalType.FR.Training = "5067112530745229321"
     
     
 End Sub
@@ -142,85 +185,23 @@ Private Function Set_URL(ServiceURL As String, endpoint As String) As String
     End If
 End Function
 
-Private Function VtS(num As Variant) As String 'Convert Variant to String'
-    Dim resault As String
-    resault = ""
-    Dim dec As String
-    Dim counter As Integer
-    Dim zeros As Integer
-    Dim temp As Integer
-    
-    'get length of decimal'
-    dec = CStr(num)
-    counter = CInt(Right(dec, 2))
-    
-    'build string'
-    Dim index As Integer
-    Dim j As Integer
-    For index = 1 To counter
-        j = 0
-        dec = CStr(num)
-        resault = resault & Left(dec, 1)
-        num = num - (CInt(Left(dec, 1)) * (10 ^ (counter - (index - 1))))
-        dec = CStr(num)
-        If InStr(1, dec, "E") = 0 Then
-            resault = resault & CStr(num)
-            Exit For
-        End If
-        zeros = (counter - (index)) - (CInt(Mid(dec, InStr(1, dec, "E") + 1)))
-        
-        While j < zeros
-            resault = resault & "0"
-            index = index + 1
-            j = j + 1
-        Wend
-    Next
-    VtS = resault
-    
-End Function
-
-Private Function build_journalType(CountyCode As String) As String
-    Dim journalType As Variant
-    Dim temp As Integer
-    Dim Jtype As Variant
-    Dim Char() As Byte
-    Dim char1 As Byte
-    Dim char2 As Byte
-    Dim Jreturn As String
-    
-    Jtype = 1
-    journalType = 0
-    Char = StrConv(CountyCode, vbFromUnicode)
-    
-    char1 = Char(0)
-    char2 = Char(1)
-    
-    temp = CInt(char1)
-    journalType = journalType + (temp * (2 ^ 56)) 'Add first letter of county code'
-    temp = CInt(char2)
-    journalType = journalType + (temp * (2 ^ 48)) 'Add second letter of county code
-    'MsgBox VtS(journalType), vbInformation
-    journalType = journalType + 1 'Add journal type'
-    'MsgBox VtS(journalType), vbInformation
-    build_journalType = VtS(journalType)
-
-End Function
-
-
 Private Sub send_Click()
+    
+    'lock input fields'
     MousePointer = vbHourglass
-    'txtQuery.Locked = True'
+    URL.Locked = True
+    cashboxid.Locked = True
+    accesstoken.Locked = True
+    ComboCC.Locked = True
+    
     Dim echo As String
     Dim ServiceURL As String
-    Dim journalType As String
     
     Set rest = New WinHttp.WinHttpRequest
     
     'Set Methode and Add Parameter to URL'
     ServiceURL = Set_URL(URL.Text, "json/journal")
-    journalType = build_journalType(ComboCC.Text)
-    MsgBox journalType, vbInformation
-    ServiceURL = ServiceURL & "?type=" & journalType
+    ServiceURL = ServiceURL & "?type=" & journalType.AT.RKSV_DEP_Export
     ServiceURL = ServiceURL & "&from=0&to=0"
     
     'set URL and methode'
@@ -242,10 +223,16 @@ Private Sub rest_OnResponseFinished()
     output.Text = output.Text & "Status " & CStr(rest.Status)
     If rest.Status = 200 Then
         output.Text = output.Text & vbCrLf & rest.ResponseText
-        'MsgBox rest.ResponseText, vbInformation
         Set response = JSON.parse(rest.ResponseText)
+        'print one object of journal response'
         MsgBox "Kassen-ID: " & response.Item("Belege-Gruppe")(1).Item("Kassen-ID"), vbInformation
         
     End If
-    MousePointer = vbDefault
+    
+    'unlock input fields'
+    MousePointer = vbdeault
+    URL.Locked = False
+    cashboxid.Locked = False
+    accesstoken.Locked = False
+    ComboCC.Locked = False
 End Sub

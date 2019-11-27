@@ -99,7 +99,7 @@ Begin VB.Form echo
       Width           =   2535
    End
    Begin VB.Label Label1 
-      Caption         =   "This .."
+      Caption         =   "This example sends an echo request to the fiskaltrust.Service via REST"
       Height          =   735
       Left            =   360
       TabIndex        =   9
@@ -130,8 +130,8 @@ Private Function Set_URL()
 End Function
 
 Private Sub send_Click()
-    'MousePointer = vbHourglass
-    'txtQuery.Locked = True'
+    MousePointer = vbHourglass
+    
     Dim echo As String
     Dim ServiceURL As String
     
@@ -153,14 +153,14 @@ Private Sub send_Click()
     
     'set echo message'
     echo = Trim(Message.Text)
-    rest.send """echo"""
+    rest.send """" & echo & """"
     
-    rest.WaitForResponse
+End Sub
+
+Private Sub rest_OnResponseFinished()
+    output.Text = "Status " & CStr(rest.Status)
     If rest.Status = 200 Then
-        output.Text = "Status " & CStr(rest.Status) & vbCrLf & rest.ResponseText
-    Else
-        output.Text = "Status " & CStr(rest.Status)
+        output.Text = output.Text & vbCrLf & rest.ResponseText & vbCrLf
     End If
-    
-    
+    MousePointer = vbDefault
 End Sub
