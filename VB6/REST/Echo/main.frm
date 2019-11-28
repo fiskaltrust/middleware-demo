@@ -125,9 +125,9 @@ Private Sub Form_Load()
     Set rest = New WinHttp.WinHttpRequest
 End Sub
 
-Private Function Set_URL(ServiceURL As String, endpoint As String) As String
-    
-    ServiceURL = Trim(URL.Text)
+Private Function Set_URL(URL As String, endpoint As String) As String
+    Dim ServiceURL As String
+    ServiceURL = Trim(URL)
     If Right(ServiceURL, 1) = "/" Then
         Set_URL = ServiceURL & endpoint
     Else
