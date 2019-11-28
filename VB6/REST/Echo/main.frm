@@ -125,8 +125,14 @@ Private Sub Form_Load()
     Set rest = New WinHttp.WinHttpRequest
 End Sub
 
-Private Function Set_URL()
+Private Function Set_URL(ServiceURL As String, endpoint As String) As String
     
+    ServiceURL = Trim(URL.Text)
+    If Right(ServiceURL, 1) = "/" Then
+        Set_URL = ServiceURL & endpoint
+    Else
+        Set_URL = ServiceURL & "/" & endpoint
+    End If
 End Function
 
 Private Sub send_Click()
@@ -138,12 +144,7 @@ Private Sub send_Click()
     Set rest = New WinHttp.WinHttpRequest
     
     'set URL and methode'
-    ServiceURL = Trim(URL.Text)
-    If Right(ServiceURL, 1) = "/" Then
-        ServiceURL = ServiceURL & "json/echo"
-    Else
-        ServiceURL = ServiceURL & "/json/echo"
-    End If
+    ServiceURL = Set_URL(URL.Text, "json/echo")
     rest.Open "POST", ServiceURL, True
     
     'set headers'
