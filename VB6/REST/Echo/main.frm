@@ -142,9 +142,9 @@ Private Sub send_Click()
     If Right(ServiceURL, 1) = "/" Then
         ServiceURL = ServiceURL & "json/echo"
     Else
-        ServiceURL = ServiceURL & "json/echo"
+        ServiceURL = ServiceURL & "/json/echo"
     End If
-    rest.Open "POST", Trim(URL.Text) & "/json/echo", True
+    rest.Open "POST", ServiceURL, True
     
     'set headers'
     rest.SetRequestHeader "Content-Type", "application/json"
