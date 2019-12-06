@@ -152,7 +152,7 @@ Private Function VtS(num As Variant) As String 'Convert Variant to String'
     
     'get length of decimal'
     dec = CStr(num)
-    counter = CInt(Right(dec, 2))
+    counter = CInt(right(dec, 2))
 
     'build string'
     Dim index As Integer
@@ -160,8 +160,8 @@ Private Function VtS(num As Variant) As String 'Convert Variant to String'
     For index = 1 To counter
         j = 0
         dec = CStr(num)
-        resault = resault & Left(dec, 1)
-        num = num - (CInt(Left(dec, 1)) * (10 ^ (counter - (index - 1))))
+        resault = resault & left(dec, 1)
+        num = num - (CInt(left(dec, 1)) * (10 ^ (counter - (index - 1))))
         dec = CStr(num)
         If InStr(1, dec, "E") = 0 Then
             resault = resault & CStr(num)
@@ -181,69 +181,69 @@ End Function
 Private Function create_receiptcase_dictionary(signCase As Dictionary)
     Dim AT As Dictionary
     Set AT = New Dictionary
-    AT.Add "unknown", 4.70738751E+18 + 509010944 '64bit unsigned integer cant be hardcode otherwise because of IDE
-    AT.Add "RKSV", 4.70738751E+18 + 509010945
-    AT.Add "zero_receipt", 4.70738751E+18
-    AT.Add "start_receipt", 4.70738751E+18 ' + 509010947
+    AT.add "unknown", 4.70738751E+18 + 509010944 '64bit unsigned integer cant be hardcode otherwise because of IDE
+    AT.add "RKSV", 4.70738751E+18 + 509010945
+    AT.add "zero_receipt", 4.70738751E+18
+    AT.add "start_receipt", 4.70738751E+18 + 509010947
     'AT.Item("zero_receipt") = AT.Item("zero_receipt") + 509010946
-    'MsgBox VtS(AT.Item("start_receipt"))
+    MsgBox VtS(AT.Item("start_receipt"))
     
     Dim DE As Dictionary
     Set DE = New Dictionary
-    DE.Add "unknown", 4.919338167E+18 ' + 972134912
-    DE.Add "standart", 4.919338167E+18 ' + 972134913
-    DE.Add "zero_receipt", 4919338167# * (10 ^ 9) + 972134914 '       4.919338167E+18 + 972134914
+    DE.add "unknown", 4.919338167E+18 ' + 972134912
+    DE.add "standart", 4.919338167E+18 ' + 972134913
+    DE.add "zero_receipt", 491933816# * (10 ^ 10) + 7972134914# '       4.919338167E+18 + 972134914
     'DE.Item("zero_receipt") = DE.Item("zero_receipt") + 972134914
-    'DE.Item("zero_receipt") = DE.Item("zero_receipt") + 2
-    MsgBox VtS(DE.Item("zero_receipt"))
+    'DE.Item("zero_receipt") = DE.Item("zero_receipt") + 513
+    'MsgBox VtS(DE.Item("zero_receipt"))
     
     Dim FR As Dictionary
     Set FR = New Dictionary
-    FR.Add "unknown", 5.06711253E+18 + 745229312
-    FR.Add "zero_receipt", 5.06711253E+18 + 745229327
+    FR.add "unknown", 5.06711253E+18 + 745229312
+    FR.add "zero_receipt", 5.06711253E+18 + 745229327
     
-    signCase.Add "AT", AT
-    signCase.Add "DE", DE
-    signCase.Add "FR", FR
+    signCase.add "AT", AT
+    signCase.add "DE", DE
+    signCase.add "FR", FR
     
 End Function
 
 Private Function create_ChargeItemCase_dictionary(ChargeItemCase As Dictionary)
     Dim AT As Dictionary
     Set AT = New Dictionary
-    AT.Add "unknown", 4.70738751E+18 + 509010944 '64bit unsigned integer cant be hardcode otherwise because of IDE
-    AT.Add "undefined_10", 4.70738751E+18 + 509010945
+    AT.add "unknown", 4.70738751E+18 + 509010944 '64bit unsigned integer cant be hardcode otherwise because of IDE
+    AT.add "undefined_10", 4.70738751E+18 + 509010945
     
     Dim DE As Dictionary
     Set DE = New Dictionary
-    DE.Add "unknown", 4.919338167E+18 + 972134912
+    DE.add "unknown", 4.919338167E+18 + 972134912
     
     Dim FR As Dictionary
     Set FR = New Dictionary
-    FR.Add "unknown", 5.06711253E+18 + 745229312
+    FR.add "unknown", 5.06711253E+18 + 745229312
     
-    ChargeItemCase.Add "AT", AT
-    ChargeItemCase.Add "DE", DE
-    ChargeItemCase.Add "FR", FR
+    ChargeItemCase.add "AT", AT
+    ChargeItemCase.add "DE", DE
+    ChargeItemCase.add "FR", FR
     
 End Function
 
 Private Function create_PayItemCase_dictionary(PayItemCase As Dictionary)
     Dim AT As Dictionary
     Set AT = New Dictionary
-    AT.Add "default", 4.70738751E+18 + 509010944 '64bit unsigned integer cant be hardcode otherwise because of IDE
+    AT.add "default", 4.70738751E+18 + 509010944 '64bit unsigned integer cant be hardcode otherwise because of IDE
     
     Dim DE As Dictionary
     Set DE = New Dictionary
-    DE.Add "default", 4.919338167E+18 + 972134912
+    DE.add "default", 4.919338167E+18 + 972134912
     
     Dim FR As Dictionary
     Set FR = New Dictionary
-    FR.Add "default", 5.06711253E+18 + 745229312
+    FR.add "default", 5.06711253E+18 + 745229312
     
-    PayItemCase.Add "AT", AT
-    PayItemCase.Add "DE", DE
-    PayItemCase.Add "FR", FR
+    PayItemCase.add "AT", AT
+    PayItemCase.add "DE", DE
+    PayItemCase.add "FR", FR
     
 End Function
 
@@ -254,6 +254,15 @@ Private Sub Form_Load()
     ComboCC.AddItem "AT"
     ComboCC.AddItem "DE"
     ComboCC.AddItem "FR"
+    
+    Dim left As New bigDecimal
+    Dim right As New bigDecimal
+    left.Set_value "4919338167972134912", 10
+    'right.Set_value "6347069845", 10
+    
+    'left.add right
+    MsgBox left.toString(10)
+    
     
     Set signCase = New Dictionary
     create_receiptcase_dictionary signCase
@@ -268,7 +277,7 @@ Private Function set_request_parameter()
     'Set Methode and Add Parameter to URL'
     Dim ServiceURL As String
     ServiceURL = Trim(URL.Text)
-    If Right(ServiceURL, 1) = "/" Then
+    If right(ServiceURL, 1) = "/" Then
         ServiceURL = ServiceURL & "json/sign"
     Else
         ServiceURL = ServiceURL & "/" & "json/sign"
@@ -291,13 +300,13 @@ Private Function init_zero(receipt_case As String) As Dictionary
     Dim PayItem As Collection
     Set PayItem = New Collection
     
-    sign.Add "ftcashboxid", Trim(cashboxid.Text)
-    sign.Add "cbTerminalID", "1"
-    sign.Add "cbReceiptReference", "1"
-    sign.Add "cbChargeItems", ChargeItem
-    sign.Add "cbPayItems", PayItem
-    sign.Add "cbReceiptMoment", Format(Now, "mm/dd/yyyy") & "Z" & Format(Now, "hh:mm:ss")
-    sign.Add "ftReceiptCase", receipt_case
+    sign.add "ftcashboxid", Trim(cashboxid.Text)
+    sign.add "cbTerminalID", "1"
+    sign.add "cbReceiptReference", "1"
+    sign.add "cbChargeItems", ChargeItem
+    sign.add "cbPayItems", PayItem
+    sign.add "cbReceiptMoment", Format(Now, "mm/dd/yyyy") & "Z" & Format(Now, "hh:mm:ss")
+    sign.add "ftReceiptCase", receipt_case
     
     Set init_zero = sign
 End Function
@@ -308,36 +317,36 @@ Private Function init_sign(receipt_case As String) As Dictionary
     'set chargeitems
     Dim ChargeItem As Dictionary
     Set ChargeItem = New Dictionary
-    ChargeItem.Add "Quantity", 10#
-    ChargeItem.Add "Description", "Food"
-    ChargeItem.Add "Amount", 5#
-    ChargeItem.Add "VATRate", 10#
-    ChargeItem.Add "ftChargeItemCase", ChargeItemCase.Item(ComboCC.Text).Item("undefined_10")
-    ChargeItem.Add "ProductNumber", "1"
+    ChargeItem.add "Quantity", 10#
+    ChargeItem.add "Description", "Food"
+    ChargeItem.add "Amount", 5#
+    ChargeItem.add "VATRate", 10#
+    ChargeItem.add "ftChargeItemCase", ChargeItemCase.Item(ComboCC.Text).Item("undefined_10")
+    ChargeItem.add "ProductNumber", "1"
     
     Dim ChargeItems As Collection
     Set ChargeItems = New Collection
-    ChargeItems.Add ChargeItem
+    ChargeItems.add ChargeItem
     
     'set Payitems
     Dim PayItem As Dictionary
     Set PayItem = New Dictionary
-    PayItem.Add "Quantity", 10#
-    PayItem.Add "Description", "Cash"
-    PayItem.Add "Amount", 5#
-    PayItem.Add "ftPayItemCase", PayItemCase.Item(ComboCC.Text).Item("default")
+    PayItem.add "Quantity", 10#
+    PayItem.add "Description", "Cash"
+    PayItem.add "Amount", 5#
+    PayItem.add "ftPayItemCase", PayItemCase.Item(ComboCC.Text).Item("default")
     
     Dim PayItems As Collection
     Set PayItems = New Collection
-    PayItems.Add PayItem
+    PayItems.add PayItem
     
-    sign.Add "ftcashboxid", Trim(cashboxid.Text)
-    sign.Add "cbTerminalID", "1"
-    sign.Add "cbReceiptReference", "1"
-    sign.Add "cbChargeItems", ChargeItems
-    sign.Add "cbPayItems", PayItems
-    sign.Add "cbReceiptMoment", Format(Now, "mm/dd/yyyy") & "Z" & Format(Now, "hh:mm:ss")
-    sign.Add "ftReceiptCase", receipt_case
+    sign.add "ftcashboxid", Trim(cashboxid.Text)
+    sign.add "cbTerminalID", "1"
+    sign.add "cbReceiptReference", "1"
+    sign.add "cbChargeItems", ChargeItems
+    sign.add "cbPayItems", PayItems
+    sign.add "cbReceiptMoment", Format(Now, "mm/dd/yyyy") & "Z" & Format(Now, "hh:mm:ss")
+    sign.add "ftReceiptCase", receipt_case
     
     Set init_sign = sign
 End Function
