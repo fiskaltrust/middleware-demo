@@ -69,7 +69,7 @@ Begin VB.Form sign
          Height          =   285
          Left            =   120
          TabIndex        =   6
-         Text            =   "BMhBjJrUOIuuah83mne5m9ZAo6JLOff7EX8rRWAXjyl3tllsmUUULHoZpZbNKrtduFDpOLM71zDGb6Qy2/UhNWE="
+         Text            =   "BJCvKkJY9YeLuOerD1tr7tbuixq+5bwcwgC2Yq2zWHVgaCGIlPQBEuOdtOlgSuGd3/02RXEhdDbQW8QO+LY9cPM="
          Top             =   240
          Width           =   8295
       End
@@ -85,7 +85,7 @@ Begin VB.Form sign
          Height          =   285
          Left            =   120
          TabIndex        =   4
-         Text            =   "23b55571-86fd-43d0-a331-bc8e190c68b7"
+         Text            =   "862b15b4-85cc-4774-bcc4-f45d6bb90e42"
          Top             =   240
          Width           =   8295
       End
@@ -101,7 +101,7 @@ Begin VB.Form sign
          Height          =   285
          Left            =   120
          TabIndex        =   2
-         Text            =   "https://signaturcloud-sandbox.fiskaltrust.at"
+         Text            =   "http://fiskaltrust.free.beeceptor.com/"
          Top             =   240
          Width           =   8295
       End
@@ -132,6 +132,8 @@ Private signCase As Dictionary
 Private ChargeItemCase As Dictionary
 Private PayItemCase As Dictionary
 Private sign As Dictionary
+Private zero As Boolean
+
 
 Private WithEvents rest As WinHttp.WinHttpRequest
 Attribute rest.VB_VarHelpID = -1
@@ -181,14 +183,19 @@ Private Function create_receiptcase_dictionary(signCase As Dictionary)
     Set AT = New Dictionary
     AT.Add "unknown", 4.70738751E+18 + 509010944 '64bit unsigned integer cant be hardcode otherwise because of IDE
     AT.Add "RKSV", 4.70738751E+18 + 509010945
-    AT.Add "zero_receipt", 4.70738751E+18 + 509010946
-    AT.Add "start_receipt", 4.70738751E+18 + 509010947
+    AT.Add "zero_receipt", 4.70738751E+18
+    AT.Add "start_receipt", 4.70738751E+18 ' + 509010947
+    'AT.Item("zero_receipt") = AT.Item("zero_receipt") + 509010946
+    'MsgBox VtS(AT.Item("start_receipt"))
     
     Dim DE As Dictionary
     Set DE = New Dictionary
-    DE.Add "unknown", 4.919338167E+18 + 972134912
-    DE.Add "standart", 4.919338167E+18 + 972134913
-    DE.Add "zero_receipt", 4.919338167E+18 + 972134914
+    DE.Add "unknown", 4.919338167E+18 ' + 972134912
+    DE.Add "standart", 4.919338167E+18 ' + 972134913
+    DE.Add "zero_receipt", 4919338167# * (10 ^ 9) + 972134914 '       4.919338167E+18 + 972134914
+    'DE.Item("zero_receipt") = DE.Item("zero_receipt") + 972134914
+    'DE.Item("zero_receipt") = DE.Item("zero_receipt") + 2
+    MsgBox VtS(DE.Item("zero_receipt"))
     
     Dim FR As Dictionary
     Set FR = New Dictionary
@@ -351,7 +358,9 @@ Private Sub cmdZero_Click()
     Set sign = init_zero(VtS(signCase.Item(ComboCC.Text).Item("zero_receipt")))
     
     'send sign request'
+    zero = True
     output.Text = "Request sent" & vbCrLf
+    MsgBox VtS(signCase.Item(ComboCC.Text).Item("zero_receipt"))
     rest.Send JSON.toString(sign)
 End Sub
 
@@ -403,7 +412,7 @@ End Sub
 Private Sub rest_OnResponseFinished()
     Dim response As Object
     output.Text = output.Text & "Status " & CStr(rest.Status) & vbCrLf
-    If rest.Status = 200 Then
+    If rest.Status = 200 And zero = False Then
         'output.Text = output.Text & rest.ResponseText & vbCrLf
         Set response = JSON.parse(rest.ResponseText)
         'print one object of journal response'
