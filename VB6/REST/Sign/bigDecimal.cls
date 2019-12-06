@@ -29,8 +29,7 @@ Public Sub Set_value(number As String, new_base As Byte)
         Exit Sub
     End If
     Dim temp As Byte
-    ReDim num(1)
-    num(0) = 0
+    ReDim num(0)
     
     base = new_base
     
@@ -50,6 +49,7 @@ Public Sub Set_value(number As String, new_base As Byte)
             MsgBox "input error", vbCritical
         End If
     Next
+    
     
 End Sub
 
@@ -74,9 +74,10 @@ End Sub
 
 Public Function add(target As bigDecimal)
     Dim overload As Byte
+    overload = 0
     Dim sum As Byte
     Dim index As Byte
-    index = 1
+    index = 0
     Dim temp As Byte
     
     If target.get_base <> base Then
@@ -111,7 +112,26 @@ Public Property Get get_base() As Byte
 End Property
 
 Public Property Get toString(Optional target_base As Byte) As String
-    
+    Dim printaible As New bigDecimal
+    Dim output As String
+    If base <> target_base Then
+        Set printable = Me
+        printable.convertBase base
+        toString = printable.toString(target_base)
+        Exit Property
+    End If
+    'MsgBox UBound(printable.num)
+    For i = (UBound(num) - 1) To 0 Step -1
+        
+        If num(i) < 10 Then 'numbers
+            output = output + ChrW$(num(i) + 48)
+        ElseIf num(i) < 37 Then 'upper case
+            output = output + ChrW$(num(i) + 55)
+        Else
+            MsgBox "Error toString", vbCritical
+        End If
+    Next
+    toString = output
 End Property
 
 Public Property Get numbers() As Byte()
