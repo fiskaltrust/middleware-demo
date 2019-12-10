@@ -11,23 +11,14 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
-Private num() As Byte
-Private base As Byte
+Private num() As Integer
+Private base As Integer
+Private CC As String
 
+base = 10
 
-Private Property Let set_base(new_base As Byte)
-    If check_base(new_base) Then
-        MsgBox "wrong base"
-    Else
-        base = new_base
-    End If
-    
-End Property
-
-Public Sub Set_value(number As String, new_base As Byte)
-    If check_base(new_base) = False Then
-        Exit Sub
-    End If
+Public Property Set country(number As String)
+    CC = number
     Dim temp As Byte
     ReDim num(0)
     
@@ -49,44 +40,22 @@ Public Sub Set_value(number As String, new_base As Byte)
             MsgBox "input error", vbCritical
         End If
     Next
-    
-    
-End Sub
+End Property
 
-Public Sub convertBase(new_base As Byte)
-    If (new_base = base) Then
-        Exit Sub
-    End If
-    Dim overload As Byte
-    Dim buffer As Byte
-    Dim index As Byte
-    Dim temp As bigDecimal
-    'Dim buffer As bigDecimal
-    index = 0
-    Set temp = Me
-    ReDim num(0)
+Public Property Set flag(new_flag As Variant)
     
     
-      
-    
-    
-    base = newbase
-End Sub
+End Property
 
-Public Function add(target As bigDecimal)
+Private Function add(flag_obj As bigDecimal)
     Dim overload As Integer
     overload = 0
-    Dim sum As Byte
-    Dim index As Byte
+    Dim sum As Integer
+    Dim index As Integer
     index = 0
-    Dim temp As Byte
+    Dim temp As Integer
     
-    If target.get_base <> base Then
-        target.convertBase base
-    End If
-    
-    
-    For Each Item In target.numbers
+    For Each Item In flag_obj.numbers
         temp = num(index) + overload
         sum = Item + temp
         overload = 0
@@ -104,13 +73,13 @@ Public Function add(target As bigDecimal)
     
 End Function
 
-Public Function Subtract(target As bigDecimal)
-    Dim underload As Byte
+Private Function Subtract(target As bigDecimal)
+    Dim underload As Integer
     underload = 0
-    Dim resault As Byte
-    Dim index As Byte
+    Dim resault As Integer
+    Dim index As Integer
     index = 0
-    Dim substractor() As Byte
+    Dim substractor() As Integer
     substractor = target.numbers
     
     If target.get_base <> base Then
@@ -154,20 +123,34 @@ Public Function Subtract(target As bigDecimal)
     ReDim Preserve num(UBound(num) - (underload - 1))
 End Function
 
-Public Property Get get_base() As Byte
-    get_base = base
+Public Function check_flag(flag As Variant) As Boolean
+    Dim flagspace_obj As New bigDecimal
+    Dim flagspace As Variant
+    Dim country_obj As New bigDecimal
+    Set flagspace_obj = Me
+    country_obj.Set_value CC, 10
+    flagspace_obj.Subtract country
+    flagspace = flagspace_obj.toVariant
+    If (flagspace And flag) = flag Then
+        check_flag = True
+    Else
+        check_flag = False
+    End If
+End Function
+
+Private Property Get toVariant() As Variant
+    Dim resault As Variant
+    Dim index As Integer
+    
+    For Each Item In num
+        resault = resault + (Item * 10 ^ (index))
+        index = index + 1
+    Next
+    toVariant = resault
 End Property
 
-Public Property Get toString(Optional target_base As Byte) As String
-    Dim printaible As New bigDecimal
+Public Property Get toString() As String
     Dim output As String
-    If target_base And base <> target_base Then
-        Set printable = Me
-        printable.convertBase base
-        toString = printable.toString(target_base)
-        Exit Property
-    End If
-    'MsgBox UBound(printable.num)
     For i = (UBound(num) - 1) To 0 Step -1
         
         If num(i) < 10 Then 'numbers
@@ -180,18 +163,6 @@ Public Property Get toString(Optional target_base As Byte) As String
     Next
     toString = output
 End Property
-
-Public Property Get numbers() As Byte()
-    numbers = num
-End Property
-
-Private Function check_base(new_num_base As Byte) As Boolean
-    If new_num_base < 2 Or newnum_base > 37 Then
-        check_base = False
-    Else
-        check_base = True
-    End If
-End Function
 
 
 
