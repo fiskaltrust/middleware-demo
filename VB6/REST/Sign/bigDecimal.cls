@@ -54,26 +54,27 @@ Public Sub Set_value(number As String, new_base As Byte)
 End Sub
 
 Public Sub convertBase(new_base As Byte)
-    'save hex to decimal property
+    If (new_base = base) Then
+        Exit Sub
+    End If
     Dim overload As Byte
     Dim buffer As Byte
     Dim index As Byte
-    Dim temp() As Byte
+    Dim temp As bigDecimal
+    'Dim buffer As bigDecimal
     index = 0
-    temp = num
-    Erase num
-    
-    For Each Item In temp
-        temp = Item + overload
-        
-        index = index + 1
-    Next
+    Set temp = Me
+    ReDim num(0)
     
     
+      
+    
+    
+    base = newbase
 End Sub
 
 Public Function add(target As bigDecimal)
-    Dim overload As Byte
+    Dim overload As Integer
     overload = 0
     Dim sum As Byte
     Dim index As Byte
@@ -103,9 +104,55 @@ Public Function add(target As bigDecimal)
     
 End Function
 
-Public Property Let Subtract(number As bigDecimal)
+Public Function Subtract(target As bigDecimal)
+    Dim underload As Byte
+    underload = 0
+    Dim resault As Byte
+    Dim index As Byte
+    index = 0
+    Dim substractor() As Byte
+    substractor = target.numbers
     
-End Property
+    If target.get_base <> base Then
+        target.convertBase base
+    End If
+    
+    
+    For Each Item In num
+        If underload > 0 Then
+            'if negative
+            If (UBound(num) = index) Then
+                Err.Raise -1, , , , "number would be negative"
+            End If
+            'calculate underload
+            If underload > Item Then
+                num(index) = Item + (base - underload)
+                underload = 1
+            Else
+                num(index) = Item - underload
+                underload = 0
+            End If
+        End If
+        
+        If index <= UBound(substractor) Then
+            If Item < substractor(index) Then
+                num(index) = num(index) + (base - underload)
+                underload = underload + 1
+            End If
+            num(index) = num(index) - substractor(index)
+        End If
+        index = index + 1
+        
+    Next
+    underload = 0
+    'shorten num if needed
+    For i = (UBound(num)) To 0 Step -1
+       If num(i) = 0 Then
+        underload = underload + 1
+       End If
+    Next
+    ReDim Preserve num(UBound(num) - (underload - 1))
+End Function
 
 Public Property Get get_base() As Byte
     get_base = base
@@ -114,7 +161,7 @@ End Property
 Public Property Get toString(Optional target_base As Byte) As String
     Dim printaible As New bigDecimal
     Dim output As String
-    If base <> target_base Then
+    If target_base And base <> target_base Then
         Set printable = Me
         printable.convertBase base
         toString = printable.toString(target_base)

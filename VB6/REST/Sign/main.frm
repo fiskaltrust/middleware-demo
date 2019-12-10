@@ -257,12 +257,17 @@ Private Sub Form_Load()
     
     Dim left As New bigDecimal
     Dim right As New bigDecimal
-    left.Set_value "4919338167972134912", 10
-    'right.Set_value "6347069845", 10
+    Dim power As Byte
+    power = 22
+    left.Set_value "4707387510509010944", 10
+    right.Set_value (&H1), 10
+    left.add right VtS (&HFFFFFFFFFFFF)
+    '(&H800000000000)
+    '(&HFFFFFFFFFFFF)
     
-    'left.add right
-    MsgBox left.toString(10)
+    'MsgBox (&HA)
     
+    MsgBox left.toString
     
     Set signCase = New Dictionary
     create_receiptcase_dictionary signCase
