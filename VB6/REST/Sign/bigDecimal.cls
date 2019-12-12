@@ -148,13 +148,14 @@ Private Function variantToString(num As Variant) As String 'Convert Variant to S
     
     'get length of decimal'
     dec = CStr(num)
-    counter = CInt(Right(dec, 2))
-
+    
     'build string'
     If InStr(1, dec, "E") = 0 Then
-        VtS = CStr(num)
+        variantToString = CStr(num)
         Exit Function
     End If
+    
+    counter = CInt(Right(dec, 2))
     Dim index As Integer
     Dim j As Integer
     For index = 1 To counter
@@ -175,7 +176,7 @@ Private Function variantToString(num As Variant) As String 'Convert Variant to S
             j = j + 1
         Wend
     Next
-    VtS = resault
+    variantToString = resault
 End Function
 
 Private Function arrayToVariant(target() As Integer) As Variant
@@ -196,7 +197,7 @@ Private Function add(sum() As Integer, Addend() As Integer)
     overload = 0
     
     For i = 0 To UBound(Addend)
-        sum(i) = Addend(i) + overload
+        sum(i) = Addend(i) + overload + sum(i)
         If (i = UBound(Addend) And sum(i) = 0) Then
             Exit For
         End If

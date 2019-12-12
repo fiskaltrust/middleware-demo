@@ -36,7 +36,7 @@ Begin VB.Form sign
          Height          =   315
          Left            =   120
          TabIndex        =   11
-         Text            =   "DE"
+         Text            =   "AT"
          Top             =   240
          Width           =   975
       End
@@ -69,7 +69,7 @@ Begin VB.Form sign
          Height          =   285
          Left            =   120
          TabIndex        =   6
-         Text            =   "BJCvKkJY9YeLuOerD1tr7tbuixq+5bwcwgC2Yq2zWHVgaCGIlPQBEuOdtOlgSuGd3/02RXEhdDbQW8QO+LY9cPM="
+         Text            =   "BJ6ZufH6hcCHmu2yzc9alH45FjdlCUT1YDlAf83gTydHKj1ZWcMibPlheky1WLMc+E9WeHYanQ8vS5oCirhI6Ck="
          Top             =   240
          Width           =   8295
       End
@@ -85,7 +85,7 @@ Begin VB.Form sign
          Height          =   285
          Left            =   120
          TabIndex        =   4
-         Text            =   "862b15b4-85cc-4774-bcc4-f45d6bb90e42"
+         Text            =   "a37ce376-62be-42c6-b560-1aa0a6700211"
          Top             =   240
          Width           =   8295
       End
@@ -101,7 +101,7 @@ Begin VB.Form sign
          Height          =   285
          Left            =   120
          TabIndex        =   2
-         Text            =   "http://localhost:1200/rest/"
+         Text            =   "https://signaturcloud-sandbox.fiskaltrust.at"
          Top             =   240
          Width           =   8295
       End
@@ -222,14 +222,7 @@ Private Sub Form_Load()
     create_ChargeItemCase_dictionary ChargeItemCase
     Set PayItemCase = New Dictionary
     create_PayItemCase_dictionary PayItemCase
-    
-    Dim test As New case_handler
-    test.Value signCase.Item("DE").Item("unknown"), signCase.Item("DE").Item("zero_receipt")
-    test.flag signCase.Item("DE").Item("implicit")
-    test.flag 175921860444160#
-    MsgBox test.toString
-    
-    
+     
 End Sub
 
 Private Function set_request_parameter()
@@ -251,7 +244,7 @@ Private Function set_request_parameter()
     rest.SetRequestHeader "accesstoken", Trim(accesstoken.Text)
 End Function
 
-Private Function init_zero(receipt_case As String) As Dictionary
+Private Function init_zero(receipt_case As Variant) As Dictionary
     Dim sign As New Dictionary
     
     Dim ChargeItem As Collection
@@ -330,7 +323,14 @@ Private Sub cmdZero_Click()
     'set JSON content
     Dim zero_case As New case_handler
     zero_case.Value signCase.Item(ComboCC.Text).Item("unknown"), signCase.Item(ComboCC.Text).Item("zero_receipt")
-    Set sign = init_zero(zero_case.toString)
+    Dim test As Variant
+    Dim test2 As Variant
+    test = CDec(&H4154) * (16 ^ 12)
+    test = test + 2
+    test2 = CDec(3)
+    test = test + test2
+    MsgBox CStr(test)
+    Set sign = init_zero(test)
     
     'send sign request'
     output.Text = "Request sent" & vbCrLf
@@ -400,6 +400,7 @@ Private Sub rest_OnResponseFinished()
             Next
             'check if flag is set
             Dim response_case As case_handler
+            MsgBox TypeName(response.Item("ftState"))
             response_case.valueStr response.Item("ftState")
             If response_case.check_flag(signCase.Item(ComboCC.Text).Item("unknown")) Then
                 'frag is set
