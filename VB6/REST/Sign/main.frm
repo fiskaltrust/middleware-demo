@@ -36,7 +36,7 @@ Begin VB.Form sign
          Height          =   315
          Left            =   120
          TabIndex        =   11
-         Text            =   "AT"
+         Text            =   "DE"
          Top             =   240
          Width           =   975
       End
@@ -101,7 +101,7 @@ Begin VB.Form sign
          Height          =   285
          Left            =   120
          TabIndex        =   2
-         Text            =   "http://fiskaltrust.free.beeceptor.com/"
+         Text            =   "http://localhost:1200/rest/"
          Top             =   240
          Width           =   8295
       End
@@ -132,7 +132,6 @@ Private signCase As Dictionary
 Private ChargeItemCase As Dictionary
 Private PayItemCase As Dictionary
 Private sign As Dictionary
-Private zero As Boolean
 
 
 Private WithEvents rest As WinHttp.WinHttpRequest
@@ -142,65 +141,27 @@ Private Sub close_Click()
     Unload Me
 End Sub
 
-Private Function VtS(num As Variant) As String 'Convert Variant to String'
-    Dim resault As String
-    resault = ""
-    Dim dec As String
-    Dim counter As Integer
-    Dim zeros As Integer
-    Dim temp As Integer
-    
-    'get length of decimal'
-    dec = CStr(num)
-    counter = CInt(right(dec, 2))
-
-    'build string'
-    Dim index As Integer
-    Dim j As Integer
-    For index = 1 To counter
-        j = 0
-        dec = CStr(num)
-        resault = resault & left(dec, 1)
-        num = num - (CInt(left(dec, 1)) * (10 ^ (counter - (index - 1))))
-        dec = CStr(num)
-        If InStr(1, dec, "E") = 0 Then
-            resault = resault & CStr(num)
-            Exit For
-        End If
-        zeros = (counter - (index)) - (CInt(Mid(dec, InStr(1, dec, "E") + 1)))
-
-        While j < zeros
-            resault = resault & "0"
-            index = index + 1
-            j = j + 1
-        Wend
-    Next
-    VtS = resault
-End Function
-
 Private Function create_receiptcase_dictionary(signCase As Dictionary)
     Dim AT As Dictionary
     Set AT = New Dictionary
-    AT.add "unknown", 4.70738751E+18 + 509010944 '64bit unsigned integer cant be hardcode otherwise because of IDE
-    AT.add "RKSV", 4.70738751E+18 + 509010945
-    AT.add "zero_receipt", 4.70738751E+18
-    AT.add "start_receipt", 4.70738751E+18 + 509010947
-    'AT.Item("zero_receipt") = AT.Item("zero_receipt") + 509010946
-    MsgBox VtS(AT.Item("start_receipt"))
+    AT.add "unknown", ((&H4154) * (16 ^ 12))
+    AT.add "cash_transaction", 1
+    AT.add "zero_receipt", 2
+    AT.add "start_receipt", 3
     
     Dim DE As Dictionary
     Set DE = New Dictionary
-    DE.add "unknown", 4.919338167E+18 ' + 972134912
-    DE.add "standart", 4.919338167E+18 ' + 972134913
-    DE.add "zero_receipt", 491933816# * (10 ^ 10) + 7972134914# '       4.919338167E+18 + 972134914
-    'DE.Item("zero_receipt") = DE.Item("zero_receipt") + 972134914
-    'DE.Item("zero_receipt") = DE.Item("zero_receipt") + 513
-    'MsgBox VtS(DE.Item("zero_receipt"))
+    DE.add "unknown", ((&H4445) * (16 ^ 12))
+    DE.add "pos-receipt", 1
+    DE.add "zero_receipt", 2
+    'DE Flags
+    DE.add "implicit", ((&HA0000) * (16 ^ 4))
     
     Dim FR As Dictionary
     Set FR = New Dictionary
-    FR.add "unknown", 5.06711253E+18 + 745229312
-    FR.add "zero_receipt", 5.06711253E+18 + 745229327
+    FR.add "unknown", ((&H4652) * (16 ^ 12))
+    FR.add "zero_receipt", 15
+    FR.add "start_receipt", 16
     
     signCase.add "AT", AT
     signCase.add "DE", DE
@@ -211,16 +172,16 @@ End Function
 Private Function create_ChargeItemCase_dictionary(ChargeItemCase As Dictionary)
     Dim AT As Dictionary
     Set AT = New Dictionary
-    AT.add "unknown", 4.70738751E+18 + 509010944 '64bit unsigned integer cant be hardcode otherwise because of IDE
-    AT.add "undefined_10", 4.70738751E+18 + 509010945
+    AT.add "unknown", "4707387510509010944" '0x4154 0000 0000 0000
+    AT.add "undefined_10", 1
     
     Dim DE As Dictionary
     Set DE = New Dictionary
-    DE.add "unknown", 4.919338167E+18 + 972134912
+    DE.add "unknown", "4919338167972134912" '0x4445 0000 0000 0000
     
     Dim FR As Dictionary
     Set FR = New Dictionary
-    FR.add "unknown", 5.06711253E+18 + 745229312
+    FR.add "unknown", "506711253E745229312" '0x4652 0000 0000 0000
     
     ChargeItemCase.add "AT", AT
     ChargeItemCase.add "DE", DE
@@ -231,15 +192,15 @@ End Function
 Private Function create_PayItemCase_dictionary(PayItemCase As Dictionary)
     Dim AT As Dictionary
     Set AT = New Dictionary
-    AT.add "default", 4.70738751E+18 + 509010944 '64bit unsigned integer cant be hardcode otherwise because of IDE
+    AT.add "default", "4707387510509010944" '0x4154 0000 0000 0000
     
     Dim DE As Dictionary
     Set DE = New Dictionary
-    DE.add "default", 4.919338167E+18 + 972134912
+    DE.add "default", "4919338167972134912" '0x4445 0000 0000 0000
     
     Dim FR As Dictionary
     Set FR = New Dictionary
-    FR.add "default", 5.06711253E+18 + 745229312
+    FR.add "default", "506711253E745229312" '0x4652 0000 0000 0000
     
     PayItemCase.add "AT", AT
     PayItemCase.add "DE", DE
@@ -255,20 +216,6 @@ Private Sub Form_Load()
     ComboCC.AddItem "DE"
     ComboCC.AddItem "FR"
     
-    Dim left As New bigDecimal
-    Dim right As New bigDecimal
-    Dim power As Byte
-    power = 22
-    left.Set_value "4707387510509010944", 10
-    right.Set_value (&H1), 10
-    left.add right VtS (&HFFFFFFFFFFFF)
-    '(&H800000000000)
-    '(&HFFFFFFFFFFFF)
-    
-    'MsgBox (&HA)
-    
-    MsgBox left.toString
-    
     Set signCase = New Dictionary
     create_receiptcase_dictionary signCase
     Set ChargeItemCase = New Dictionary
@@ -276,13 +223,20 @@ Private Sub Form_Load()
     Set PayItemCase = New Dictionary
     create_PayItemCase_dictionary PayItemCase
     
+    Dim test As New case_handler
+    test.value signCase.Item("DE").Item("unknown"), signCase.Item("DE").Item("zero_receipt")
+    test.flag signCase.Item("DE").Item("implicit")
+    test.flag 175921860444160#
+    MsgBox test.toString
+    
+    
 End Sub
 
 Private Function set_request_parameter()
     'Set Methode and Add Parameter to URL'
     Dim ServiceURL As String
     ServiceURL = Trim(URL.Text)
-    If right(ServiceURL, 1) = "/" Then
+    If Right(ServiceURL, 1) = "/" Then
         ServiceURL = ServiceURL & "json/sign"
     Else
         ServiceURL = ServiceURL & "/" & "json/sign"
@@ -300,10 +254,10 @@ End Function
 Private Function init_zero(receipt_case As String) As Dictionary
     Dim sign As New Dictionary
     
-    Dim ChargeItem As Collection
-    Set ChargeItem = New Collection
-    Dim PayItem As Collection
-    Set PayItem = New Collection
+    Dim ChargeItem As collection
+    Set ChargeItem = New collection
+    Dim PayItem As collection
+    Set PayItem = New collection
     
     sign.add "ftcashboxid", Trim(cashboxid.Text)
     sign.add "cbTerminalID", "1"
@@ -318,6 +272,8 @@ End Function
 
 Private Function init_sign(receipt_case As String) As Dictionary
     Dim sign As New Dictionary
+    Dim base As New bigDecimal
+    Dim flag As New bigDecimal
     
     'set chargeitems
     Dim ChargeItem As Dictionary
@@ -326,11 +282,14 @@ Private Function init_sign(receipt_case As String) As Dictionary
     ChargeItem.add "Description", "Food"
     ChargeItem.add "Amount", 5#
     ChargeItem.add "VATRate", 10#
-    ChargeItem.add "ftChargeItemCase", ChargeItemCase.Item(ComboCC.Text).Item("undefined_10")
+    base.Set_value ChargeItemCase.Item(ComboCC.Text).Item("unknown"), 10
+    flag.Set_value CStr(ChargeItemCase.Item(ComboCC.Text).Item("undefined_10")), 10
+    base.add flag
+    ChargeItem.add "ftChargeItemCase", base.toString
     ChargeItem.add "ProductNumber", "1"
     
-    Dim ChargeItems As Collection
-    Set ChargeItems = New Collection
+    Dim ChargeItems As collection
+    Set ChargeItems = New collection
     ChargeItems.add ChargeItem
     
     'set Payitems
@@ -341,8 +300,8 @@ Private Function init_sign(receipt_case As String) As Dictionary
     PayItem.add "Amount", 5#
     PayItem.add "ftPayItemCase", PayItemCase.Item(ComboCC.Text).Item("default")
     
-    Dim PayItems As Collection
-    Set PayItems = New Collection
+    Dim PayItems As collection
+    Set PayItems = New collection
     PayItems.add PayItem
     
     sign.add "ftcashboxid", Trim(cashboxid.Text)
@@ -369,12 +328,15 @@ Private Sub cmdZero_Click()
     set_request_parameter
     
     'set JSON content
-    Set sign = init_zero(VtS(signCase.Item(ComboCC.Text).Item("zero_receipt")))
+    Dim base As New bigDecimal
+    Dim flag As New bigDecimal
+    base.Set_value signCase.Item(ComboCC.Text).Item("unknown"), 10
+    flag.Set_value CStr(signCase.Item(ComboCC.Text).Item("zero_receipt")), 10
+    base.add flag
+    Set sign = init_zero(base.toString)
     
     'send sign request'
-    zero = True
     output.Text = "Request sent" & vbCrLf
-    MsgBox VtS(signCase.Item(ComboCC.Text).Item("zero_receipt"))
     rest.Send JSON.toString(sign)
 End Sub
 
@@ -391,7 +353,12 @@ Private Sub cmdStart_Click()
     set_request_parameter
     
     'set JSON content
-    Set sign = init_zero(VtS(signCase.Item(ComboCC.Text).Item("start_receipt")))
+    Dim base As New bigDecimal
+    Dim flag As New bigDecimal
+    base.Set_value signCase.Item(ComboCC.Text).Item("unknown"), 10
+    flag.Set_value CStr(signCase.Item(ComboCC.Text).Item("start_receipt")), 10
+    base.add flag
+    Set sign = init_zero(base.toString)
     
     'send sign request'
     output.Text = "Request sent" & vbCrLf
@@ -410,13 +377,20 @@ Private Sub cmdCash_Click()
     set_request_parameter
     
     'set JSON content
+    Dim base As New bigDecimal
+    Dim flag As New bigDecimal
+    base.Set_value signCase.Item(ComboCC.Text).Item("unknown"), 10
+    
+    
     If ComboCC.Text = "DE" Then
-        Set sign = init_sign(VtS(signCase.Item(ComboCC.Text).Item("standart") + 4294967296#)) 'create Implicite Receipt case
+        flag.Set_value CStr(signCase.Item(ComboCC.Text).Item("implicit")), 10
+        base.add flag
+        Set sign = init_sign(base.toString)  'create Implicite Receipt case
     Else
-        Set sign = init_sign(VtS(signCase.Item(ComboCC.Text).Item("RKSV")))
+        flag.Set_value CStr(signCase.Item(ComboCC.Text).Item("cash_transaction")), 10
+        base.add flag
+        Set sign = init_sign(base.toString)  'create Implicite Receipt case
     End If
-    
-    
     
     'send sign request'
     output.Text = "Request sent" & vbCrLf
@@ -426,16 +400,19 @@ End Sub
 Private Sub rest_OnResponseFinished()
     Dim response As Object
     output.Text = output.Text & "Status " & CStr(rest.Status) & vbCrLf
-    If rest.Status = 200 And zero = False Then
-        'output.Text = output.Text & rest.ResponseText & vbCrLf
+    If rest.Status = 200 Then
         Set response = JSON.parse(rest.ResponseText)
         'print one object of journal response'
-        output.Text = output.Text & "State: " & response.Item("ftState") & vbCrLf
-        For Each Signature In response.Item("ftSignatures")
-            If (Signature.Item("ftSignatureType") <> "4707387510509010944") Then
+        If Not response Is Nothing And response.Exists("ftState") Then
+            output.Text = output.Text & "State: " & response.Item("ftState") & vbCrLf
+            For Each Signature In response.Item("ftSignatures")
+                If (Signature.Item("ftSignatureType") <> "4707387510509010944") Then
                 output.Text = output.Text & "Signature: " & Signature.Item("data") & vbCrLf
-            End If
-        Next
+                End If
+            Next
+        Else
+            output.Text = output.Text & "Body" & vbCrLf & rest.ResponseText
+        End If
     End If
     'destroy sign
     Set sign = Nothing
