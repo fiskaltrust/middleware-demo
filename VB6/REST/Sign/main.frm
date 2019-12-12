@@ -152,7 +152,7 @@ Private Function create_receiptcase_dictionary(signCase As Dictionary)
     Dim DE As Dictionary
     Set DE = New Dictionary
     DE.add "unknown", ((&H4445) * (16 ^ 12))
-    DE.add "pos-receipt", 1
+    DE.add "pos_receipt", 1
     DE.add "zero_receipt", 2
     'DE Flags
     DE.add "implicit", ((&HA0000) * (16 ^ 4))
@@ -224,7 +224,7 @@ Private Sub Form_Load()
     create_PayItemCase_dictionary PayItemCase
     
     Dim test As New case_handler
-    test.value signCase.Item("DE").Item("unknown"), signCase.Item("DE").Item("zero_receipt")
+    test.Value signCase.Item("DE").Item("unknown"), signCase.Item("DE").Item("zero_receipt")
     test.flag signCase.Item("DE").Item("implicit")
     test.flag 175921860444160#
     MsgBox test.toString
@@ -254,10 +254,10 @@ End Function
 Private Function init_zero(receipt_case As String) As Dictionary
     Dim sign As New Dictionary
     
-    Dim ChargeItem As collection
-    Set ChargeItem = New collection
-    Dim PayItem As collection
-    Set PayItem = New collection
+    Dim ChargeItem As Collection
+    Set ChargeItem = New Collection
+    Dim PayItem As Collection
+    Set PayItem = New Collection
     
     sign.add "ftcashboxid", Trim(cashboxid.Text)
     sign.add "cbTerminalID", "1"
@@ -288,8 +288,8 @@ Private Function init_sign(receipt_case As String) As Dictionary
     ChargeItem.add "ftChargeItemCase", base.toString
     ChargeItem.add "ProductNumber", "1"
     
-    Dim ChargeItems As collection
-    Set ChargeItems = New collection
+    Dim ChargeItems As Collection
+    Set ChargeItems = New Collection
     ChargeItems.add ChargeItem
     
     'set Payitems
@@ -300,8 +300,8 @@ Private Function init_sign(receipt_case As String) As Dictionary
     PayItem.add "Amount", 5#
     PayItem.add "ftPayItemCase", PayItemCase.Item(ComboCC.Text).Item("default")
     
-    Dim PayItems As collection
-    Set PayItems = New collection
+    Dim PayItems As Collection
+    Set PayItems = New Collection
     PayItems.add PayItem
     
     sign.add "ftcashboxid", Trim(cashboxid.Text)
@@ -328,12 +328,9 @@ Private Sub cmdZero_Click()
     set_request_parameter
     
     'set JSON content
-    Dim base As New bigDecimal
-    Dim flag As New bigDecimal
-    base.Set_value signCase.Item(ComboCC.Text).Item("unknown"), 10
-    flag.Set_value CStr(signCase.Item(ComboCC.Text).Item("zero_receipt")), 10
-    base.add flag
-    Set sign = init_zero(base.toString)
+    Dim zero_case As New case_handler
+    zero_case.Value signCase.Item(ComboCC.Text).Item("unknown"), signCase.Item(ComboCC.Text).Item("zero_receipt")
+    Set sign = init_zero(zero_case.toString)
     
     'send sign request'
     output.Text = "Request sent" & vbCrLf
@@ -353,11 +350,8 @@ Private Sub cmdStart_Click()
     set_request_parameter
     
     'set JSON content
-    Dim base As New bigDecimal
-    Dim flag As New bigDecimal
-    base.Set_value signCase.Item(ComboCC.Text).Item("unknown"), 10
-    flag.Set_value CStr(signCase.Item(ComboCC.Text).Item("start_receipt")), 10
-    base.add flag
+    Dim start_case As New case_handler
+    start_case.Value signCase.Item(ComboCC.Text).Item("unknown"), signCase.Item(ComboCC.Text).Item("start_receipt")
     Set sign = init_zero(base.toString)
     
     'send sign request'
@@ -377,19 +371,15 @@ Private Sub cmdCash_Click()
     set_request_parameter
     
     'set JSON content
-    Dim base As New bigDecimal
-    Dim flag As New bigDecimal
-    base.Set_value signCase.Item(ComboCC.Text).Item("unknown"), 10
-    
+    Dim cash_case As New case_handler
     
     If ComboCC.Text = "DE" Then
-        flag.Set_value CStr(signCase.Item(ComboCC.Text).Item("implicit")), 10
-        base.add flag
-        Set sign = init_sign(base.toString)  'create Implicite Receipt case
+        cash_case.Value signCase.Item(ComboCC.Text).Item("unknown"), signCase.Item(ComboCC.Text).Item("pos_receipt")
+        cash_case.flag CStr(signCase.Item(ComboCC.Text).Item("implicit")), 10
+        Set sign = init_sign(cash_case.toString)  'create Implicite Receipt case
     Else
-        flag.Set_value CStr(signCase.Item(ComboCC.Text).Item("cash_transaction")), 10
-        base.add flag
-        Set sign = init_sign(base.toString)  'create Implicite Receipt case
+        cash_case.Value signCase.Item(ComboCC.Text).Item("unknown"), signCase.Item(ComboCC.Text).Item("cash_transaction")
+        Set sign = init_sign(cash_case.toString)  'create Implicite Receipt case
     End If
     
     'send sign request'
@@ -406,10 +396,15 @@ Private Sub rest_OnResponseFinished()
         If Not response Is Nothing And response.Exists("ftState") Then
             output.Text = output.Text & "State: " & response.Item("ftState") & vbCrLf
             For Each Signature In response.Item("ftSignatures")
-                If (Signature.Item("ftSignatureType") <> "4707387510509010944") Then
                 output.Text = output.Text & "Signature: " & Signature.Item("data") & vbCrLf
-                End If
             Next
+            'check if flag is set
+            Dim response_case As case_handler
+            response_case.valueStr response.Item("ftState")
+            If response_case.check_flag(signCase.Item(ComboCC.Text).Item("unknown")) Then
+                'frag is set
+            End If
+            
         Else
             output.Text = output.Text & "Body" & vbCrLf & rest.ResponseText
         End If

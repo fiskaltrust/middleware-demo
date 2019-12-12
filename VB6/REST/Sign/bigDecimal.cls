@@ -72,6 +72,10 @@ Public Property Get check_flag(try_flag As Variant) As Boolean
     End If
 End Property
 
+Public Property Get receiptcase() As Variant
+    receiptcase = case_value
+End Property
+
 Public Property Get toString() As String
     Dim output As String
     Dim collect() As Integer
