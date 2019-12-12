@@ -129,37 +129,81 @@ End Function
 
 Private Function variantToArray(number As Variant) As Integer()
     Dim temp As Variant
-    Dim froward As String
-    Dim backwards As String
     
     temp = number
-    froward = VtS(temp)
-    For i = 0 To Len(froward)
-        backward = backward & forward(Len(froward) - i)
-    Next
-    variantToArray = strToArray(backward)
+    variantToArray = strToArray(variantToString(temp))
 End Function
+
+Private Function variantToString(num As Variant) As String 'Convert Variant to String'
+    Dim resault As String
+    resault = ""
+    Dim dec As String
+    Dim counter As Integer
+    Dim zeros As Integer
+    Dim buffer As Variant
+    
+    'get length of decimal'
+    dec = CStr(num)
+    counter = CInt(Right(dec, 2))
+
+    'build string'
+    If InStr(1, dec, "E") = 0 Then
+        VtS = CStr(num)
+        Exit Function
+    End If
+    Dim index As Integer
+    Dim j As Integer
+    For index = 1 To counter
+        j = 0
+        dec = CStr(num)
+        resault = resault & Left(dec, 1)
+        num = num - (CInt(Left(dec, 1)) * (10 ^ (counter - (index - 1))))
+        dec = CStr(num)
+        If InStr(1, dec, "E") = 0 Then
+            resault = resault & CStr(num)
+            Exit For
+        End If
+        zeros = (counter - (index)) - (CInt(Mid(dec, InStr(1, dec, "E") + 1)))
+
+        While j < zeros
+            resault = resault & "0"
+            index = index + 1
+            j = j + 1
+        Wend
+    Next
+    VtS = resault
+End Function
+
+Private Function arrayToVariant(target() As Integer) As Variant
+    Dim resault As Variant
+    Dim index As Integer
+    
+    For Each Item In target
+        resault = resault + (Item * 10 ^ (index))
+        index = index + 1
+    Next
+    arrayToVariant = resault
+End Function
+
+
 
 Private Function add(sum() As Integer, Addend() As Integer)
     Dim overload As Integer
     overload = 0
-    'Dim sum As Integer
-    Dim index As Integer
-    index = 0
-    Dim temp As Integer
     
-    For Each Item In Addend
-        temp = Addend(index) + overload
-        sum(index) = Item + temp
+    For i = 0 To UBound(Addend)
+        sum(i) = Addend(i) + overload
+        If (i = UBound(Addend) And sum(i) = 0) Then
+            Exit For
+        End If
         overload = 0
-        While sum(index) >= 10
-            sum(index) = sum(index) - 10
+        While sum(i) >= 10
+            sum(index) = sum(i) - 10
             overload = overload + 1
         Wend
-        If UBound(sum) <= index Then
-            ReDim Preserve sum(index + 1)
+        If UBound(sum) <= i Then
+            ReDim Preserve sum(i + 1)
         End If
-        index = index + 1
     Next
 End Function
 
@@ -205,51 +249,4 @@ Private Function Subtract(Difference() As Integer, Subtrahend() As Integer)
        End If
     Next
     ReDim Preserve Difference(UBound(Difference) - (underload - 1))
-End Function
-
-Private Function arrayToVariant(target() As Integer) As Variant
-    Dim resault As Variant
-    Dim index As Integer
-    
-    For Each Item In target
-        resault = resault + (Item * 10 ^ (index))
-        index = index + 1
-    Next
-    arrayToVariant = resault
-End Function
-
-Private Function VtS(num As Variant) As String 'Convert Variant to String'
-    Dim resault As String
-    resault = ""
-    Dim dec As String
-    Dim counter As Integer
-    Dim zeros As Integer
-    Dim buffer As Variant
-    
-    'get length of decimal'
-    dec = CStr(num)
-    counter = CInt(Right(dec, 2))
-
-    'build string'
-    Dim index As Integer
-    Dim j As Integer
-    For index = counter To 1 Step -1
-        j = 0
-        dec = CStr(num)
-        resault = resault & Right(dec, 1)
-        num = num - (CInt(Left(dec, 1)) * (10 ^ (counter - (index - 1))))
-        dec = CStr(num)
-        If InStr(1, dec, "E") = 0 Then
-            resault = resault & CStr(num)
-            Exit For
-        End If
-        zeros = (counter - (index)) - (CInt(Mid(dec, InStr(1, dec, "E") + 1)))
-
-        While j < zeros
-            resault = resault & "0"
-            index = index + 1
-            j = j + 1
-        Wend
-    Next
-    VtS = resault
 End Function
