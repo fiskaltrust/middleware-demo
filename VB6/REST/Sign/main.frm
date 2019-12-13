@@ -131,6 +131,7 @@ Attribute VB_Exposed = False
 Private signCase As Dictionary
 Private ChargeItemCase As Dictionary
 Private PayItemCase As Dictionary
+Private ftstate As Dictionary
 Private sign As Dictionary
 
 
@@ -142,26 +143,42 @@ Private Sub close_Click()
 End Sub
 
 Private Function create_receiptcase_dictionary(signCase As Dictionary)
-    Dim AT As Dictionary
-    Set AT = New Dictionary
-    AT.add "unknown", ((&H4154) * (16 ^ 12))
-    AT.add "cash_transaction", 1
-    AT.add "zero_receipt", 2
-    AT.add "start_receipt", 3
+    Dim AT_cases As New Dictionary
+    AT_cases.add "unknown", CDec(CDec(&H4154) * (16 ^ 12))
+    AT_cases.add "cash_transaction", CDec(CDec(&H4154) * (16 ^ 12)) + 1
+    AT_cases.add "zero_receipt", CDec(CDec(&H4154) * (16 ^ 12)) + 2
+    AT_cases.add "start_receipt", CDec(CDec(&H4154) * (16 ^ 12)) + 3
     
-    Dim DE As Dictionary
-    Set DE = New Dictionary
-    DE.add "unknown", ((&H4445) * (16 ^ 12))
-    DE.add "pos_receipt", 1
-    DE.add "zero_receipt", 2
-    'DE Flags
-    DE.add "implicit", ((&HA0000) * (16 ^ 4))
+    Dim AT_flags As New Dictionary
+    AT_flags.add "out of service", CDec(&H10000)
     
-    Dim FR As Dictionary
-    Set FR = New Dictionary
-    FR.add "unknown", ((&H4652) * (16 ^ 12))
-    FR.add "zero_receipt", 15
-    FR.add "start_receipt", 16
+    Dim AT As New Dictionary
+    AT.add "case", AT_cases
+    AT.add "flag", AT_flags
+    
+    Dim DE_cases As New Dictionary
+    DE_cases.add "unknown", CDec(CDec(&H4445) * (16 ^ 12))
+    DE_cases.add "pos_receipt", CDec(CDec(&H4445) * (16 ^ 12)) + 1
+    DE_cases.add "zero_receipt", CDec(CDec(&H4445) * (16 ^ 12)) + 2
+    
+    Dim DE_flags As New Dictionary
+    DE_flags.add "implicit", CDec(CDec(&H10000) * (16 ^ 4))
+    
+    Dim DE As New Dictionary
+    DE.add "case", DE_cases
+    DE.add "flag", DE_flags
+    
+    Dim FR_cases As New Dictionary
+    FR_cases.add "unknown", CDec(CDec(&H4652) * (16 ^ 12))
+    FR_cases.add "zero_receipt", CDec(CDec(&H4652) * (16 ^ 12)) + 15
+    FR_cases.add "start_receipt", CDec(CDec(&H4652) * (16 ^ 12)) + 16
+    
+    Dim FR_flags As New Dictionary
+    FR_flags.add "out of service", CDec(&H10000)
+    
+    Dim FR As New Dictionary
+    FR.add "case", FR_cases
+    FR.add "flag", FR_flags
     
     signCase.add "AT", AT
     signCase.add "DE", DE
@@ -172,16 +189,16 @@ End Function
 Private Function create_ChargeItemCase_dictionary(ChargeItemCase As Dictionary)
     Dim AT As Dictionary
     Set AT = New Dictionary
-    AT.add "unknown", "4707387510509010944" '0x4154 0000 0000 0000
-    AT.add "undefined_10", 1
+    AT.add "unknown", CDec(CDec(&H4154) * (16 ^ 12))
+    AT.add "undefined_10", CDec(CDec(&H4154) * (16 ^ 12)) + 1
     
     Dim DE As Dictionary
     Set DE = New Dictionary
-    DE.add "unknown", "4919338167972134912" '0x4445 0000 0000 0000
+    DE.add "unknown", CDec(CDec(&H4445) * (16 ^ 12))
     
     Dim FR As Dictionary
     Set FR = New Dictionary
-    FR.add "unknown", "506711253E745229312" '0x4652 0000 0000 0000
+    FR.add "unknown", CDec(CDec(&H4652) * (16 ^ 12))
     
     ChargeItemCase.add "AT", AT
     ChargeItemCase.add "DE", DE
@@ -192,19 +209,38 @@ End Function
 Private Function create_PayItemCase_dictionary(PayItemCase As Dictionary)
     Dim AT As Dictionary
     Set AT = New Dictionary
-    AT.add "default", "4707387510509010944" '0x4154 0000 0000 0000
+    AT.add "default", CDec(CDec(&H4154) * (16 ^ 12))
     
     Dim DE As Dictionary
     Set DE = New Dictionary
-    DE.add "default", "4919338167972134912" '0x4445 0000 0000 0000
+    DE.add "default", CDec(CDec(&H4445) * (16 ^ 12))
     
     Dim FR As Dictionary
     Set FR = New Dictionary
-    FR.add "default", "506711253E745229312" '0x4652 0000 0000 0000
+    FR.add "default", CDec(CDec(&H4652) * (16 ^ 12))
     
     PayItemCase.add "AT", AT
     PayItemCase.add "DE", DE
     PayItemCase.add "FR", FR
+    
+End Function
+
+Private Function create_ftstate_dictionary(PayItemCase As Dictionary)
+    Dim AT As Dictionary
+    Set AT = New Dictionary
+    AT.add "ready", CDec(CDec(&H4154) * (16 ^ 12))
+    
+    Dim DE As Dictionary
+    Set DE = New Dictionary
+    DE.add "ready", CDec(CDec(&H4445) * (16 ^ 12))
+    
+    Dim FR As Dictionary
+    Set FR = New Dictionary
+    FR.add "ready", CDec(CDec(&H4652) * (16 ^ 12))
+    
+    ftstate.add "AT", AT
+    ftstate.add "DE", DE
+    ftstate.add "FR", FR
     
 End Function
 
@@ -222,6 +258,8 @@ Private Sub Form_Load()
     create_ChargeItemCase_dictionary ChargeItemCase
     Set PayItemCase = New Dictionary
     create_PayItemCase_dictionary PayItemCase
+    Set ftstate = New Dictionary
+    create_ftstate_dictionary ftstate
      
 End Sub
 
@@ -263,10 +301,8 @@ Private Function init_zero(receipt_case As Variant) As Dictionary
     Set init_zero = sign
 End Function
 
-Private Function init_sign(receipt_case As String) As Dictionary
+Private Function init_sign(receipt_case As Variant) As Dictionary
     Dim sign As New Dictionary
-    Dim base As New bigDecimal
-    Dim flag As New bigDecimal
     
     'set chargeitems
     Dim ChargeItem As Dictionary
@@ -275,10 +311,7 @@ Private Function init_sign(receipt_case As String) As Dictionary
     ChargeItem.add "Description", "Food"
     ChargeItem.add "Amount", 5#
     ChargeItem.add "VATRate", 10#
-    base.Set_value ChargeItemCase.Item(ComboCC.Text).Item("unknown"), 10
-    flag.Set_value CStr(ChargeItemCase.Item(ComboCC.Text).Item("undefined_10")), 10
-    base.add flag
-    ChargeItem.add "ftChargeItemCase", base.toString
+    ChargeItem.add "ftChargeItemCase", ChargeItemCase.Item(ComboCC.Text).Item("undefined_10")
     ChargeItem.add "ProductNumber", "1"
     
     Dim ChargeItems As Collection
@@ -321,16 +354,7 @@ Private Sub cmdZero_Click()
     set_request_parameter
     
     'set JSON content
-    Dim zero_case As New case_handler
-    zero_case.Value signCase.Item(ComboCC.Text).Item("unknown"), signCase.Item(ComboCC.Text).Item("zero_receipt")
-    Dim test As Variant
-    Dim test2 As Variant
-    test = CDec(&H4154) * (16 ^ 12)
-    test = test + 2
-    test2 = CDec(3)
-    test = test + test2
-    MsgBox CStr(test)
-    Set sign = init_zero(test)
+    Set sign = init_zero(signCase.Item(ComboCC.Text).Item("case").Item("zero_receipt"))
     
     'send sign request'
     output.Text = "Request sent" & vbCrLf
@@ -350,9 +374,7 @@ Private Sub cmdStart_Click()
     set_request_parameter
     
     'set JSON content
-    Dim start_case As New case_handler
-    start_case.Value signCase.Item(ComboCC.Text).Item("unknown"), signCase.Item(ComboCC.Text).Item("start_receipt")
-    Set sign = init_zero(base.toString)
+    Set sign = init_zero(signCase.Item(ComboCC.Text).Item("case").Item("start_receipt"))
     
     'send sign request'
     output.Text = "Request sent" & vbCrLf
@@ -371,21 +393,53 @@ Private Sub cmdCash_Click()
     set_request_parameter
     
     'set JSON content
-    Dim cash_case As New case_handler
-    
     If ComboCC.Text = "DE" Then
-        cash_case.Value signCase.Item(ComboCC.Text).Item("unknown"), signCase.Item(ComboCC.Text).Item("pos_receipt")
-        cash_case.flag CStr(signCase.Item(ComboCC.Text).Item("implicit")), 10
-        Set sign = init_sign(cash_case.toString)  'create Implicite Receipt case
+        Set sign = init_sign(flag(signCase.Item(ComboCC.Text).Item("case").Item("pos_receipt"), signCase.Item(ComboCC.Text).Item("flag").Item("implicit"))) 'create Implicite Receipt case
     Else
-        cash_case.Value signCase.Item(ComboCC.Text).Item("unknown"), signCase.Item(ComboCC.Text).Item("cash_transaction")
-        Set sign = init_sign(cash_case.toString)  'create Implicite Receipt case
+        Set sign = init_sign(signCase.Item(ComboCC.Text).Item("case").Item("cash_transaction"))
     End If
     
     'send sign request'
     output.Text = "Request sent" & vbCrLf
     rest.Send JSON.toString(sign)
 End Sub
+
+Private Function flag(target_case As Variant, new_flag As Variant) As Variant
+    Dim new_upper As Variant
+    Dim case_upper As Variant
+    Dim new_lower As Variant
+    Dim case_lower As Variant
+    Dim CC As Variant
+    Dim cases As Variant
+    
+    CC = CDec(Fix(target_case / (16 ^ 12)) * (16 ^ 12))
+    new_upper = CDec(Fix(new_flag / (16 ^ 8)))
+    case_upper = CDec(Fix((target_case - CC) / (16 ^ 8)))
+    new_lower = CDec(Fix(new_flag / (16 ^ 4)) - (new_upper * (16 ^ 4)))
+    case_lower = CDec(Fix((target_case - CC) / (16 ^ 4)) - (flags_upper * (16 ^ 4)))
+    cases = ((target_case - case_upper * (16 ^ 8)) - case_lower * (16 ^ 4)) - CC
+    flag = CDec((case_lower Or new_lower) * (16 ^ 4)) + ((case_upper Or new_upper) * (16 ^ 8)) + CC + cases
+End Function
+
+Private Function check_flag(target_case As Variant, try_flag As Variant) As Boolean
+    Dim try_lower As Variant
+    Dim flags_lower As Variant
+    Dim try_upper As Variant
+    Dim flags_upper As Variant
+    Dim CC As Variant
+    
+    CC = (CDec(Fix(target_case / (16 ^ 12))) \ 1) * (16 ^ 12)
+    try_upper = (Fix(try_flag / (16 ^ 8))) \ 1
+    flags_upper = (Fix((target_case - CC) / (16 ^ 8))) \ 1
+    try_lower = (Fix(try_flag / (16 ^ 4)) - (try_upper * (16 ^ 4))) \ 1
+    flags_lower = (Fix((target_case - CC) / (16 ^ 4)) - (try_upper * (16 ^ 4))) \ 1
+    
+    If (try_upper And flags_upper) = try_upper And (try_lower And flags_lower) = try_lower Then
+        check_flag = True
+    Else
+        check_flag = False
+    End If
+End Function
 
 Private Sub rest_OnResponseFinished()
     Dim response As Object
@@ -398,12 +452,9 @@ Private Sub rest_OnResponseFinished()
             For Each Signature In response.Item("ftSignatures")
                 output.Text = output.Text & "Signature: " & Signature.Item("data") & vbCrLf
             Next
-            'check if flag is set
-            Dim response_case As case_handler
-            MsgBox TypeName(response.Item("ftState"))
-            response_case.valueStr response.Item("ftState")
-            If response_case.check_flag(signCase.Item(ComboCC.Text).Item("unknown")) Then
-                'frag is set
+            'check ftState
+            If response.Item("ftState") = ftstate.Item(ComboCC.Text).Item("ready") Then
+                'do something
             End If
             
         Else
