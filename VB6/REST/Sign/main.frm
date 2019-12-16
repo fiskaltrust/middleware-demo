@@ -252,6 +252,7 @@ Private Sub Form_Load()
     ComboCC.AddItem "DE"
     ComboCC.AddItem "FR"
     
+    'create cases dictionary
     Set signCase = New Dictionary
     create_receiptcase_dictionary signCase
     Set ChargeItemCase = New Dictionary
@@ -282,7 +283,7 @@ Private Function set_request_parameter()
     rest.SetRequestHeader "accesstoken", Trim(accesstoken.Text)
 End Function
 
-Private Function init_zero(receipt_case As Variant) As Dictionary
+Private Function init_zero(receipt_case As Variant) As Dictionary 'zero and start receipt have the same body except the receipt case
     Dim sign As New Dictionary
     
     Dim ChargeItem As Collection
@@ -290,6 +291,7 @@ Private Function init_zero(receipt_case As Variant) As Dictionary
     Dim PayItem As Collection
     Set PayItem = New Collection
     
+    'fill dictionary with content
     sign.add "ftcashboxid", Trim(cashboxid.Text)
     sign.add "cbTerminalID", "1"
     sign.add "cbReceiptReference", "1"
@@ -330,6 +332,7 @@ Private Function init_sign(receipt_case As Variant) As Dictionary
     Set PayItems = New Collection
     PayItems.add PayItem
     
+    'fill dictionary with content
     sign.add "ftcashboxid", Trim(cashboxid.Text)
     sign.add "cbTerminalID", "1"
     sign.add "cbReceiptReference", "1"
@@ -458,7 +461,7 @@ Private Sub rest_OnResponseFinished()
             End If
             
         Else
-            output.Text = output.Text & "Body" & vbCrLf & rest.ResponseText
+            output.Text = output.Text & "Body:" & vbCrLf & rest.ResponseText
         End If
     End If
     'destroy sign
