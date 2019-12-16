@@ -6,14 +6,10 @@ main.exe: src\main.c
 #Linux
 else
 
-main: src/main.c src/cJSON.a
+main: src/main.c lib/cJSON/cJSON.a
 	mkdir build -p
-	gcc src/main.c -o build/Journal -lcurl src/cJSON.a
+	gcc src/main.c -o build/Journal -lcurl lib/cJSON/cJSON.a -I./lib
 
-src/cJSON.a: src/cJSON.c
-	gcc -c src/cJSON.c -o src/cJSON.a
+lib/cJSON/cJSON.a: lib/cJSON/cJSON.c
+	gcc -c lib/cJSON/cJSON.c -o lib/cJSON/cJSON.a
 endif
-
-
-
-

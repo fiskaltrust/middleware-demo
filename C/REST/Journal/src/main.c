@@ -4,7 +4,7 @@
 #include <curl/curl.h>
 #include <inttypes.h>
 #include <time.h>
-#include "cJSON.h"
+#include <cJSON/cJSON.h>
 
 #define STRING_LENGTH 256
 
@@ -255,11 +255,14 @@ int main()
     }
     else {
         printf("Body:\n%s\n", s.ptr);
+         //parse JSON
+        cJSON *response_obj = cJSON_Parse(s.ptr);
+        printf("name of obj: %s\n",response_obj->child->child->child->next->string);
+        cJSON_free(response_obj);
+        response_obj = NULL;
         free(s.ptr);
+        s.ptr = NULL;
     }
-    
-    cJSON *response_obj = cJSON_Parse(s.ptr);
-    printf("name of obj: %s\n",response_obj->child->child->child->next->string);
 
     return 0;
 }
