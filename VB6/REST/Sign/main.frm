@@ -9,11 +9,26 @@ Begin VB.Form sign
    ScaleHeight     =   6225
    ScaleWidth      =   14925
    StartUpPosition =   3  'Windows Default
+   Begin VB.Frame Frame4 
+      Caption         =   "POS System ID"
+      Height          =   615
+      Left            =   360
+      TabIndex        =   15
+      Top             =   3480
+      Width           =   8535
+      Begin VB.TextBox POSSID 
+         Height          =   285
+         Left            =   120
+         TabIndex        =   3
+         Top             =   240
+         Width           =   8295
+      End
+   End
    Begin VB.CommandButton cmdCash 
       Caption         =   "Send cash transaction"
       Height          =   615
       Left            =   2160
-      TabIndex        =   13
+      TabIndex        =   7
       Top             =   5160
       Width           =   2535
    End
@@ -21,22 +36,21 @@ Begin VB.Form sign
       Caption         =   "Send start receipt"
       Height          =   615
       Left            =   5160
-      TabIndex        =   12
-      Top             =   4080
+      TabIndex        =   6
+      Top             =   4320
       Width           =   2535
    End
    Begin VB.Frame Frame5 
       Caption         =   "Country code"
       Height          =   615
       Left            =   360
-      TabIndex        =   10
-      Top             =   3960
+      TabIndex        =   14
+      Top             =   4320
       Width           =   1215
       Begin VB.ComboBox ComboCC 
          Height          =   315
          Left            =   120
-         TabIndex        =   11
-         Text            =   "AT"
+         TabIndex        =   4
          Top             =   240
          Width           =   975
       End
@@ -45,7 +59,7 @@ Begin VB.Form sign
       Caption         =   "Close"
       Height          =   615
       Left            =   5160
-      TabIndex        =   9
+      TabIndex        =   8
       Top             =   5160
       Width           =   2535
    End
@@ -54,7 +68,7 @@ Begin VB.Form sign
       Left            =   9120
       Locked          =   -1  'True
       MultiLine       =   -1  'True
-      TabIndex        =   8
+      TabIndex        =   13
       Top             =   240
       Width           =   5535
    End
@@ -62,14 +76,13 @@ Begin VB.Form sign
       Caption         =   "Accesstoken"
       Height          =   615
       Left            =   360
-      TabIndex        =   5
-      Top             =   3000
+      TabIndex        =   11
+      Top             =   2640
       Width           =   8535
       Begin VB.TextBox accesstoken 
          Height          =   285
          Left            =   120
-         TabIndex        =   6
-         Text            =   "BJ6ZufH6hcCHmu2yzc9alH45FjdlCUT1YDlAf83gTydHKj1ZWcMibPlheky1WLMc+E9WeHYanQ8vS5oCirhI6Ck="
+         TabIndex        =   2
          Top             =   240
          Width           =   8295
       End
@@ -78,14 +91,13 @@ Begin VB.Form sign
       Caption         =   "CashBoxID"
       Height          =   615
       Left            =   360
-      TabIndex        =   3
-      Top             =   2160
+      TabIndex        =   10
+      Top             =   1800
       Width           =   8535
       Begin VB.TextBox cashboxid 
          Height          =   285
          Left            =   120
-         TabIndex        =   4
-         Text            =   "a37ce376-62be-42c6-b560-1aa0a6700211"
+         TabIndex        =   1
          Top             =   240
          Width           =   8295
       End
@@ -94,14 +106,13 @@ Begin VB.Form sign
       Caption         =   "Service URL"
       Height          =   615
       Left            =   360
-      TabIndex        =   1
-      Top             =   1320
+      TabIndex        =   9
+      Top             =   960
       Width           =   8535
       Begin VB.TextBox URL 
          Height          =   285
-         Left            =   120
-         TabIndex        =   2
-         Text            =   "https://signaturcloud-sandbox.fiskaltrust.at"
+         Left            =   240
+         TabIndex        =   0
          Top             =   240
          Width           =   8295
       End
@@ -110,15 +121,15 @@ Begin VB.Form sign
       Caption         =   "Send zero request"
       Height          =   615
       Left            =   2160
-      TabIndex        =   0
-      Top             =   4080
+      TabIndex        =   5
+      Top             =   4320
       Width           =   2535
    End
    Begin VB.Label Label1 
       Caption         =   "This example sends a sign request to a fiskaltrust.service via REST"
-      Height          =   735
+      Height          =   375
       Left            =   360
-      TabIndex        =   7
+      TabIndex        =   12
       Top             =   360
       Width           =   8535
    End
@@ -133,7 +144,6 @@ Private ChargeItemCase As Dictionary
 Private PayItemCase As Dictionary
 Private ftstate As Dictionary
 Private sign As Dictionary
-
 
 Private WithEvents rest As WinHttp.WinHttpRequest
 Attribute rest.VB_VarHelpID = -1
@@ -293,6 +303,7 @@ Private Function init_zero(receipt_case As Variant) As Dictionary 'zero and star
     
     'fill dictionary with content
     sign.add "ftcashboxid", Trim(cashboxid.Text)
+    sign.add "ftPosSystemId", Trim(POSSID.Text)
     sign.add "cbTerminalID", "1"
     sign.add "cbReceiptReference", "1"
     sign.add "cbChargeItems", ChargeItem
@@ -334,6 +345,7 @@ Private Function init_sign(receipt_case As Variant) As Dictionary
     
     'fill dictionary with content
     sign.add "ftcashboxid", Trim(cashboxid.Text)
+    sign.add "ftPosSystemId", Trim(POSSID.Text)
     sign.add "cbTerminalID", "1"
     sign.add "cbReceiptReference", "1"
     sign.add "cbChargeItems", ChargeItems
