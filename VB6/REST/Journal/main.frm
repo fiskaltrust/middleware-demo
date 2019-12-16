@@ -124,16 +124,16 @@ End Sub
 Private Function create_journalcase_dictionary(journalCase As Dictionary)
     Dim AT As Dictionary
     Set AT = New Dictionary
-    AT.Add "unknown", "4707387510509010944"
-    AT.Add "DEP7", "4707387510509010945"
+    AT.Add "unknown", CDec(&H4154) * (16 ^ 12)
+    AT.Add "DEP7", (CDec(&H4154) * (16 ^ 12)) + 1
     
     Dim DE As Dictionary
     Set DE = New Dictionary
-    DE.Add "unknown", "4919338167972134912"
+    DE.Add "unknown", CDec(&H4445) * (16 ^ 12)
     
     Dim FR As Dictionary
     Set FR = New Dictionary
-    FR.Add "unknown", "5067112530745229312"
+    FR.Add "unknown", CDec(&H4652) * (16 ^ 12)
     
     journalCase.Add "AT", AT
     journalCase.Add "DE", DE
