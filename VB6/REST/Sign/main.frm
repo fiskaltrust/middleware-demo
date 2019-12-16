@@ -111,10 +111,10 @@ Begin VB.Form sign
       Width           =   8535
       Begin VB.TextBox URL 
          Height          =   285
-         Left            =   240
+         Left            =   120
          TabIndex        =   0
          Top             =   240
-         Width           =   8295
+         Width           =   8415
       End
    End
    Begin VB.CommandButton cmdZero 

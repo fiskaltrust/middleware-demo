@@ -11,6 +11,7 @@ Class=cStringBuilder; cStringBuilder.cls
 Class=cJSONScript; cJSONScript.cls
 Class=case_handler; bigDecimal.cls
 Startup="sign"
+ExeName32="sign.exe"
 Command32=""
 Name="Project1"
 HelpContextID="0"
@@ -36,6 +37,7 @@ Unattended=0
 Retained=0
 ThreadPerObject=0
 MaxNumberOfThreads=1
+DebugStartupOption=0
 
 [MS Transaction Server]
 AutoRefresh=1
