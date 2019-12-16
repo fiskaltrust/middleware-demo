@@ -167,9 +167,9 @@ void send_request(char *ServiceURL, char *cashboxid, char *accesstoken, char *bo
         curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
 
         // set verify certificate
-        curl_easy_setopt(curl, CURLOPT_CAINFO, cer_name); //add curl certificate
+        //curl_easy_setopt(curl, CURLOPT_CAINFO, cer_name); //add curl certificate
 
-        curl_easy_setopt(curl, CURLOPT_CAPATH, cer_path); //path to certificate
+        //curl_easy_setopt(curl, CURLOPT_CAPATH, cer_path); //path to certificate
 
         // get header with callback
         //curl_easy_setopt(curl, CURLOPT_HEADER, 1);

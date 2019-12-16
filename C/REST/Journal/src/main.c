@@ -4,6 +4,7 @@
 #include <curl/curl.h>
 #include <inttypes.h>
 #include <time.h>
+#include "cJSON.h"
 
 #define STRING_LENGTH 256
 
@@ -180,8 +181,8 @@ void send_request(char *ServiceURL, char *cashboxid, char *accesstoken, struct r
         curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
 
         // set verify certificate
-        curl_easy_setopt(curl, CURLOPT_CAINFO, cer_name); //add curl certificate
-        curl_easy_setopt(curl, CURLOPT_CAPATH, cer_path); //path to certificate
+        //curl_easy_setopt(curl, CURLOPT_CAINFO, cer_name); //add curl certificate
+        //curl_easy_setopt(curl, CURLOPT_CAPATH, cer_path); //path to certificate
 
          
         // get header with callback
@@ -193,7 +194,7 @@ void send_request(char *ServiceURL, char *cashboxid, char *accesstoken, struct r
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, s);
 
         // Perform the request, res will get the return code
-        printf("performing request ...");
+        printf("performing request...");
         res = curl_easy_perform(curl);
         
         // Check for errors
@@ -220,12 +221,19 @@ int main()
 {
     printf("This example sends a journal request to the fiskaltrust.Service via REST\n");
     
+    /*
     char ServiceURL[STRING_LENGTH];
     char cashboxid[STRING_LENGTH];
     char accesstoken[STRING_LENGTH];
     char countryCode[STRING_LENGTH];
 
     get_input(ServiceURL, cashboxid, accesstoken, countryCode);
+    */
+
+    char ServiceURL[] = {"https://signaturcloud-sandbox.fiskaltrust.at"};
+    char cashboxid[] = {"a37ce376-62be-42c6-b560-1aa0a6700211"};
+    char accesstoken[] = {"BJ6ZufH6hcCHmu2yzc9alH45FjdlCUT1YDlAf83gTydHKj1ZWcMibPlheky1WLMc+E9WeHYanQ8vS5oCirhI6Ck="};
+    char countryCode[] = {"AT"};
 
     //init response struct
     struct response s;
@@ -236,10 +244,11 @@ int main()
         printf("URL: %s\n",ServiceURL);
     #endif
 
-    int64_t response_code;
+    int response_code;
     send_request(ServiceURL, cashboxid, accesstoken, &s, &response_code, journal_type);
 
     //print Response
+    
     printf("Response Code: %ld\n",response_code);
     if(s.ptr[0] == 0) {
         printf("No Response\n");
@@ -248,6 +257,9 @@ int main()
         printf("Body:\n%s\n", s.ptr);
         free(s.ptr);
     }
+    
+    cJSON *response_obj = cJSON_Parse(s.ptr);
+    printf("name of obj: %s\n",response_obj->child->child->child->next->string);
 
     return 0;
 }
