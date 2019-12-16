@@ -221,19 +221,13 @@ int main()
 {
     printf("This example sends a journal request to the fiskaltrust.Service via REST\n");
     
-    /*
     char ServiceURL[STRING_LENGTH];
     char cashboxid[STRING_LENGTH];
     char accesstoken[STRING_LENGTH];
     char countryCode[STRING_LENGTH];
 
     get_input(ServiceURL, cashboxid, accesstoken, countryCode);
-    */
-
-    char ServiceURL[] = {"https://signaturcloud-sandbox.fiskaltrust.at"};
-    char cashboxid[] = {"a37ce376-62be-42c6-b560-1aa0a6700211"};
-    char accesstoken[] = {"BJ6ZufH6hcCHmu2yzc9alH45FjdlCUT1YDlAf83gTydHKj1ZWcMibPlheky1WLMc+E9WeHYanQ8vS5oCirhI6Ck="};
-    char countryCode[] = {"AT"};
+       
 
     //init response struct
     struct response s;

@@ -4,6 +4,7 @@
 #include <curl/curl.h>
 #include <inttypes.h> //int64_t, uint64_t
 #include <time.h>
+#include <cJSON/cJSON.h>
 
 #define STRING_LENGTH 256
 #define BODY_SIZE 1024
@@ -132,10 +133,16 @@ uint64_t build_receipt_case(char *countryCode) {
     return receipt_case;
 }
 
-void set_body(char *body, char *cashboxid, unsigned long long receipt_case) {
+cJSON *set_body(char *cashboxid, unsigned long long receipt_case) {
+    
+    cJSON *body = cJSON_CreateObject();
+    cJSON_AddStringToObject(body,"ftCashBoxID", cashboxid);
+    cJSON_AddStringToObject(body,"cbTerminalID", "1");
+
     char buffer[128];
+    /*
     strcat(body, "{");
-    sprintf(buffer,"\"ftCashBoxID\": \"%s\",",cashboxid);               strcat(body, buffer);
+    sprintf(buffer,%s\",",cashboxid);               strcat(body, buffer);
     strcat(body, "\"cbTerminalID\": \"1\",");
     strcat(body, "\"cbReceiptReference\": \"1\",");
     sprintf(buffer,"\"cbReceiptMoment\": \"/Date(%lu)/\",",(unsigned long)time(NULL));       strcat(body, buffer);
@@ -146,6 +153,8 @@ void set_body(char *body, char *cashboxid, unsigned long long receipt_case) {
     #ifdef DEBUG
     printf("Body:\n%s\n",body);
     #endif
+    */
+    return body;
 }
 
 void send_request(char *ServiceURL, char *cashboxid, char *accesstoken, char *body, struct response *s, int64_t *response_code) {
@@ -197,9 +206,8 @@ void send_request(char *ServiceURL, char *cashboxid, char *accesstoken, char *bo
         curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
 
         // set verify certificate
-        curl_easy_setopt(curl, CURLOPT_CAINFO, cer_name); //add curl certificate
-
-        curl_easy_setopt(curl, CURLOPT_CAPATH, cer_path); //path to certificate
+        //curl_easy_setopt(curl, CURLOPT_CAINFO, cer_name); //add curl certificate
+        //curl_easy_setopt(curl, CURLOPT_CAPATH, cer_path); //path to certificate
 
          
         // get header with callback
@@ -238,14 +246,21 @@ int main()
 {
     printf("This example sends a sign request to the fiskaltrust.Service via REST\n");
     
+    /*
     char ServiceURL[STRING_LENGTH];
     char cashboxid[STRING_LENGTH];
     char accesstoken[STRING_LENGTH];
     char countryCode[STRING_LENGTH];
 
     get_input(ServiceURL, cashboxid, accesstoken, countryCode);
+    */
+
+    char ServiceURL[] = {"https://signaturcloud-sandbox.fiskaltrust.at"};
+    char cashboxid[] = {"a37ce376-62be-42c6-b560-1aa0a6700211"};
+    char accesstoken[] = {"BJ6ZufH6hcCHmu2yzc9alH45FjdlCUT1YDlAf83gTydHKj1ZWcMibPlheky1WLMc+E9WeHYanQ8vS5oCirhI6Ck="};
+    char countryCode[] = {"AT"};
     
-    char body[BODY_SIZE] = {0};
+    //char body[BODY_SIZE] = {0};
     int64_t response_code;
 
     //init response struct
@@ -254,8 +269,9 @@ int main()
 
     uint64_t receip_case = build_receipt_case(countryCode);
 
-    set_body(body, cashboxid, receip_case);
-
+    cJSON *body = set_body(cashboxid, receip_case);
+    cJSON_Print(body);
+    /*
     send_request(ServiceURL, cashboxid, accesstoken, body, &s, &response_code);
 
     //print Response
@@ -267,6 +283,6 @@ int main()
         printf("Body:\n%s\n", s.ptr);
         free(s.ptr);
     }
-
+    */
     return 0;
 }
