@@ -41,7 +41,7 @@ Begin VB.Form sign
       Width           =   2535
    End
    Begin VB.Frame Frame5 
-      Caption         =   "Country code"
+      Caption         =   "Country"
       Height          =   615
       Left            =   360
       TabIndex        =   14
@@ -51,6 +51,7 @@ Begin VB.Form sign
          Height          =   315
          Left            =   120
          TabIndex        =   4
+         Text            =   "AT"
          Top             =   240
          Width           =   975
       End
@@ -170,6 +171,7 @@ Private Function create_receiptcase_dictionary(signCase As Dictionary)
     DE_cases.add "unknown", CDec(CDec(&H4445) * (16 ^ 12))
     DE_cases.add "pos_receipt", CDec(CDec(&H4445) * (16 ^ 12)) + 1
     DE_cases.add "zero_receipt", CDec(CDec(&H4445) * (16 ^ 12)) + 2
+    DE_cases.add "start_receipt", CDec(CDec(&H4445) * (16 ^ 12)) + 3
     
     Dim DE_flags As New Dictionary
     DE_flags.add "implicit", CDec(CDec(&H10000) * (16 ^ 4))
@@ -180,6 +182,7 @@ Private Function create_receiptcase_dictionary(signCase As Dictionary)
     
     Dim FR_cases As New Dictionary
     FR_cases.add "unknown", CDec(CDec(&H4652) * (16 ^ 12))
+    FR_cases.add "cash_transaction", CDec(CDec(&H4652) * (16 ^ 12)) + 1
     FR_cases.add "zero_receipt", CDec(CDec(&H4652) * (16 ^ 12)) + 15
     FR_cases.add "start_receipt", CDec(CDec(&H4652) * (16 ^ 12)) + 16
     
@@ -205,10 +208,12 @@ Private Function create_ChargeItemCase_dictionary(ChargeItemCase As Dictionary)
     Dim DE As Dictionary
     Set DE = New Dictionary
     DE.add "unknown", CDec(CDec(&H4445) * (16 ^ 12))
+    DE.add "undefined_19", CDec(CDec(&H4445) * (16 ^ 12)) + 1
     
     Dim FR As Dictionary
     Set FR = New Dictionary
     FR.add "unknown", CDec(CDec(&H4652) * (16 ^ 12))
+    FR.add "undefined_10", CDec(CDec(&H4652) * (16 ^ 12)) + 2
     
     ChargeItemCase.add "AT", AT
     ChargeItemCase.add "DE", DE
@@ -324,7 +329,11 @@ Private Function init_sign(receipt_case As Variant) As Dictionary
     ChargeItem.add "Description", "Food"
     ChargeItem.add "Amount", 5#
     ChargeItem.add "VATRate", 10#
-    ChargeItem.add "ftChargeItemCase", ChargeItemCase.Item(ComboCC.Text).Item("undefined_10")
+    If ComboCC.Text = "DE" Then
+        ChargeItem.add "ftChargeItemCase", ChargeItemCase.Item(ComboCC.Text).Item("undefined_19")
+    Else
+        ChargeItem.add "ftChargeItemCase", ChargeItemCase.Item(ComboCC.Text).Item("undefined_10")
+    End If
     ChargeItem.add "ProductNumber", "1"
     
     Dim ChargeItems As Collection

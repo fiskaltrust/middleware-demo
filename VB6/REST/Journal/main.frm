@@ -1,5 +1,6 @@
 VERSION 5.00
 Begin VB.Form journal 
+   AutoRedraw      =   -1  'True
    Caption         =   "Form1"
    ClientHeight    =   6225
    ClientLeft      =   165
@@ -10,19 +11,19 @@ Begin VB.Form journal
    ScaleWidth      =   18615
    StartUpPosition =   3  'Windows Default
    Begin VB.Frame Frame5 
-      Caption         =   "Country code"
+      Caption         =   "Journal Type"
       Height          =   615
       Left            =   360
       TabIndex        =   10
       Top             =   3960
-      Width           =   1215
+      Width           =   2775
       Begin VB.ComboBox ComboCC 
          Height          =   315
          Left            =   120
          TabIndex        =   11
-         Text            =   "AT"
+         Text            =   "AT DEP7"
          Top             =   240
-         Width           =   975
+         Width           =   2535
       End
    End
    Begin VB.CommandButton close 
@@ -122,22 +123,9 @@ Private Sub close_Click()
 End Sub
 
 Private Function create_journalcase_dictionary(journalCase As Dictionary)
-    Dim AT As Dictionary
-    Set AT = New Dictionary
-    AT.Add "unknown", CDec(&H4154) * (16 ^ 12)
-    AT.Add "DEP7", (CDec(&H4154) * (16 ^ 12)) + 1
-    
-    Dim DE As Dictionary
-    Set DE = New Dictionary
-    DE.Add "unknown", CDec(&H4445) * (16 ^ 12)
-    
-    Dim FR As Dictionary
-    Set FR = New Dictionary
-    FR.Add "unknown", CDec(&H4652) * (16 ^ 12)
-    
-    journalCase.Add "AT", AT
-    journalCase.Add "DE", DE
-    journalCase.Add "FR", FR
+    journalCase.Add "AT DEP7", (CDec(&H4154) * (16 ^ 12)) + 1
+    'journalCase.Add "DE ", CDec(&H4445) * (16 ^ 12) 'not yet implemented but should work the same
+    journalCase.Add "FR status", CDec(&H4652) * (16 ^ 12)
     
 End Function
 
@@ -145,9 +133,8 @@ Private Sub Form_Load()
     Set rest = New WinHttp.WinHttpRequest
     
     'load colloms for county code selection'
-    ComboCC.AddItem "AT"
-    ComboCC.AddItem "DE"
-    ComboCC.AddItem "FR"
+    ComboCC.AddItem "AT DEP7"
+    ComboCC.AddItem "FR status"
     
     'set values for journalType'
     Set journalCase = New Dictionary
@@ -182,7 +169,7 @@ Private Sub send_Click()
     
     'Set Methode and Add Parameter to URL'
     ServiceURL = Set_URL(URL.Text, "json/journal")
-    ServiceURL = ServiceURL & "?type=" & journalCase.Item(ComboCC.Text).Item("DEP7")
+    ServiceURL = ServiceURL & "?type=" & journalCase.Item(ComboCC.Text)
     ServiceURL = ServiceURL & "&from=0&to=0"
     
     'set URL and methode'
@@ -203,13 +190,12 @@ Private Sub rest_OnResponseFinished()
     Dim response As Object
     output.Text = output.Text & "Status " & CStr(rest.Status)
     If rest.Status = 200 Then
-        output.Text = output.Text & vbCrLf & Left(rest.ResponseText, 1000) & vbCrLf
-        output.Text = output.Text & "*" & vbCrLf & "*" & vbCrLf & "*" & vbCrLf & "*" & vbCrLf & "*" & vbCrLf
-        output.Text = output.Text & Right(rest.ResponseText, 1000) & vbCrLf
+        output.Text = output.Text & vbCrLf & rest.ResponseText & vbCrLf
         Set response = JSON.parse(rest.ResponseText)
         'print one object of journal response'
-        MsgBox "Kassen-ID: " & response.Item("Belege-Gruppe")(1).Item("Kassen-ID"), vbInformation
-        
+        If ComboCC.Text = "AT DEP7" Then
+            MsgBox "Kassen-ID: " & response.Item("Belege-Gruppe")(1).Item("Kassen-ID"), vbInformation
+        End If
     Else
         output.Text = output.Text & vbCrLf & rest.ResponseText
     End If

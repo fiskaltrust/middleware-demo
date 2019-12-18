@@ -9,6 +9,7 @@ Module=JSON; JSON.bas
 Class=cStringBuilder; cStringBuilder.cls
 Class=cJSONScript; cJSONScript.cls
 Startup="journal"
+ExeName32="journal.exe"
 Command32=""
 Name="Project1"
 HelpContextID="0"
