@@ -54,7 +54,7 @@ Begin VB.Form journal
          Height          =   285
          Left            =   120
          TabIndex        =   6
-         Text            =   "BJ6ZufH6hcCHmu2yzc9alH45FjdlCUT1YDlAf83gTydHKj1ZWcMibPlheky1WLMc+E9WeHYanQ8vS5oCirhI6Ck="
+         Text            =   "BKTBfocQoFIEzIbxVcTMlIvsCQzDMeyl9E3S06+K3s3uwrcKatPvKOAocwnZmEgocvxRovuEVJPaqUjyMmCl0Ng="
          Top             =   240
          Width           =   8295
       End
@@ -70,7 +70,7 @@ Begin VB.Form journal
          Height          =   285
          Left            =   120
          TabIndex        =   4
-         Text            =   "a37ce376-62be-42c6-b560-1aa0a6700211"
+         Text            =   "5f72b575-f9f3-4a73-916f-beebe3ea7ab7"
          Top             =   240
          Width           =   8295
       End
@@ -86,7 +86,7 @@ Begin VB.Form journal
          Height          =   285
          Left            =   120
          TabIndex        =   2
-         Text            =   " https://signaturcloud-sandbox.fiskaltrust.at "
+         Text            =   "http://localhost:1200/0242306d-d1e8-4ccd-96f2-b21cae326475/"
          Top             =   240
          Width           =   8295
       End
@@ -100,7 +100,7 @@ Begin VB.Form journal
       Width           =   2535
    End
    Begin VB.Label Label1 
-      Caption         =   "This example sends a journal request to a fiskaltrust.service via REST and downloads the DEP7 of the queue"
+      Caption         =   "This example sends a journal request to a fiskaltrust.service via REST and downloads the full journal of the queue"
       Height          =   735
       Left            =   360
       TabIndex        =   7
@@ -125,7 +125,7 @@ End Sub
 Private Function create_journalcase_dictionary(journalCase As Dictionary)
     journalCase.Add "AT DEP7", (CDec(&H4154) * (16 ^ 12)) + 1
     'journalCase.Add "DE ", CDec(&H4445) * (16 ^ 12) 'not yet implemented but should work the same
-    journalCase.Add "FR status", CDec(&H4652) * (16 ^ 12)
+    journalCase.Add "FR Ticket", CDec(&H4652) * (16 ^ 12) + 1
     
 End Function
 
@@ -134,7 +134,7 @@ Private Sub Form_Load()
     
     'load colloms for county code selection'
     ComboCC.AddItem "AT DEP7"
-    ComboCC.AddItem "FR status"
+    ComboCC.AddItem "FR Ticket"
     
     'set values for journalType'
     Set journalCase = New Dictionary
@@ -191,9 +191,9 @@ Private Sub rest_OnResponseFinished()
     output.Text = output.Text & "Status " & CStr(rest.Status)
     If rest.Status = 200 Then
         output.Text = output.Text & vbCrLf & rest.ResponseText & vbCrLf
-        Set response = JSON.parse(rest.ResponseText)
-        'print one object of journal response'
         If ComboCC.Text = "AT DEP7" Then
+            'print one object of journal response'
+            Set response = JSON.parse(rest.ResponseText)
             MsgBox "Kassen-ID: " & response.Item("Belege-Gruppe")(1).Item("Kassen-ID"), vbInformation
         End If
     Else
