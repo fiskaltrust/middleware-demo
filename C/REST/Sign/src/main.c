@@ -134,18 +134,25 @@ uint64_t build_receipt_case(char *countryCode) {
 }
 
 cJSON *set_body(char *cashboxid, unsigned long long receipt_case) {
-    
-    cJSON *body = cJSON_CreateObject();
-    cJSON_AddStringToObject(body,"ftCashBoxID", cashboxid);
-    cJSON_AddStringToObject(body,"cbTerminalID", "1");
-
     char buffer[128];
+
+    cJSON *root = cJSON_CreateObject();
+    cJSON_AddStringToObject(root,"ftCashBoxID", cashboxid);
+    cJSON_AddStringToObject(root,"cbTerminalID", "1");
+    cJSON_AddStringToObject(root,"cbReceiptReference", "1");
+    sprintf(buffer,"/Date(%lu)/",(unsigned long)time(NULL));
+    cJSON_AddStringToObject(root,"cbReceiptMoment", buffer);
+    cJSON_AddItemToObject(root, "cbChargeItems", cJSON_CreateArray());
+    cJSON_AddItemToObject(root, "cbPayItems", cJSON_CreateArray());
+    sprintf(buffer,"%I64lld",receipt_case);
+    cJSON_AddStringToObject(root,"ftReceiptCase", trim(buffer,NULL));
+
     /*
     strcat(body, "{");
     sprintf(buffer,%s\",",cashboxid);               strcat(body, buffer);
     strcat(body, "\"cbTerminalID\": \"1\",");
     strcat(body, "\"cbReceiptReference\": \"1\",");
-    sprintf(buffer,"\"cbReceiptMoment\": \"/Date(%lu)/\",",(unsigned long)time(NULL));       strcat(body, buffer);
+           strcat(body, buffer);
     strcat(body, "\"cbChargeItems\": [],");
     strcat(body, "\"cbPayItems\": [],");
     sprintf(buffer,"\"ftReceiptCase\": %I64lld",receipt_case);               strcat(body, buffer);
@@ -154,7 +161,7 @@ cJSON *set_body(char *cashboxid, unsigned long long receipt_case) {
     printf("Body:\n%s\n",body);
     #endif
     */
-    return body;
+    return root;
 }
 
 void send_request(char *ServiceURL, char *cashboxid, char *accesstoken, char *body, struct response *s, int64_t *response_code) {
@@ -255,7 +262,8 @@ int main()
     get_input(ServiceURL, cashboxid, accesstoken, countryCode);
     */
 
-    char ServiceURL[] = {"https://signaturcloud-sandbox.fiskaltrust.at"};
+    //char ServiceURL[] = {"https://signaturcloud-sandbox.fiskaltrust.at"};
+    char ServiceURL[] = {"https://fiskaltrust.free.beeceptor.com"};
     char cashboxid[] = {"a37ce376-62be-42c6-b560-1aa0a6700211"};
     char accesstoken[] = {"BJ6ZufH6hcCHmu2yzc9alH45FjdlCUT1YDlAf83gTydHKj1ZWcMibPlheky1WLMc+E9WeHYanQ8vS5oCirhI6Ck="};
     char countryCode[] = {"AT"};
@@ -270,10 +278,11 @@ int main()
     uint64_t receip_case = build_receipt_case(countryCode);
 
     cJSON *body = set_body(cashboxid, receip_case);
-    cJSON_Print(body);
-    /*
-    send_request(ServiceURL, cashboxid, accesstoken, body, &s, &response_code);
-
+    //printf("JSON: %s\n",cJSON_Print(body));
+    
+    
+    send_request(ServiceURL, cashboxid, accesstoken, cJSON_PrintUnformatted(body), &s, &response_code);
+    cJSON_Delete(body);
     //print Response
     if(s.ptr[0] == 0) {
         printf("No Response\n");
@@ -281,8 +290,14 @@ int main()
     else {
         printf("Response Code: %ld\n",response_code);
         printf("Body:\n%s\n", s.ptr);
+        cJSON *response_struct = cJSON_Parse(s.ptr);
+        cJSON *temp = response_struct->child->next;
+        //printf("first: %s\n",response_struct->child->string);
+        for(;strcmp(temp->string,"ftState") != 0;temp = temp->next) {if (temp->next == NULL) return -1;}
+        printf("ftState: %d\n",temp->valueint);
+        cJSON_Delete(response_struct);
         free(s.ptr);
     }
-    */
+    
     return 0;
 }

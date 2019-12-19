@@ -4,7 +4,7 @@
 #include <curl/curl.h>
 #include <inttypes.h>
 #include <time.h>
-#include <cJSON/cJSON.h>
+#include <json-c/json.h>
 
 #define STRING_LENGTH 256
 
@@ -139,9 +139,10 @@ void send_request(char *ServiceURL, char *cashboxid, char *accesstoken, struct r
 
     //init curl
     curl = curl_easy_init();
-    
+    #ifdef _WIN32
     char cer_path[] = {".\\"};
     char cer_name[] = {"curl-ca-bundle.crt"};
+    #endif
     char requestURL[STRING_LENGTH], buffer[STRING_LENGTH];
     strcpy(requestURL, ServiceURL);
     strcat(requestURL, "/json/journal"); //add endpoint
@@ -151,7 +152,6 @@ void send_request(char *ServiceURL, char *cashboxid, char *accesstoken, struct r
     strcat(requestURL, buffer);
     strcat(requestURL, "&from=0");
     strcat(requestURL, "&to=0");
-    printf("requestURL: %s\n",requestURL);
 
     if (curl)
     {
@@ -180,10 +180,11 @@ void send_request(char *ServiceURL, char *cashboxid, char *accesstoken, struct r
         // tell libcurl to follow redirection
         curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
 
+        #ifdef _WIN32
         // set verify certificate
-        //curl_easy_setopt(curl, CURLOPT_CAINFO, cer_name); //add curl certificate
-        //curl_easy_setopt(curl, CURLOPT_CAPATH, cer_path); //path to certificate
-
+        curl_easy_setopt(curl, CURLOPT_CAINFO, cer_name); //add curl certificate
+        curl_easy_setopt(curl, CURLOPT_CAPATH, cer_path); //path to certificate
+        #endif
          
         // get header with callback
         //curl_easy_setopt(curl, CURLOPT_HEADER, 1);
@@ -220,14 +221,18 @@ void send_request(char *ServiceURL, char *cashboxid, char *accesstoken, struct r
 int main()
 {
     printf("This example sends a journal request to the fiskaltrust.Service via REST\n");
-    
+    /*
     char ServiceURL[STRING_LENGTH];
     char cashboxid[STRING_LENGTH];
     char accesstoken[STRING_LENGTH];
     char countryCode[STRING_LENGTH];
 
     get_input(ServiceURL, cashboxid, accesstoken, countryCode);
-       
+    */ 
+    char ServiceURL[] = {"https://signaturcloud-sandbox.fiskaltrust.at"};
+    char cashboxid[] = {"a37ce376-62be-42c6-b560-1aa0a6700211"};
+    char accesstoken[] = {"BJ6ZufH6hcCHmu2yzc9alH45FjdlCUT1YDlAf83gTydHKj1ZWcMibPlheky1WLMc+E9WeHYanQ8vS5oCirhI6Ck="};
+    char countryCode[] = {"AT"};
 
     //init response struct
     struct response s;
@@ -243,17 +248,40 @@ int main()
 
     //print Response
     
-    printf("Response Code: %ld\n",response_code);
+    printf("Response Code: %d\n",response_code);
     if(s.ptr[0] == 0) {
         printf("No Response\n");
     }
     else {
         printf("Body:\n%s\n", s.ptr);
-         //parse JSON
-        cJSON *response_obj = cJSON_Parse(s.ptr);
-        printf("name of obj: %s\n",response_obj->child->child->child->next->string);
-        cJSON_free(response_obj);
-        response_obj = NULL;
+        //parse JSON
+        json_object *response_obj = json_tokener_parse(s.ptr);
+        struct json_object *target_array = NULL, *taget_obj = NULL;
+        struct json_object *o = NULL;
+        
+
+        taget_obj = json_object_object_get(response_obj, "Belege-Gruppe");
+        enum json_type o_type = json_object_get_type(taget_obj);
+	    printf("type of %s:%s\n", "obj", json_type_to_name(o_type));
+        target_array = json_object_array_get_idx(taget_obj, 0);
+        //json_pointer_get(response_obj, "Belege-Gruppe/0/Kassen-ID",&target);
+        //printf("Target Pointer: 0x%x\n",target);
+        if (!json_object_object_get_ex(target_array, "Kassen-ID", &o))
+		    {printf("Field %s does not exist\n", "Kassen-ID");}
+        else
+            {printf("Body:\n%s\n",json_object_to_json_string(target_array));}
+        /*
+        //array_list *belege = json_object_get_array(response_obj);
+        enum json_type o_type = json_object_get_type(response_obj);
+	    printf("type of %s:%s\n", "obj", json_type_to_name(o_type));
+        struct json_object *o = NULL;
+	    if (!json_object_object_get_ex(response_obj, "Belege-Gruppe", &o))
+		    printf("Field %s does not exist\n", "Belege-Gruppe");
+        array_list *bel =  json_object_get_array(o);
+        json_poin
+        //printf("Body:\n%s\n",json_object_to_json_string(response_obj));
+        //printf("state: %ld\n",get);
+        */
         free(s.ptr);
         s.ptr = NULL;
     }
