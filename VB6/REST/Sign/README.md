@@ -8,6 +8,8 @@ A zero, start or cash receipt, can be sent to a specified url and CashBox and th
 
 This example can be used as a starting point to implement the [fiskaltrust.Interface](https://github.com/fiskaltrust/interface-doc)
 
+> _**Note:** The German cash transation is not yet working because the Service is not yet ready for it._
+
 # Requirements
 
 Visual Basic 6.0 https://en.wikipedia.org/wiki/Visual_Basic
