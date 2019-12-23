@@ -4,7 +4,7 @@
 #include <curl/curl.h>
 #include <inttypes.h> //int64_t, uint64_t
 #include <time.h>
-#include <cJSON/cJSON.h>
+#include <json-c/json.h>
 
 #define STRING_LENGTH 256
 #define BODY_SIZE 1024
@@ -99,7 +99,7 @@ void get_input(char *ServiceURL, char *cashboxid, char *accesstoken, char *count
     fgets(accesstoken,STRING_LENGTH-1,stdin);
 
     //get country Code
-    printf("Please enter the countrycode of the fiskaltrust.Queue (e.g. \"AT,DE,FR\"): ");
+    printf("Please enter the country of the fiskaltrust.Queue (e.g. \"AT,DE,FR\"): ");
     fgets(countryCode,STRING_LENGTH-1,stdin);
 
     //trim the input strings
@@ -112,7 +112,7 @@ void get_input(char *ServiceURL, char *cashboxid, char *accesstoken, char *count
 
     //check countyCode length
     if(strlen(countryCode) != 2) {
-        printf("The countrycode must have length two.\n");
+        printf("The country must have length two.\n");
         exit(EXIT_FAILURE);
     }
 
@@ -120,12 +120,12 @@ void get_input(char *ServiceURL, char *cashboxid, char *accesstoken, char *count
     if(ServiceURL[strlen(ServiceURL) -1] == '/') {ServiceURL[strlen(ServiceURL) -1] = 0;}
 }
 
-uint64_t build_receipt_case(char *countryCode) {
-    uint64_t receipt_case = 0;
+int64_t build_receipt_case(char *countryCode) {
+    int64_t receipt_case = 0;
 
     //add county Code
-    receipt_case |= ((uint64_t)countryCode[0] << (4 * 14));
-    receipt_case |= ((uint64_t)countryCode[1] << (4 * 12));
+    receipt_case |= ((int64_t)countryCode[0] << (4 * 14));
+    receipt_case |= ((int64_t)countryCode[1] << (4 * 12));
 
     //zero receipt
     receipt_case |= 2;
@@ -133,38 +133,24 @@ uint64_t build_receipt_case(char *countryCode) {
     return receipt_case;
 }
 
-cJSON *set_body(char *cashboxid, unsigned long long receipt_case) {
+json_object *set_body(char *cashboxid, int64_t receipt_case) {
     char buffer[128];
 
-    cJSON *root = cJSON_CreateObject();
-    cJSON_AddStringToObject(root,"ftCashBoxID", cashboxid);
-    cJSON_AddStringToObject(root,"cbTerminalID", "1");
-    cJSON_AddStringToObject(root,"cbReceiptReference", "1");
+    json_object *root = json_object_new_object();
+    json_object_object_add(root,"ftCashBoxID",json_object_new_string(cashboxid));
+    json_object_object_add(root,"cbTerminalID",json_object_new_string("1"));
+    json_object_object_add(root,"cbReceiptReference",json_object_new_string("1"));
     sprintf(buffer,"/Date(%lu)/",(unsigned long)time(NULL));
-    cJSON_AddStringToObject(root,"cbReceiptMoment", buffer);
-    cJSON_AddItemToObject(root, "cbChargeItems", cJSON_CreateArray());
-    cJSON_AddItemToObject(root, "cbPayItems", cJSON_CreateArray());
-    sprintf(buffer,"%I64lld",receipt_case);
-    cJSON_AddStringToObject(root,"ftReceiptCase", trim(buffer,NULL));
+    json_object_object_add(root,"cbReceiptMoment",json_object_new_string(buffer));
+    json_object_object_add(root,"cbChargeItems",json_object_new_array());
+    json_object_object_add(root,"cbPayItems",json_object_new_array());
+    json_object_object_add(root,"ftReceiptCase",json_object_new_int64(receipt_case));
 
-    /*
-    strcat(body, "{");
-    sprintf(buffer,%s\",",cashboxid);               strcat(body, buffer);
-    strcat(body, "\"cbTerminalID\": \"1\",");
-    strcat(body, "\"cbReceiptReference\": \"1\",");
-           strcat(body, buffer);
-    strcat(body, "\"cbChargeItems\": [],");
-    strcat(body, "\"cbPayItems\": [],");
-    sprintf(buffer,"\"ftReceiptCase\": %I64lld",receipt_case);               strcat(body, buffer);
-    strcat(body, "}");
-    #ifdef DEBUG
-    printf("Body:\n%s\n",body);
-    #endif
-    */
+    //printf("Body:\n %s\n",json_object_to_json_string(root));
     return root;
 }
 
-void send_request(char *ServiceURL, char *cashboxid, char *accesstoken, char *body, struct response *s, int64_t *response_code) {
+void send_request(char *ServiceURL, char *cashboxid, char *accesstoken, const char *body, struct response *s, int64_t *response_code) {
     
     CURL *curl = NULL;
     CURLcode res;
@@ -275,14 +261,13 @@ int main()
     struct response s;
     init_string(&s);
 
-    uint64_t receip_case = build_receipt_case(countryCode);
+    int64_t receip_case = build_receipt_case(countryCode);
 
-    cJSON *body = set_body(cashboxid, receip_case);
-    //printf("JSON: %s\n",cJSON_Print(body));
+    json_object *body = set_body(cashboxid, receip_case);    
     
-    
-    send_request(ServiceURL, cashboxid, accesstoken, cJSON_PrintUnformatted(body), &s, &response_code);
-    cJSON_Delete(body);
+    send_request(ServiceURL, cashboxid, accesstoken, json_object_to_json_string(body), &s, &response_code);
+    json_object_put(body);
+
     //print Response
     if(s.ptr[0] == 0) {
         printf("No Response\n");
@@ -290,14 +275,14 @@ int main()
     else {
         printf("Response Code: %ld\n",response_code);
         printf("Body:\n%s\n", s.ptr);
-        cJSON *response_struct = cJSON_Parse(s.ptr);
-        cJSON *temp = response_struct->child->next;
-        //printf("first: %s\n",response_struct->child->string);
-        for(;strcmp(temp->string,"ftState") != 0;temp = temp->next) {if (temp->next == NULL) return -1;}
-        printf("ftState: %d\n",temp->valueint);
-        cJSON_Delete(response_struct);
+
+        //parse response body to json
+        json_object *target = NULL;
+        json_object *response_json = json_tokener_parse(s.ptr);
+        json_pointer_get(response_json,"/ftState",&target);
+        printf("ftState: %s\n",json_object_to_json_string(target));
+
         free(s.ptr);
     }
-    
     return 0;
 }

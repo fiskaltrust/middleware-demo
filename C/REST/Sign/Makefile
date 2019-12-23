@@ -6,14 +6,7 @@ main.exe: main.c
 #Linux
 else
 
-main: src/main.c lib/cJSON/cJSON.a
+main: src/main.c
 	mkdir build -p
-	gcc src/main.c -o build/Sign -lcurl lib/cJSON/cJSON.a -Ilib/
-
-lib/cJSON/cJSON.a: lib/cJSON/cJSON.c
-	gcc -c lib/cJSON/cJSON.c -o lib/cJSON/cJSON.a
+	gcc src/main.c -o build/Sign -lcurl -I/usr/local/include -L/usr/local/lib -l:libjson-c.a
 endif
-
-
-
-
