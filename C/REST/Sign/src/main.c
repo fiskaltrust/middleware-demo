@@ -7,10 +7,19 @@
 #include <json-c/json.h>
 
 #define STRING_LENGTH 256
-#define BODY_SIZE 1024
+#define BODY_SIZE 4096
 
-//#define DEBUG
-#define CLOUD
+int64_t cases[ ][3] = {
+            //{zero, start, cash}
+    /*AT*/{0x4154000000000002,0x4154000000000003,0x4154000000000001},
+    /*DE*/{0x4445000000000002,0x4445000000000003,/*pos OR implicit flag*/0x444500000000001 | 0x0000000100000000},
+    /*FR*/{0x465200000000000F,0x4652000000000010,0x4652000000000001}
+};
+                          //AT undefinded 10% ,DE undefinded 19% ,FR undefinded 10%
+int64_t ChargeItemCase[] = {0x4154000000000001,0x4445000000000001,0x4652000000000002};
+
+                        //AT default       ,DE default        ,FR default
+int64_t PayItemCase[] = {0x4154000000000000,0x4445000000000000,0x4652000000000000};
 
 struct response{
   char *ptr;
@@ -83,8 +92,9 @@ void string_to_UPPERcase(char *target) {
     }
 }
 
-void get_input(char *ServiceURL, char *cashboxid, char *accesstoken, char *countryCode) {
+void get_input(char *ServiceURL, char *cashboxid, char *accesstoken, char *country, int *receipt) {
     
+    char temp[STRING_LENGTH] = {0};
     //Getting all the input
     //ask for Service URL
     printf("Please enter the serviceurl of the fiskaltrust.Service: ");
@@ -98,20 +108,32 @@ void get_input(char *ServiceURL, char *cashboxid, char *accesstoken, char *count
     printf("Please enter the accesstoken of the fiskaltrust.CashBox: ");
     fgets(accesstoken,STRING_LENGTH-1,stdin);
 
-    //get country Code
+    //get country
     printf("Please enter the country of the fiskaltrust.Queue (e.g. \"AT,DE,FR\"): ");
-    fgets(countryCode,STRING_LENGTH-1,stdin);
+    fgets(country,STRING_LENGTH-1,stdin);
 
+    //get receipt case
+    printf("please choose the receipt you want to send \
+        \n1: zero receipt \
+        \n2: start receipt \
+        \n3: cash transaction \
+        \n: ");
+    fgets(temp,STRING_LENGTH-1,stdin);
+    if(!sscanf(temp, "%d",receipt) || *receipt > 3) {
+        fprintf(stderr,"ERROR wrong input\n");
+        exit(-1);
+    }
+    
     //trim the input strings
     trim(ServiceURL, NULL);
     trim(cashboxid, NULL);
     trim(accesstoken, NULL);
-    trim(countryCode, NULL);
+    trim(country, NULL);
 
-    string_to_UPPERcase(countryCode);
+    string_to_UPPERcase(country);
 
     //check countyCode length
-    if(strlen(countryCode) != 2) {
+    if(strlen(country) != 2) {
         printf("The country must have length two.\n");
         exit(EXIT_FAILURE);
     }
@@ -120,20 +142,17 @@ void get_input(char *ServiceURL, char *cashboxid, char *accesstoken, char *count
     if(ServiceURL[strlen(ServiceURL) -1] == '/') {ServiceURL[strlen(ServiceURL) -1] = 0;}
 }
 
-int64_t build_receipt_case(char *countryCode) {
-    int64_t receipt_case = 0;
-
-    //add county Code
-    receipt_case |= ((int64_t)countryCode[0] << (4 * 14));
-    receipt_case |= ((int64_t)countryCode[1] << (4 * 12));
-
-    //zero receipt
-    receipt_case |= 2;
-
-    return receipt_case;
+int64_t get_receipt_case(char *countryCode, int receipt) {
+    if(strcmp(countryCode, "AT") == 0) {return cases[0][receipt-1];}
+    else if(strcmp(countryCode, "DE") == 0) {return cases[1][receipt-1];}
+    else if(strcmp(countryCode, "FR") == 0) {return cases[2][receipt-1];}
+    else {
+        fprintf(stderr,"ERROR \"%s\" is an invalid country",countryCode);
+        exit(-1);
+    }
 }
 
-json_object *set_body(char *cashboxid, int64_t receipt_case) {
+json_object *set_zero_body(char *cashboxid, int64_t receipt_case) {
     char buffer[128];
 
     json_object *root = json_object_new_object();
@@ -147,6 +166,56 @@ json_object *set_body(char *cashboxid, int64_t receipt_case) {
     json_object_object_add(root,"ftReceiptCase",json_object_new_int64(receipt_case));
 
     //printf("Body:\n %s\n",json_object_to_json_string(root));
+    return root;
+}
+
+json_object *set_cash_body(char *cashboxid, int64_t receipt_case, char *country) {
+    char buffer[128];
+    int country_index;
+    if(strcmp(country, "AT") == 0) {country_index = 0;}
+    else if(strcmp(country, "DE") == 0) {country_index = 1;}
+    else if(strcmp(country, "FR") == 0) {country_index = 2;}
+    
+    //create cbChargeItems array
+    //create ChargeItem
+    json_object *item = json_object_new_object();
+    json_object_object_add(item,"Quantity",json_object_new_double(10.0));
+    json_object_object_add(item,"Description",json_object_new_string("Food"));
+    json_object_object_add(item,"Amount",json_object_new_double(5.0));
+    json_object_object_add(item,"VATRate",json_object_new_double(10.0));
+    json_object_object_add(item,"ftChargeItemCase",json_object_new_int64(ChargeItemCase[country_index]));
+    json_object_object_add(item,"ProductNumber",json_object_new_string("1"));
+
+    //add item to array
+    json_object *ChargeItems = json_object_new_array();
+    json_object_array_add(ChargeItems,item); //the same function can be used to add more objects
+
+    
+    //create cbPayItems array
+    //creat cbPayItem
+    json_object *PayItem = json_object_new_object();
+    json_object_object_add(PayItem,"Quantity",json_object_new_double(10.0));
+    json_object_object_add(PayItem,"Description",json_object_new_string("Cash"));
+    json_object_object_add(PayItem,"Amount",json_object_new_double(5.0));
+    json_object_object_add(PayItem,"ftPayItemCase",json_object_new_int64(PayItemCase[country_index]));
+
+    //add item to array
+    json_object *PayItems = json_object_new_array();
+    json_object_array_add(PayItems,PayItem); //the same function can be used to add mor objects
+
+
+    //create root object
+    json_object *root = json_object_new_object();
+    json_object_object_add(root,"ftCashBoxID",json_object_new_string(cashboxid));
+    //json_object_object_add(root,"ftPosSystemId",json_object_new_string(POSSID));
+    json_object_object_add(root,"cbTerminalID",json_object_new_string("1"));
+    json_object_object_add(root,"cbReceiptReference",json_object_new_string("1"));
+    sprintf(buffer,"/Date(%lu)/",(unsigned long)time(NULL));
+    json_object_object_add(root,"cbReceiptMoment",json_object_new_string(buffer));
+    json_object_object_add(root,"cbChargeItems",ChargeItems);
+    json_object_object_add(root,"cbPayItems",PayItems);
+    json_object_object_add(root,"ftReceiptCase",json_object_new_int64(receipt_case));
+
     return root;
 }
 
@@ -243,16 +312,18 @@ int main()
     char ServiceURL[STRING_LENGTH];
     char cashboxid[STRING_LENGTH];
     char accesstoken[STRING_LENGTH];
-    char countryCode[STRING_LENGTH];
+    char country[STRING_LENGTH];
+    int receipt;
 
-    get_input(ServiceURL, cashboxid, accesstoken, countryCode);
+    get_input(ServiceURL, cashboxid, accesstoken, country, &receipt);
     */
 
-    //char ServiceURL[] = {"https://signaturcloud-sandbox.fiskaltrust.at"};
-    char ServiceURL[] = {"https://fiskaltrust.free.beeceptor.com"};
+    char ServiceURL[] = {"https://signaturcloud-sandbox.fiskaltrust.at"};
+    //char ServiceURL[] = {"https://fiskaltrust.free.beeceptor.com"};
     char cashboxid[] = {"a37ce376-62be-42c6-b560-1aa0a6700211"};
     char accesstoken[] = {"BJ6ZufH6hcCHmu2yzc9alH45FjdlCUT1YDlAf83gTydHKj1ZWcMibPlheky1WLMc+E9WeHYanQ8vS5oCirhI6Ck="};
-    char countryCode[] = {"AT"};
+    char country[] = {"AT"};
+    int receipt = 3;
     
     //char body[BODY_SIZE] = {0};
     int64_t response_code;
@@ -261,9 +332,16 @@ int main()
     struct response s;
     init_string(&s);
 
-    int64_t receip_case = build_receipt_case(countryCode);
+    int64_t receip_case = get_receipt_case(country, receipt);
 
-    json_object *body = set_body(cashboxid, receip_case);    
+    json_object *body;
+    if(receipt == 3) { //cash signing
+        body = set_cash_body(cashboxid, receip_case, country);
+    }
+    else{
+        body = set_zero_body(cashboxid, receip_case);
+    }
+        
     
     send_request(ServiceURL, cashboxid, accesstoken, json_object_to_json_string(body), &s, &response_code);
     json_object_put(body);
@@ -280,9 +358,9 @@ int main()
         json_object *target = NULL;
         json_object *response_json = json_tokener_parse(s.ptr);
         json_pointer_get(response_json,"/ftState",&target);
-        printf("ftState: %s\n",json_object_to_json_string(target));
-
+        if(target) {printf("ftState: %s\n",json_object_to_json_string(target));}
         free(s.ptr);
     }
+    
     return 0;
 }
