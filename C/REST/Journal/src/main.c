@@ -4,9 +4,10 @@
 #include <curl/curl.h>
 #include <inttypes.h>
 #include <time.h>
-#include <json-c/json.h>
 
 #define STRING_LENGTH 256
+
+uint64_t journal_array[] = {4707387510509010945 ,5067112530745229313};
 
 struct response{
   char *ptr;
@@ -79,7 +80,7 @@ void string_to_UPPERcase(char *target) {
     }
 }
 
-void get_input(char *ServiceURL, char *cashboxid, char *accesstoken, char *countryCode) {
+void get_input(char *ServiceURL, char *cashboxid, char *accesstoken, char *journal) {
     
     //Getting all the input
     //ask for Service URL
@@ -95,35 +96,31 @@ void get_input(char *ServiceURL, char *cashboxid, char *accesstoken, char *count
     fgets(accesstoken,STRING_LENGTH-1,stdin);
 
     //get country Code
-    printf("Please enter the countrycode of the fiskaltrust.Queue (e.g. \"AT,DE,FR\"): ");
-    fgets(countryCode,STRING_LENGTH-1,stdin);
+    printf("Please choose the journal you want to request\
+                                                    \n1: \"AT DEP7\" \"0x4154 0000 0000 0001\"\
+                                                    \n2: \"FR Ticket\" \"0x4652 0000 0000 0001\"\
+                                                    \n: ");
+    fgets(journal,STRING_LENGTH-1,stdin);
 
     //trim the input strings
     trim(ServiceURL, NULL);
     trim(cashboxid, NULL);
     trim(accesstoken, NULL);
-    trim(countryCode, NULL);
-
-    string_to_UPPERcase(countryCode);
-
-    //check countyCode length
-    if(strlen(countryCode) != 2) {
-        printf("The countrycode must have length two.\n");
-        exit(EXIT_FAILURE);
-    }
+    trim(journal, NULL);
 }
 
-uint64_t build_journal_type(char *countryCode) {
-    uint64_t receipt_case = 0;
-
-    //add county Code
-    receipt_case |= ((uint64_t)countryCode[0] << (4 * 14));
-    receipt_case |= ((uint64_t)countryCode[1] << (4 * 12));
-
-    //journal request
-    receipt_case |= 1;
-
-    return receipt_case;
+uint64_t build_journal_type(char *journal) {
+    int index;
+    if(!sscanf(journal,"%d",&index)) {
+        fprintf(stderr,"ERROR input is no number\n");
+        exit -1;
+    }
+    if(index > (sizeof(journal_array) / sizeof(uint64_t))) {
+        fprintf(stderr,"ERROR invalid journal type\n");
+        exit -1;
+    }
+    index --;
+    return journal_array[index];
 }
 
 void send_request(char *ServiceURL, char *cashboxid, char *accesstoken, struct response *s, int *response_code, int64_t journal_type) {
@@ -218,30 +215,23 @@ void send_request(char *ServiceURL, char *cashboxid, char *accesstoken, struct r
     }
 }
 
+
 int main()
 {
     printf("This example sends a journal request to the fiskaltrust.Service via REST\n");
-    /*
+    
     char ServiceURL[STRING_LENGTH];
     char cashboxid[STRING_LENGTH];
     char accesstoken[STRING_LENGTH];
-    char countryCode[STRING_LENGTH];
+    char journal[STRING_LENGTH];
 
-    get_input(ServiceURL, cashboxid, accesstoken, countryCode);
-    */ 
-    char ServiceURL[] = {"https://signaturcloud-sandbox.fiskaltrust.at"};
-    char cashboxid[] = {"a37ce376-62be-42c6-b560-1aa0a6700211"};
-    char accesstoken[] = {"BJ6ZufH6hcCHmu2yzc9alH45FjdlCUT1YDlAf83gTydHKj1ZWcMibPlheky1WLMc+E9WeHYanQ8vS5oCirhI6Ck="};
-    char countryCode[] = {"AT"};
+    get_input(ServiceURL, cashboxid, accesstoken, journal);
 
     //init response struct
     struct response s;
     init_string(&s);
 
-    uint64_t journal_type = build_journal_type(countryCode);
-    #ifdef DEBUG
-        printf("URL: %s\n",ServiceURL);
-    #endif
+    uint64_t journal_type = build_journal_type(journal);
 
     int response_code;
     send_request(ServiceURL, cashboxid, accesstoken, &s, &response_code, journal_type);
@@ -254,37 +244,10 @@ int main()
     }
     else {
         printf("Body:\n%s\n", s.ptr);
-        //parse JSON
-        json_object *response_obj = json_tokener_parse(s.ptr);
-        struct json_object *target_array = NULL, *taget_obj = NULL;
-        struct json_object *o = NULL;
-        
-
-        taget_obj = json_object_object_get(response_obj, "Belege-Gruppe");
-        enum json_type o_type = json_object_get_type(taget_obj);
-	    printf("type of %s:%s\n", "obj", json_type_to_name(o_type));
-        target_array = json_object_array_get_idx(taget_obj, 0);
-        //json_pointer_get(response_obj, "Belege-Gruppe/0/Kassen-ID",&target);
-        //printf("Target Pointer: 0x%x\n",target);
-        if (!json_object_object_get_ex(target_array, "Kassen-ID", &o))
-		    {printf("Field %s does not exist\n", "Kassen-ID");}
-        else
-            {printf("Body:\n%s\n",json_object_to_json_string(target_array));}
-        /*
-        //array_list *belege = json_object_get_array(response_obj);
-        enum json_type o_type = json_object_get_type(response_obj);
-	    printf("type of %s:%s\n", "obj", json_type_to_name(o_type));
-        struct json_object *o = NULL;
-	    if (!json_object_object_get_ex(response_obj, "Belege-Gruppe", &o))
-		    printf("Field %s does not exist\n", "Belege-Gruppe");
-        array_list *bel =  json_object_get_array(o);
-        json_poin
-        //printf("Body:\n%s\n",json_object_to_json_string(response_obj));
-        //printf("state: %ld\n",get);
-        */
         free(s.ptr);
         s.ptr = NULL;
     }
 
+    //befor freeing the body, it could be written to a file if needed
     return 0;
 }
