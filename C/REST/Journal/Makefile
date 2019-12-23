@@ -8,5 +8,5 @@ else
 
 main: src/main.c
 	mkdir build -p
-	gcc src/main.c -o build/Journal -lcurl -I/usr/local/include -L/usr/local/lib -l:libjson-c.a
+	gcc src/main.c -o build/Journal -lcurl
 endif
