@@ -165,7 +165,7 @@ json_object *set_zero_body(char *cashboxid, int64_t receipt_case) {
     json_object_object_add(root,"cbPayItems",json_object_new_array());
     json_object_object_add(root,"ftReceiptCase",json_object_new_int64(receipt_case));
 
-    //printf("Body:\n %s\n",json_object_to_json_string(root));
+    printf("Body:\n %s\n",json_object_to_json_string(root));
     return root;
 }
 
@@ -318,12 +318,18 @@ int main()
     get_input(ServiceURL, cashboxid, accesstoken, country, &receipt);
     */
 
-    char ServiceURL[] = {"https://signaturcloud-sandbox.fiskaltrust.at"};
+    //FR start and sign not working
+    char ServiceURL[] = {"https://ft-a241-signaturcloud-azure-sandbox.fiskaltrust.fr"};
+    char cashboxid[] = {"c8665a57-8493-44c2-99e4-286b528ab0c8"};
+    char accesstoken[] = {"BMxqclRyzG1v6surtfMMiYBMqcfhRbIK8t0a5cSLnB9M+3EYGUzz2woOoUFaoYBKpr0A+O1bsbvSOkJGZtMjGdg="};
+
+    //char ServiceURL[] = {"https://signaturcloud-sandbox.fiskaltrust.at"};
     //char ServiceURL[] = {"https://fiskaltrust.free.beeceptor.com"};
-    char cashboxid[] = {"a37ce376-62be-42c6-b560-1aa0a6700211"};
-    char accesstoken[] = {"BJ6ZufH6hcCHmu2yzc9alH45FjdlCUT1YDlAf83gTydHKj1ZWcMibPlheky1WLMc+E9WeHYanQ8vS5oCirhI6Ck="};
+    //char cashboxid[] = {"a37ce376-62be-42c6-b560-1aa0a6700211"};
+    //char accesstoken[] = {"BJ6ZufH6hcCHmu2yzc9alH45FjdlCUT1YDlAf83gTydHKj1ZWcMibPlheky1WLMc+E9WeHYanQ8vS5oCirhI6Ck="};
+
     char country[] = {"AT"};
-    int receipt = 3;
+    int receipt = 2;
     
     //char body[BODY_SIZE] = {0};
     int64_t response_code;
