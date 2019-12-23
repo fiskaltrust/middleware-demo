@@ -32,9 +32,9 @@ Install the library via your distributions package manager.
 
 | Distribution  | Command                    |
 |---------------|----------------------------|
-| Ubuntu/Debian | `apt-get install libcurl4` |
-| Fedora        | `dnf install libcurl`      |
-| OpenSUSE      | `zypper install libcurl4`  |
+| Ubuntu/Debian | `apt-get install libcurl4 libcurl4-openssl-dev` |
+| Fedora        | `dnf install libcurl`                           |
+| OpenSUSE      | `zypper install libcurl4 libcurl4-openssl-dev`  |
 
 # Building
 
