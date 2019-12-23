@@ -1,6 +1,0 @@
-[submodule "C/REST/Journal/lib/cJSON"]
-	path = C/REST/Journal/lib/cJSON
-	url = https://github.com/DaveGamble/cJSON.git
-[submodule "C/REST/Sign/lib/cJSON"]
-	path = C/REST/Sign/lib/cJSON
-	url = https://github.com/DaveGamble/cJSON.git
