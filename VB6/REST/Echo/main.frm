@@ -37,7 +37,6 @@ Begin VB.Form echo
          Height          =   285
          Left            =   120
          TabIndex        =   8
-         Text            =   "test text"
          Top             =   240
          Width           =   8295
       End
@@ -53,7 +52,6 @@ Begin VB.Form echo
          Height          =   285
          Left            =   120
          TabIndex        =   6
-         Text            =   "BJ6ZufH6hcCHmu2yzc9alH45FjdlCUT1YDlAf83gTydHKj1ZWcMibPlheky1WLMc+E9WeHYanQ8vS5oCirhI6Ck="
          Top             =   240
          Width           =   8295
       End
@@ -69,7 +67,6 @@ Begin VB.Form echo
          Height          =   285
          Left            =   120
          TabIndex        =   4
-         Text            =   "a37ce376-62be-42c6-b560-1aa0a6700211"
          Top             =   240
          Width           =   8295
       End
@@ -85,7 +82,6 @@ Begin VB.Form echo
          Height          =   285
          Left            =   120
          TabIndex        =   2
-         Text            =   " https://signaturcloud-sandbox.fiskaltrust.at "
          Top             =   240
          Width           =   8295
       End

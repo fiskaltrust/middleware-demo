@@ -54,7 +54,6 @@ Begin VB.Form journal
          Height          =   285
          Left            =   120
          TabIndex        =   6
-         Text            =   "BKTBfocQoFIEzIbxVcTMlIvsCQzDMeyl9E3S06+K3s3uwrcKatPvKOAocwnZmEgocvxRovuEVJPaqUjyMmCl0Ng="
          Top             =   240
          Width           =   8295
       End
@@ -70,7 +69,6 @@ Begin VB.Form journal
          Height          =   285
          Left            =   120
          TabIndex        =   4
-         Text            =   "5f72b575-f9f3-4a73-916f-beebe3ea7ab7"
          Top             =   240
          Width           =   8295
       End
@@ -86,7 +84,6 @@ Begin VB.Form journal
          Height          =   285
          Left            =   120
          TabIndex        =   2
-         Text            =   "http://localhost:1200/0242306d-d1e8-4ccd-96f2-b21cae326475/"
          Top             =   240
          Width           =   8295
       End
