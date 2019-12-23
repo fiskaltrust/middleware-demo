@@ -113,11 +113,11 @@ uint64_t build_journal_type(char *journal) {
     int index;
     if(!sscanf(journal,"%d",&index)) {
         fprintf(stderr,"ERROR input is no number\n");
-        exit -1;
+        exit(-1);
     }
     if(index > (sizeof(journal_array) / sizeof(uint64_t))) {
         fprintf(stderr,"ERROR invalid journal type\n");
-        exit -1;
+        exit(-1);
     }
     index --;
     return journal_array[index];
