@@ -8,6 +8,8 @@ A zero receipt is sent to a specified url and CashBox and the response is printe
 
 This example can be used as a starting point to implement the [fiskaltrust.Interface](https://github.com/fiskaltrust/interface-doc)
 
+> _**Note:** The German cash transaction could not have be tested because the Service is not yet ready, but it should work like an Austrian one.<br>The France start receipt and cash transaction could not have be tested because the cloud Service is not yet ready, but it should work like an Austrian one._
+
 # Requirements
 
 ## Toolchain

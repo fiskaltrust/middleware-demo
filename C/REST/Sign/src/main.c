@@ -281,7 +281,7 @@ void send_request(char *ServiceURL, char *cashboxid, char *accesstoken, const ch
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, s);
 
         // Perform the request, res will get the return code
-        printf("performing request ...");
+        printf("performing request...");
         res = curl_easy_perform(curl);
         
         // Check for errors
@@ -319,17 +319,17 @@ int main()
     */
 
     //FR start and sign not working
-    char ServiceURL[] = {"https://ft-a241-signaturcloud-azure-sandbox.fiskaltrust.fr"};
-    char cashboxid[] = {"c8665a57-8493-44c2-99e4-286b528ab0c8"};
-    char accesstoken[] = {"BMxqclRyzG1v6surtfMMiYBMqcfhRbIK8t0a5cSLnB9M+3EYGUzz2woOoUFaoYBKpr0A+O1bsbvSOkJGZtMjGdg="};
+    char ServiceURL[] = {"http://localhost:1200/0242306d-d1e8-4ccd-96f2-b21cae326475"};
+    char cashboxid[] = {"15d6c408-c06e-4a9b-8834-9f76ed4e05eb"};
+    char accesstoken[] = {"BPB0vVrWw9AbfSVc2zC7DjWMu47xdDNN1d3dgdto0KTA5hDQcfeUCqED3pVfKaGURNptr3SH3Ci5/SqIodl9iWs="};
 
     //char ServiceURL[] = {"https://signaturcloud-sandbox.fiskaltrust.at"};
     //char ServiceURL[] = {"https://fiskaltrust.free.beeceptor.com"};
     //char cashboxid[] = {"a37ce376-62be-42c6-b560-1aa0a6700211"};
     //char accesstoken[] = {"BJ6ZufH6hcCHmu2yzc9alH45FjdlCUT1YDlAf83gTydHKj1ZWcMibPlheky1WLMc+E9WeHYanQ8vS5oCirhI6Ck="};
 
-    char country[] = {"AT"};
-    int receipt = 2;
+    char country[] = {"FR"};
+    int receipt = 1;
     
     //char body[BODY_SIZE] = {0};
     int64_t response_code;
