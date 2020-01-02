@@ -4,11 +4,11 @@ This example sends a signing request to the fiskaltrust.Service via REST.
 
 A zero receipt is sent to a specified url and CashBox and the response is printed.
 
-> _**Note:** If the http statuscod204 is returned the CashBox may not yet be activated and you'll need to send a start receipt first. For instructions on how to do this please consult our videos about [sending requests to the fiskaltrust.Service](https://www.youtube.com/playlist?list=PL9QFfhi6nFj94kZBTxxL3kyar2Q7yTejU)_
+> _**Note:** If the http statuscode 204 is returned the CashBox may not yet be activated and you'll need to send a start receipt first. For instructions on how to do this please consult our videos about [sending requests to the fiskaltrust.Service](https://www.youtube.com/playlist?list=PL9QFfhi6nFj94kZBTxxL3kyar2Q7yTejU)_
 
 This example can be used as a starting point to implement the [fiskaltrust.Interface](https://github.com/fiskaltrust/interface-doc)
 
-> _**Note:** The German cash transaction could not have be tested because the Service is not yet ready, but it should work like an Austrian one._
+> _**Note:** The german cash transaction is being implemented at the moment in the fiskaltrust.Service. Since the implementation is similar, you can use the austrian service for testing._
 
 # Requirements
 
@@ -28,9 +28,9 @@ To build the example, the [curl library](https://curl.haxx.se/libcurl/) needs to
 
 Building the curl library for windows is a complicated process. [This](https://albertino80.github.io/building.html) guide is a good starting point.
 
-After the library is compiled all the following dll files have to be added to system32 or next to the executable.<br>`libcrypto-1_1.dll, zlibwapi.dll, nghttp2.dll, libssl-1_1.dll, libssh2.dll, libcurl.dll`
+After the library is compiled the following dll files have to be copied to `C:\Windows\System32` or to `.\build\`.<br>`libcrypto-1_1.dll, zlibwapi.dll, nghttp2.dll, libssl-1_1.dll, libssh2.dll, libcurl.dll`
 
-> _**Note:** If the program is executed from window it throws an error about the dll it is missing._
+> _**Note:** If the program is executed from window it throws error about the dll it is missing._
 
 Also the curl certificate has to be obtained.<br> Downloaded the Windows curl from [curl](https://curl.haxx.se/windows/) and copy the `curl-ca-bundle.crt` to the project folder.
 
@@ -52,15 +52,22 @@ Install the library via your distributions package manager.
 
 ### Windows
 
-This code was tested with [those](https://github.com/json-c/json-c#building-with-cmake-) build instructions except instead of `make` this line was executed `cmake --build . --target install`
+Build the library using the following commands:
 
-After json-c is compiled, add the json-c.dll to the system32 folder or next to the executable.
+```
+mkdir build
+cd build
+cmake ../
+cmake --build . --target install
+```
 
-> _**Note:** To run this command the VS tools (e.g. cl.exe) properly (e.g. "Developer Command Prompt for VS2015") are needed._
+> _**Note:** To run these commands the [VS build tools](https://aka.ms/buildtools) need to be installed._
+
+After the library is compiled the dll the `json-c.dll` has to be copied to `C:\Windows\System32` or to `.\build\`.
 
 ### Linux
 
-To complile just follow [those](https://github.com/json-c/json-c#build-instructions) instructions.
+To complile the library follow [those](https://github.com/json-c/json-c#build-instructions) instructions.
 
 > _**Note:** You may also have to look into the [Install prerequisites](https://github.com/json-c/json-c#install-prerequisites-)._
 
