@@ -24,7 +24,7 @@ To build the example, the [curl library](https://curl.haxx.se/libcurl/) needs to
 
 Building the curl library for windows is a complicated process. [This](https://albertino80.github.io/building.html) guide is a good starting point.
 
-After the library is compiled the following dll files have to be copied to `C:\Windows\System32` or to `.\build\`.<br>`libcrypto-1_1.dll, zlibwapi.dll, nghttp2.dll, libssl-1_1.dll, libssh2.dll, libcurl.dll`
+After the library is compiled, the following files have to be copied to `C:\Windows\System32` or to `.\build\`.<br>`libcrypto-1_1.dll, zlibwapi.dll, nghttp2.dll, libssl-1_1.dll, libssh2.dll, libcurl.dll`
 
 > _**Note:** If the program is executed from window it throws error about the dll it is missing._
 
