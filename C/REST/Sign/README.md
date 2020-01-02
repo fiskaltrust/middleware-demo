@@ -30,7 +30,7 @@ Building the curl library for windows is a complicated process. [This](https://a
 
 After the library is compiled all the following dll files have to be added to system32 or next to the executable.<br>`libcrypto-1_1.dll, zlibwapi.dll, nghttp2.dll, libssl-1_1.dll, libssh2.dll, libcurl.dll`
 
-> _**Note:** If the program is executed from window it throws error about the dll it is missing._
+> _**Note:** If the program is executed from window it throws an error about the dll it is missing._
 
 Also the curl certificate has to be obtained.<br> Downloaded the Windows curl from [curl](https://curl.haxx.se/windows/) and copy the `curl-ca-bundle.crt` to the project folder.
 
