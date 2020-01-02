@@ -63,7 +63,7 @@ cmake --build . --target install
 
 > _**Note:** To run these commands the [VS build tools](https://aka.ms/buildtools) need to be installed._
 
-After the library is compiled the dll file `json-c.dll` has to be copied to `C:\Windows\System32` or to `.\build\`.
+After the library is compiled, the file `json-c.dll` has to be copied to `C:\Windows\System32` or to `.\build\`.
 
 ### Linux
 
