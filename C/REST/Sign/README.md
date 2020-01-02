@@ -52,7 +52,7 @@ Install the library via your distributions package manager.
 
 ### Windows
 
-This code was tested with [those](https://github.com/json-c/json-c) build instructions except instead of `make` this line was executed `cmake --build . --target install`
+This code was tested with [those](https://github.com/json-c/json-c#building-with-cmake-) build instructions except instead of `make` this line was executed `cmake --build . --target install`
 
 After json-c is compiled, add the json-c.dll to the system32 folder or next to the executable.
 
