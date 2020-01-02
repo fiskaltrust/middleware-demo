@@ -7,7 +7,6 @@
 #include <json-c/json.h>
 
 #define STRING_LENGTH 256
-#define BODY_SIZE 4096
 
 int64_t cases[ ][3] = {
             //{zero, start, cash}
@@ -164,8 +163,6 @@ json_object *set_zero_body(char *cashboxid, int64_t receipt_case) {
     json_object_object_add(root,"cbChargeItems",json_object_new_array());
     json_object_object_add(root,"cbPayItems",json_object_new_array());
     json_object_object_add(root,"ftReceiptCase",json_object_new_int64(receipt_case));
-
-    printf("Body:\n %s\n",json_object_to_json_string(root));
     return root;
 }
 
@@ -234,8 +231,10 @@ void send_request(char *ServiceURL, char *cashboxid, char *accesstoken, const ch
     //init curl
     curl = curl_easy_init();
     
-    char cer_path[] = {".\\"};
-    char cer_name[] = {"curl-ca-bundle.crt"};
+    #ifdef _WIN32
+        char cer_path[] = {".\\"};
+        char cer_name[] = {"curl-ca-bundle.crt"};
+    #endif
     char requestURL[STRING_LENGTH];
     strcpy(requestURL, ServiceURL);
     strcat(requestURL, "/json/sign"); //add endpoint
@@ -267,9 +266,11 @@ void send_request(char *ServiceURL, char *cashboxid, char *accesstoken, const ch
         // tell libcurl to follow redirection
         curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
 
-        // set verify certificate
-        //curl_easy_setopt(curl, CURLOPT_CAINFO, cer_name); //add curl certificate
-        //curl_easy_setopt(curl, CURLOPT_CAPATH, cer_path); //path to certificate
+        #ifdef _WIN32
+            // set verify certificate
+            curl_easy_setopt(curl, CURLOPT_CAINFO, cer_name); //add curl certificate
+            curl_easy_setopt(curl, CURLOPT_CAPATH, cer_path); //path to certificate
+        #endif
 
          
         // get header with callback
@@ -308,7 +309,6 @@ int main()
 {
     printf("This example sends a sign request to the fiskaltrust.Service via REST\n");
     
-    /*
     char ServiceURL[STRING_LENGTH];
     char cashboxid[STRING_LENGTH];
     char accesstoken[STRING_LENGTH];
@@ -316,22 +316,7 @@ int main()
     int receipt;
 
     get_input(ServiceURL, cashboxid, accesstoken, country, &receipt);
-    */
-
-    //FR start and sign not working
-    char ServiceURL[] = {"http://localhost:1200/0242306d-d1e8-4ccd-96f2-b21cae326475"};
-    char cashboxid[] = {"15d6c408-c06e-4a9b-8834-9f76ed4e05eb"};
-    char accesstoken[] = {"BPB0vVrWw9AbfSVc2zC7DjWMu47xdDNN1d3dgdto0KTA5hDQcfeUCqED3pVfKaGURNptr3SH3Ci5/SqIodl9iWs="};
-
-    //char ServiceURL[] = {"https://signaturcloud-sandbox.fiskaltrust.at"};
-    //char ServiceURL[] = {"https://fiskaltrust.free.beeceptor.com"};
-    //char cashboxid[] = {"a37ce376-62be-42c6-b560-1aa0a6700211"};
-    //char accesstoken[] = {"BJ6ZufH6hcCHmu2yzc9alH45FjdlCUT1YDlAf83gTydHKj1ZWcMibPlheky1WLMc+E9WeHYanQ8vS5oCirhI6Ck="};
-
-    char country[] = {"FR"};
-    int receipt = 1;
     
-    //char body[BODY_SIZE] = {0};
     int64_t response_code;
 
     //init response struct
@@ -357,7 +342,11 @@ int main()
         printf("No Response\n");
     }
     else {
+        #ifdef _WIN32
+        printf("Response Code: %I64d\n",response_code);
+        #else
         printf("Response Code: %ld\n",response_code);
+        #endif
         printf("Body:\n%s\n", s.ptr);
 
         //parse response body to json
