@@ -1,10 +1,10 @@
 ifeq ($(OS),Windows_NT) #Windows
 
-echo.exe: src\main.c libcurl
-	gcc.exe src\main.c -o build\echo.exe -I./include -L.\lib\static-release-x64 -llibcurl_a -Wall
+CFLAGS = -IC:/dev_gcc/curltut/curl-7.67.0/include
+LDFLAGS= -L"C:/dev_gcc/curltut/curl-7.67.0/build/Win64/VC15/DLL Release - DLL OpenSSL - DLL LibSSH2" -llibcurl
 
-libcurl:
-	
+main.exe: src\main.c
+	gcc.exe src\main.c -o build\main.exe $(CFLAGS) $(LDFLAGS) -ggdb -Wall
 
 #Linux
 else
