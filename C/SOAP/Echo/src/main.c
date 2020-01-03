@@ -72,13 +72,9 @@ void get_input(char *ServiceURL, char *message) {
   }
 }
 
-void init_struct(struct type_Echo_response *Echo_response, struct type_Echo_request *Echo_request, char *message) {
+void init_struct(struct type_Echo_request *Echo_request, char *message) {
     Echo_request->message = malloc(sizeof(char) * (strlen(message) + 1));
-
-    Echo_response->EchoResult =
-        malloc(sizeof(char) * 1024); // we dont know what will come back
-
-    strcat(Echo_request->message, message); // set message
+    strcpy(Echo_request->message, message); // set message
 }
 
 int main() {
@@ -94,7 +90,7 @@ int main() {
 
     get_input(ServiceURL, message);
 
-    init_struct(&Echo_response, &Echo_request, message);
+    init_struct(&Echo_request, message);
 
     printf("making call... ");
     int response = soap_call_echo(ft, ServiceURL, NULL, &Echo_request, &Echo_response);

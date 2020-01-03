@@ -92,11 +92,7 @@ void get_input(char *ServiceURL, char *conutryCode) {
 }
 
 void print_response(struct type_Journal_response *Journal_response) {
-    if(strlen(Journal_response->JournalResult.__ptr) > 2000) {
-        printf("ptr: %.1000s\n",Journal_response->JournalResult.__ptr);
-    printf("\t*\n\t*\n\t*\n\t*\n\t*\n%s\n",Journal_response->JournalResult.__ptr + (strlen(Journal_response->JournalResult.__ptr) - 1000));
-    }
-    else {printf("ptr: %s\n",Journal_response->JournalResult.__ptr);}
+    printf("response:\n%s\n",Journal_response->JournalResult.__ptr);
     printf("Size: %d\n",Journal_response->JournalResult.__size);
 }
 
