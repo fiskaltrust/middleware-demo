@@ -1,7 +1,7 @@
 ifeq ($(OS),Windows_NT)
 echo.exe: src\main.cpp soapC.cpp
 	mkdir build || echo "dir exisit"
-	gcc -o build\echo.exe src\main.cpp "$(PATH_to_gSOAP)\gsoap\stdsoap2.cpp" "$(PATH_to_gSOAP)\gsoap\bin\win32\soapC.cpp" "$(PATH_to_gSOAP)\gsoap\bin\win32\soapClient.cpp" -I"$(PATH_to_gSOAP)\gsoap\bin\win32" -I"$(PATH_to_gSOAP)\gsoap" -L"$(PATH_to_libwsock32)" -l:libwsock32.a -lstdc++ -Wall
+	gcc -o build\echo.exe src\main.cpp "$(PATH_to_gSOAP)\gsoap\stdsoap2.cpp" "$(PATH_to_gSOAP)\gsoap\bin\win32\soapC.cpp" "$(PATH_to_gSOAP)\gsoap\bin\win32\soapBasicHttpBinding_USCOREIPOSProxy.cpp" "$(PATH_to_gSOAP)\gsoap\bin\win32\soapClient.cpp" -I"$(PATH_to_gSOAP)\gsoap\bin\win32" -I"$(PATH_to_gSOAP)\gsoap" -L"$(PATH_to_libwsock32)" -l:libwsock32.a -lstdc++ -Wall
 
 soapC.cpp:
 	"$(PATH_to_gSOAP)\gsoap\bin\win32\wsdl2h.exe" -c++ -s -o "$(PATH_to_gSOAP)\gsoap\bin\win32\ftservice.h" "$(PATH_to_WSDL)"
@@ -12,7 +12,7 @@ echo: src/main.c lib/soapC.cpp
 	mkdir build -p
 	gcc -o build/echo src/main.cpp "./lib/soapC.cpp" "./lib/soapClient.cpp" /usr/share/gsoap/custom/duration.cpp -I"./lib" -Wall -L/usr/lib/x86_64-linux-gnu -l:libgsoap.a -lstdc++
 
-lib/soapC.c:
+lib/soapC.cpp:
 	mkdir lib -p
 	wsdl2h -c++ -s -o "./lib/ftservice.h" "$(PATH_to_WSDL)"
 	soapcpp2 -C -c++ -1 "./lib/ftservice.h" -I"/usr/share/gsoap" -r -d./lib

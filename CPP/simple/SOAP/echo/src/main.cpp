@@ -1,5 +1,5 @@
 #include <BasicHttpBinding_USCOREIPOS.nsmap>
-#include <soapH.h>
+#include <soapBasicHttpBinding_USCOREIPOSProxy.h>
 //#include <inttypes.h> //int64_t, uint64_t
 //#include <stdio.h>    /* printf, sprintf */
 //#include <stdlib.h>   /* exit, atoi, malloc, free */
@@ -37,11 +37,11 @@ void get_input(string *ServiceURL, string *message) {
     // Getting all the input
     // ask for Service URL
     cout << "Please enter the serviceurl of the fiskaltrust.Service: ";
-    cin >> *ServiceURL;
+    getline(cin, *ServiceURL);
 
     // get message
     cout << "Please enter the message to send in the echo request: ";
-    cin >> *message;
+    getline(cin, *message);
 
     // trim the input strings
     trim(*ServiceURL);
@@ -53,36 +53,34 @@ void get_input(string *ServiceURL, string *message) {
     }
 }
 
-void init_struct(class _ns1__Echo *Echo_request, char *message) {
-    Echo_request->message = malloc(sizeof(char) * (strlen(message) + 1));
-
-    strcat(Echo_request->message, message); // set message
-}
-
 int main() {
-    printf("This example sends a echo to the fiskaltrust.Service via SOAP\n");
+    cout << "This example sends a echo to the fiskaltrust.Service via SOAP\n";
 
-    //std::string ServiceURL;
-    //std::string message;
+    string ServiceURL;
+    string message;
 
-    char ServiceURL[] = "http://localhost:1200/test";
-    char message[] = "test msg";
+    //char ServiceURL[] = "http://localhost:1200/test";
+    //char message[] = "testmsg";
 
-    class _ns1__Echo Echo_request;
+    get_input(&ServiceURL, &message);
+
+    //init echo class
+    struct soap *ft = soap_new();
+
+    class _ns1__Echo *Echo_request = soap_new_set__ns1__Echo(ft, (char*)message.c_str());
+
     class _ns1__EchoResponse Echo_response;
 
-    //get_input(&ServiceURL, &message);
-    struct soap *ft = soap_new();
+    //set service URL
+    BasicHttpBinding_USCOREIPOSProxy echo_handler(ServiceURL.c_str());
 
     cout << "making call... ";
 
-    soap_POST_send__ns1__Echo(ft, ServiceURL, &Echo_request);
-
-    if (soap_POST_recv__ns1__Echo(ft, &Echo_request) == SOAP_OK) {
-        printf("OK\n");
-        printf("Response: %s\n", Echo_request.message);
+    if (echo_handler.Echo(Echo_request, Echo_response) == SOAP_OK) {
+        cout << "OK" << endl;
+        cout << "Response: " << Echo_response.EchoResult << endl;
     } else {
-        printf("done\n");
+        cout << "done" << endl;
         soap_print_fault(ft, stderr);
     }
     
