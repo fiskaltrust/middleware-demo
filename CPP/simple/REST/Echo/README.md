@@ -12,6 +12,8 @@ This example can be used as a starting point to implement the [fiskaltrust.Inter
 
 To compile the example the `MinGW` compiler [`g++`](http://www.mingw.org/) and the buildtool [`make`](https://www.gnu.org/software/make/) are needed.
 
+To configure the example [Python3](https://www.python.org/) is needed.
+
 > _**Note:** On windows we recomend installing these with a package manager like [scoop](https://scoop.sh/) or [chocolatey](https://chocolatey.org/)_
 
 ## cpp-httplib
