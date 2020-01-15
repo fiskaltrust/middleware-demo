@@ -1,3 +1,0 @@
-[submodule "CPP/simple/REST/Echo/lib/cpp-httplib"]
-	path = CPP/simple/REST/Echo/lib/cpp-httplib
-	url = https://github.com/yhirose/cpp-httplib.git
