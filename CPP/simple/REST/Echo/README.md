@@ -16,7 +16,9 @@ To compile the example the `MinGW` compiler [`g++`](http://www.mingw.org/) and t
 
 ## cpp-httplib
 
-The library is a submodul of this repository, so it is already downloaded to the `lib` folder.
+Please download the from [here](https://github.com/yhirose/cpp-httplib).
+
+> _**Note:** The configure script will as the location of the library (default: .\lib\cpp-httplib)_
 
 ### Windows
 
