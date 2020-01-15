@@ -98,11 +98,7 @@ int main()
 {
     cout << "This example sends an echo request to the fiskaltrust.Service via REST" << endl;
 
-    string ServiceURL ("signaturcloud-sandbox.fiskaltrust.at");
-    string cashboxid ("a37ce376-62be-42c6-b560-1aa0a6700211");
-    string accesstoken ("BJ6ZufH6hcCHmu2yzc9alH45FjdlCUT1YDlAf83gTydHKj1ZWcMibPlheky1WLMc+E9WeHYanQ8vS5oCirhI6Ck=");
-    string body ("\"some\"");
-    string response;
+    string ServiceURL, cashboxid, accesstoken, body, response;
 
     get_input(&ServiceURL, &cashboxid, &accesstoken, &body);
 
