@@ -75,20 +75,7 @@ void string_to_UPPERcase(char *target) {
     }
 }
 
-int64_t build_receipt_case(char *countryCode) {
-    int64_t receipt_case = 0;
-
-    //add county Code
-    receipt_case |= ((int64_t)countryCode[0] << (4 * 14));
-    receipt_case |= ((int64_t)countryCode[1] << (4 * 12));
-
-    //zero receipt
-    receipt_case |= 2;
-
-    return receipt_case;
-}
-
-void get_input(char *ServiceURL, char *cashBoxId, char *country, int *receipt) {
+void get_input(char *ServiceURL, char *cashBoxId, char *country, char *POSsystemID, int *receipt) {
 
     char temp[STRING_LENGTH] = {0};
 
@@ -98,8 +85,12 @@ void get_input(char *ServiceURL, char *cashBoxId, char *country, int *receipt) {
     fgets(ServiceURL, STRING_LENGTH - 1, stdin);
 
     // get cashboxID
-    printf("Please enter the cashbox of the fiskaltrust.Cashbox: ");
+    printf("Please enter the cashboxid of the fiskaltrust.Cashbox: ");
     fgets(cashBoxId, STRING_LENGTH - 1, stdin);
+
+    // get POSsystemID
+    printf("Please enter your POS System ID: ");
+    fgets(POSsystemID, STRING_LENGTH - 1, stdin);
 
     //get country
     printf("Please enter the country of the fiskaltrust.Queue (e.g. \"AT,DE,FR\"): ");
@@ -121,6 +112,9 @@ void get_input(char *ServiceURL, char *cashBoxId, char *country, int *receipt) {
     trim(ServiceURL, NULL);
     trim(cashBoxId, NULL);
     trim(country, NULL);
+    trim(POSsystemID, NULL);
+
+    string_to_UPPERcase(country);
 
     //check countyCode length
     if (strlen(country) != 2) {
@@ -134,112 +128,90 @@ void get_input(char *ServiceURL, char *cashBoxId, char *country, int *receipt) {
     }
 }
 
-void set_zero_body(struct type_Sign_request *Sign_request,  char *cashBoxId, int64_t receiptCase) {
+void set_zero_body(struct type_Sign_request *Sign_request,  char *cashBoxId, char *POSsystemID, int64_t receiptCase) {
 
     //allocate memory for request struct
     Sign_request->data = calloc(1, sizeof(struct ns3__ReceiptRequest));
     Sign_request->data->ftCashBoxID = calloc(128, sizeof(char));
-    Sign_request->data->ftQueueID = NULL;
-    Sign_request->data->ftPosSystemId = NULL;
+    Sign_request->data->ftPosSystemId = calloc(128, sizeof(char));
     Sign_request->data->cbTerminalID = calloc(128, sizeof(char));
     Sign_request->data->cbReceiptReference = calloc(128, sizeof(char));
     //Sign_request->data->cbReceiptMoment muss be set bevor sending call
     Sign_request->data->cbChargeItems = calloc(1, sizeof(struct ns3__ArrayOfChargeItem));
     Sign_request->data->cbChargeItems->__sizeChargeItem = 1; //one empty Charge Item
-    Sign_request->data->cbChargeItems->ChargeItem = NULL;
 
     Sign_request->data->cbPayItems = calloc(1, sizeof(struct ns3__ArrayOfPayItem));
     Sign_request->data->cbPayItems->__sizePayItem = 1; //One empty Pay Item
-    Sign_request->data->cbPayItems->PayItem = NULL;
 
     Sign_request->data->ftReceiptCase = calloc(1, sizeof(int64_t));
-    Sign_request->data->ftReceiptCaseData = NULL;          
-    Sign_request->data->cbReceiptAmount = NULL;           
-    Sign_request->data->cbUser = NULL;                    
-    Sign_request->data->cbArea = NULL;                    
-    Sign_request->data->cbCustomer = NULL;                
-    Sign_request->data->cbSettlement = NULL;              
-    Sign_request->data->cbPreviousReceiptReference = NULL;
 
     //Set data
     strcpy(Sign_request->data->ftCashBoxID, cashBoxId);
     strcpy(Sign_request->data->cbTerminalID, "1");
     strcpy(Sign_request->data->cbReceiptReference, "1");
+    strcpy(Sign_request->data->ftPosSystemId, POSsystemID);
     Sign_request->data->cbReceiptMoment = time(NULL);
     Sign_request->data->ftReceiptCase = receiptCase;
-
-    //Response struct will be allocated by the call function
 }
 
-void set_cash_body(struct type_Sign_request *Sign_request,  char *cashBoxId, int64_t receiptCase, char *country) {
+void set_cash_body(struct type_Sign_request *Sign_request,  char *cashBoxId,  char *POSsystemID, int64_t receiptCase, char *country) {
+
+    int country_index;
+    if(strcmp(country, "AT") == 0) {country_index = 0;}
+    else if(strcmp(country, "DE") == 0) {country_index = 1;}
+    else if(strcmp(country, "FR") == 0) {country_index = 2;}
 
     //allocate memory for request struct
     Sign_request->data = calloc(1, sizeof(struct ns3__ReceiptRequest));
     Sign_request->data->ftCashBoxID = calloc(128, sizeof(char));
-    Sign_request->data->ftQueueID = NULL;     //calloc(128, sizeof(char));
-    Sign_request->data->ftPosSystemId = NULL; //calloc(128, sizeof(char));
+    Sign_request->data->ftPosSystemId = calloc(128, sizeof(char));
     Sign_request->data->cbTerminalID = calloc(128, sizeof(char));
     Sign_request->data->cbReceiptReference = calloc(128, sizeof(char));
     //Sign_request->data->cbReceiptMoment muss be set bevor sending call
     Sign_request->data->cbChargeItems = calloc(1, sizeof(struct ns3__ArrayOfChargeItem));
-    Sign_request->data->cbChargeItems->__sizeChargeItem = 1; //one empty Charge Item
-    Sign_request->data->cbChargeItems->ChargeItem = NULL;    //calloc(1, sizeof(struct ns3__ChargeItem));
-    /*
-    Sign_request->data->cbChargeItems->ChargeItem->Position = calloc(1, sizeof(int64_t));
+    Sign_request->data->cbChargeItems->__sizeChargeItem = 1; //one Charge Item
+    Sign_request->data->cbChargeItems->ChargeItem = calloc(1, sizeof(struct ns3__ChargeItem));
+    
     Sign_request->data->cbChargeItems->ChargeItem->Quantity = calloc(128, sizeof(char));
     Sign_request->data->cbChargeItems->ChargeItem->Description = calloc(128, sizeof(char));
     Sign_request->data->cbChargeItems->ChargeItem->Amount = calloc(128, sizeof(char));
     Sign_request->data->cbChargeItems->ChargeItem->VATRate = calloc(128, sizeof(char));
     Sign_request->data->cbChargeItems->ChargeItem->ftChargeItemCase = calloc(1, sizeof(int64_t));
-    Sign_request->data->cbChargeItems->ChargeItem->ftChargeItemCaseData = calloc(128, sizeof(char));
-    Sign_request->data->cbChargeItems->ChargeItem->VATAmount = calloc(128, sizeof(char));
-    Sign_request->data->cbChargeItems->ChargeItem->AccountNumber = calloc(128, sizeof(char));
-    Sign_request->data->cbChargeItems->ChargeItem->CostCenter = calloc(128, sizeof(char));
-    Sign_request->data->cbChargeItems->ChargeItem->ProductGroup = calloc(128, sizeof(char));
     Sign_request->data->cbChargeItems->ChargeItem->ProductNumber = calloc(128, sizeof(char));
-    Sign_request->data->cbChargeItems->ChargeItem->ProductBarcode = calloc(128, sizeof(char));
-    Sign_request->data->cbChargeItems->ChargeItem->Unit = calloc(128, sizeof(char));
-    Sign_request->data->cbChargeItems->ChargeItem->UnitQuantity = calloc(128, sizeof(char));
-    Sign_request->data->cbChargeItems->ChargeItem->UnitPrice = calloc(128, sizeof(char));
-    Sign_request->data->cbChargeItems->ChargeItem->Moment = calloc(1, sizeof(time_t));
-    */
 
     Sign_request->data->cbPayItems = calloc(1, sizeof(struct ns3__ArrayOfPayItem));
-    Sign_request->data->cbPayItems->__sizePayItem = 1; //One empty Pay Item
-    Sign_request->data->cbPayItems->PayItem = NULL;    //calloc(1, sizeof(struct ns3__ChargeItem));
-    /*
-    Sign_request->data->cbPayItems->PayItem->Position = calloc(1, sizeof(int64_t));
+    Sign_request->data->cbPayItems->__sizePayItem = 1; //One Pay Item
+    Sign_request->data->cbPayItems->PayItem = calloc(1, sizeof(struct ns3__ChargeItem));
+    
     Sign_request->data->cbPayItems->PayItem->Quantity = calloc(128, sizeof(char));
     Sign_request->data->cbPayItems->PayItem->Description = calloc(128, sizeof(char));
     Sign_request->data->cbPayItems->PayItem->Amount = calloc(128, sizeof(char));
     Sign_request->data->cbPayItems->PayItem->ftPayItemCase = calloc(1, sizeof(int64_t));
-    Sign_request->data->cbPayItems->PayItem->ftPayItemCaseData = calloc(128, sizeof(char));
-    Sign_request->data->cbPayItems->PayItem->AccountNumber = calloc(128, sizeof(char));
-    Sign_request->data->cbPayItems->PayItem->CostCenter = calloc(128, sizeof(char));
-    Sign_request->data->cbPayItems->PayItem->MoneyGroup = calloc(128, sizeof(char));
-    Sign_request->data->cbPayItems->PayItem->MoneyNumber = calloc(128, sizeof(char));
-    Sign_request->data->cbPayItems->PayItem->Moment = calloc(1, sizeof(time_t));
-    */
 
     Sign_request->data->ftReceiptCase = calloc(1, sizeof(int64_t));
-    Sign_request->data->ftReceiptCaseData = NULL;          //calloc(128, sizeof(char));
-    Sign_request->data->cbReceiptAmount = NULL;            //calloc(128, sizeof(char));
-    Sign_request->data->cbUser = NULL;                     //calloc(128, sizeof(char));
-    Sign_request->data->cbArea = NULL;                     //calloc(128, sizeof(char));
-    Sign_request->data->cbCustomer = NULL;                 //calloc(128, sizeof(char));
-    Sign_request->data->cbSettlement = NULL;               //calloc(128, sizeof(char));
-    Sign_request->data->cbPreviousReceiptReference = NULL; //calloc(128, sizeof(char));
 
-    //Response struct will be allocated by the call function
-}
-
-void set_request_data(struct type_Sign_request *Sign_request, char *cashBoxId, int64_t receiptCase) {
-
-    strcat(Sign_request->data->ftCashBoxID, cashBoxId);
-    strcat(Sign_request->data->cbTerminalID, "1");
-    strcat(Sign_request->data->cbReceiptReference, "1");
+    // Set data
+    //Receipt info
+    strcpy(Sign_request->data->ftCashBoxID, cashBoxId);
+    strcpy(Sign_request->data->cbTerminalID, "1");
+    strcpy(Sign_request->data->cbReceiptReference, "1");
+    strcpy(Sign_request->data->ftPosSystemId, POSsystemID);
     Sign_request->data->cbReceiptMoment = time(NULL);
-    Sign_request->data->ftReceiptCase = (int64_t)receiptCase;
+    Sign_request->data->ftReceiptCase = receiptCase;
+
+    //Charge Item
+    strcpy(Sign_request->data->cbChargeItems->ChargeItem->Quantity, "10.0");
+    strcpy(Sign_request->data->cbChargeItems->ChargeItem->Description, "Food");
+    strcpy(Sign_request->data->cbChargeItems->ChargeItem->Amount, "5.0");
+    strcpy(Sign_request->data->cbChargeItems->ChargeItem->VATRate, "10.0");
+    Sign_request->data->cbChargeItems->ChargeItem->ftChargeItemCase =  ChargeItemCase[country_index];
+    strcpy(Sign_request->data->cbChargeItems->ChargeItem->ProductNumber, "1");
+
+    //Pay Item
+    strcpy(Sign_request->data->cbPayItems->PayItem->Quantity, "10.0");
+    strcpy(Sign_request->data->cbPayItems->PayItem->Description, "Cash");
+    strcpy(Sign_request->data->cbPayItems->PayItem->Amount, "5.0");
+    Sign_request->data->cbPayItems->PayItem->ftPayItemCase = PayItemCase[country_index];
 }
 
 int64_t get_receipt_case(char *countryCode, int receipt) {
@@ -284,6 +256,7 @@ int main() {
     char ServiceURL[STRING_LENGTH];
     char cashboxid[STRING_LENGTH];
     char country[STRING_LENGTH];
+    char POSsystemID[STRING_LENGTH];
     int receipt;
 
     struct type_Sign_request Sign_request;
@@ -291,25 +264,27 @@ int main() {
 
     struct soap *ft = soap_new1(SOAP_XML_INDENT); // init handler
 
-    get_input(ServiceURL, cashboxid, country, &receipt);
+    get_input(ServiceURL, cashboxid, country, POSsystemID, &receipt);
 
-    uint64_t receip_case = build_receipt_case(country, receipt);
+    uint64_t receip_case = get_receipt_case(country, receipt);
 
     if(receipt == 3) { //cash signing
-        set_cash_body(&Sign_request, cashboxid, receip_case, country);
+        set_cash_body(&Sign_request, cashboxid, POSsystemID, receip_case, country);
     }
     else{
-        set_zero_body(&Sign_request, cashboxid, receip_case);
+        set_zero_body(&Sign_request, cashboxid, POSsystemID, receip_case);
     }
 
     printf("making call... ");
     fflush(stdout);
     int response = soap_call_Sign(ft, ServiceURL, NULL, &Sign_request, &Sign_response);
-    printf("done\n");
+    
 
     if (response == SOAP_OK) {
+        printf("OK\n");
         print_response(&Sign_response);
     } else {
+        printf("done\n");
         soap_print_fault(ft, stderr);
     }
 
