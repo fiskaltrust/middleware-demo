@@ -137,8 +137,8 @@ void send_request(char *ServiceURL, char *cashboxid, char *accesstoken, struct r
     //init curl
     curl = curl_easy_init();
     #ifdef _WIN32
-    char cer_path[] = {".\\"};
-    char cer_name[] = {"curl-ca-bundle.crt"};
+        char cer_path[] = {".\\"};
+        char cer_name[] = {"curl-ca-bundle.crt"};
     #endif
     char requestURL[STRING_LENGTH], buffer[STRING_LENGTH];
     strcpy(requestURL, ServiceURL);
@@ -179,12 +179,9 @@ void send_request(char *ServiceURL, char *cashboxid, char *accesstoken, struct r
 
         #ifdef _WIN32
         // set verify certificate
-        curl_easy_setopt(curl, CURLOPT_CAINFO, cer_name); //add curl certificate
-        curl_easy_setopt(curl, CURLOPT_CAPATH, cer_path); //path to certificate
+            curl_easy_setopt(curl, CURLOPT_CAINFO, cer_name); //add curl certificate
+            curl_easy_setopt(curl, CURLOPT_CAPATH, cer_path); //path to certificate
         #endif
-         
-        // get header with callback
-        //curl_easy_setopt(curl, CURLOPT_HEADER, 1);
 
         // set response
         //set callback function
