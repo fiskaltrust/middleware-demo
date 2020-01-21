@@ -21,6 +21,18 @@
     #define ns3__ArrayOfChargeItem ns1__ArrayOfChargeItem
 #endif
 
+int64_t cases[ ][3] = {
+            //{zero, start, cash}
+    /*AT*/{0x4154000000000002,0x4154000000000003,0x4154000000000001},
+    /*DE*/{0x4445000000000002,0x4445000000000003,/*pos OR implicit flag*/0x444500000000001 | 0x0000000100000000},
+    /*FR*/{0x465200000000000F,0x4652000000000010,0x4652000000000001}
+};
+                          //AT undefinded 10% ,DE undefinded 19% ,FR undefinded 10%
+int64_t ChargeItemCase[] = {0x4154000000000001,0x4445000000000001,0x4652000000000002};
+
+                        //AT default       ,DE default        ,FR default
+int64_t PayItemCase[] = {0x4154000000000000,0x4445000000000000,0x4652000000000000};
+
 char *ltrim(char *str, const char *seps) {
     size_t totrim;
     if (seps == NULL) {
@@ -76,7 +88,9 @@ int64_t build_receipt_case(char *countryCode) {
     return receipt_case;
 }
 
-void get_input(char *ServiceURL, char *cashBoxId, char *conutryCode) {
+void get_input(char *ServiceURL, char *cashBoxId, char *country, int *receipt) {
+
+    char temp[STRING_LENGTH] = {0};
 
     // Getting all the input
     // ask for Service URL
@@ -87,17 +101,29 @@ void get_input(char *ServiceURL, char *cashBoxId, char *conutryCode) {
     printf("Please enter the cashbox of the fiskaltrust.Cashbox: ");
     fgets(cashBoxId, STRING_LENGTH - 1, stdin);
 
-    // get county Code
-    printf("Please enter the countyCode of the fiskaltrust.Queue: ");
-    fgets(conutryCode, STRING_LENGTH - 1, stdin);
+    //get country
+    printf("Please enter the country of the fiskaltrust.Queue (e.g. \"AT,DE,FR\"): ");
+    fgets(country,STRING_LENGTH-1,stdin);
+
+    //get receipt case
+    printf("please choose the receipt you want to send \
+        \n1: zero receipt \
+        \n2: start receipt \
+        \n3: cash transaction \
+        \n: ");
+    fgets(temp,STRING_LENGTH-1,stdin);
+    if(!sscanf(temp, "%d",receipt) || *receipt > 3) {
+        fprintf(stderr,"ERROR wrong input\n");
+        exit(-1);
+    }
 
     // trim the input strings
     trim(ServiceURL, NULL);
     trim(cashBoxId, NULL);
-    trim(conutryCode, NULL);
+    trim(country, NULL);
 
     //check countyCode length
-    if (strlen(conutryCode) != 2) {
+    if (strlen(country) != 2) {
         printf("The countrycode must have length two.\n");
         exit(EXIT_FAILURE);
     }
@@ -108,7 +134,44 @@ void get_input(char *ServiceURL, char *cashBoxId, char *conutryCode) {
     }
 }
 
-void init_struct(struct type_Sign_request *Sign_request) {
+void set_zero_body(struct type_Sign_request *Sign_request,  char *cashBoxId, int64_t receiptCase) {
+
+    //allocate memory for request struct
+    Sign_request->data = calloc(1, sizeof(struct ns3__ReceiptRequest));
+    Sign_request->data->ftCashBoxID = calloc(128, sizeof(char));
+    Sign_request->data->ftQueueID = NULL;
+    Sign_request->data->ftPosSystemId = NULL;
+    Sign_request->data->cbTerminalID = calloc(128, sizeof(char));
+    Sign_request->data->cbReceiptReference = calloc(128, sizeof(char));
+    //Sign_request->data->cbReceiptMoment muss be set bevor sending call
+    Sign_request->data->cbChargeItems = calloc(1, sizeof(struct ns3__ArrayOfChargeItem));
+    Sign_request->data->cbChargeItems->__sizeChargeItem = 1; //one empty Charge Item
+    Sign_request->data->cbChargeItems->ChargeItem = NULL;
+
+    Sign_request->data->cbPayItems = calloc(1, sizeof(struct ns3__ArrayOfPayItem));
+    Sign_request->data->cbPayItems->__sizePayItem = 1; //One empty Pay Item
+    Sign_request->data->cbPayItems->PayItem = NULL;
+
+    Sign_request->data->ftReceiptCase = calloc(1, sizeof(int64_t));
+    Sign_request->data->ftReceiptCaseData = NULL;          
+    Sign_request->data->cbReceiptAmount = NULL;           
+    Sign_request->data->cbUser = NULL;                    
+    Sign_request->data->cbArea = NULL;                    
+    Sign_request->data->cbCustomer = NULL;                
+    Sign_request->data->cbSettlement = NULL;              
+    Sign_request->data->cbPreviousReceiptReference = NULL;
+
+    //Set data
+    strcpy(Sign_request->data->ftCashBoxID, cashBoxId);
+    strcpy(Sign_request->data->cbTerminalID, "1");
+    strcpy(Sign_request->data->cbReceiptReference, "1");
+    Sign_request->data->cbReceiptMoment = time(NULL);
+    Sign_request->data->ftReceiptCase = receiptCase;
+
+    //Response struct will be allocated by the call function
+}
+
+void set_cash_body(struct type_Sign_request *Sign_request,  char *cashBoxId, int64_t receiptCase, char *country) {
 
     //allocate memory for request struct
     Sign_request->data = calloc(1, sizeof(struct ns3__ReceiptRequest));
@@ -179,6 +242,16 @@ void set_request_data(struct type_Sign_request *Sign_request, char *cashBoxId, i
     Sign_request->data->ftReceiptCase = (int64_t)receiptCase;
 }
 
+int64_t get_receipt_case(char *countryCode, int receipt) {
+    if(strcmp(countryCode, "AT") == 0) {return cases[0][receipt-1];}
+    else if(strcmp(countryCode, "DE") == 0) {return cases[1][receipt-1];}
+    else if(strcmp(countryCode, "FR") == 0) {return cases[2][receipt-1];}
+    else {
+        fprintf(stderr,"ERROR \"%s\" is an invalid country",countryCode);
+        exit(-1);
+    }
+}
+
 void print_response(struct type_Sign_response *Sign_response) {
     printf("Response:\n");
     printf("ftReceiptIdentification: %s\n",Sign_response->SignResult->ftReceiptIdentification);
@@ -209,21 +282,25 @@ int main() {
     printf("This example sends a sign request to the fiskaltrust.Service via SOAP\n");
 
     char ServiceURL[STRING_LENGTH];
-    char cashBoxId[STRING_LENGTH];
-    char conutryCode[STRING_LENGTH];
+    char cashboxid[STRING_LENGTH];
+    char country[STRING_LENGTH];
+    int receipt;
 
     struct type_Sign_request Sign_request;
     struct type_Sign_response Sign_response;
 
     struct soap *ft = soap_new1(SOAP_XML_INDENT); // init handler
 
-    get_input(ServiceURL, cashBoxId, conutryCode);
+    get_input(ServiceURL, cashboxid, country, &receipt);
 
-    init_struct(&Sign_request);
+    uint64_t receip_case = build_receipt_case(country, receipt);
 
-    uint64_t receiptCase = build_receipt_case(conutryCode);
-
-    set_request_data(&Sign_request, cashBoxId, receiptCase);
+    if(receipt == 3) { //cash signing
+        set_cash_body(&Sign_request, cashboxid, receip_case, country);
+    }
+    else{
+        set_zero_body(&Sign_request, cashboxid, receip_case);
+    }
 
     printf("making call... ");
     fflush(stdout);
