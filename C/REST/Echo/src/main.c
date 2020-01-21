@@ -132,8 +132,10 @@ void send_request(char *ServiceURL, char *cashboxid, char *accesstoken, char *bo
     //init curl
     curl = curl_easy_init();
     
-    char cer_path[] = {".\\"};
-    char cer_name[] = {"curl-ca-bundle.crt"};
+    #ifdef _WIN32
+        char cer_path[] = {".\\"};
+        char cer_name[] = {"curl-ca-bundle.crt"};
+    #endif
     char requestURL[STRING_LENGTH];
     strcpy(requestURL, ServiceURL);
     strcat(requestURL, "/json/echo"); //add endpoint
@@ -166,13 +168,11 @@ void send_request(char *ServiceURL, char *cashboxid, char *accesstoken, char *bo
         // tell libcurl to follow redirection
         curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
 
-        // set verify certificate
-        //curl_easy_setopt(curl, CURLOPT_CAINFO, cer_name); //add curl certificate
-
-        //curl_easy_setopt(curl, CURLOPT_CAPATH, cer_path); //path to certificate
-
-        // get header with callback
-        //curl_easy_setopt(curl, CURLOPT_HEADER, 1);
+        #ifdef _WIN32
+            // set verify certificate
+            curl_easy_setopt(curl, CURLOPT_CAINFO, cer_name); //add curl certificate
+            curl_easy_setopt(curl, CURLOPT_CAPATH, cer_path); //path to certificate
+        #endif
 
         // set response
         //set callback function
