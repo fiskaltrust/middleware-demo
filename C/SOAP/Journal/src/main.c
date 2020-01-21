@@ -7,6 +7,8 @@
 
 #define STRING_LENGTH 256
 
+uint64_t journal_array[] = {4707387510509010945 ,5067112530745229313};
+
 #ifdef _WIN32
     #define type_Journal_request _ns1__Journal
     #define type_Journal_response _ns1__JournalResponse
@@ -51,39 +53,37 @@ char *trim(char *str, const char *seps) {
     return ltrim(rtrim(str, seps), seps);
 }
 
-int64_t build_Journal_type(char *countryCode) {
-    int64_t receipt_case = 0;
-
-    //add county Code
-    receipt_case |= ((int64_t)countryCode[0] << (4 * 14));
-    receipt_case |= ((int64_t)countryCode[1] << (4 * 12));
-
-    //zero receipt
-    receipt_case |= 1;
-
-    return receipt_case;
+int64_t build_journal_type(char *journal) {
+    int index;
+    if(!sscanf(journal,"%d",&index)) {
+        fprintf(stderr,"ERROR input is no number\n");
+        exit(-1);
+    }
+    if(index > (sizeof(journal_array) / sizeof(uint64_t))) {
+        fprintf(stderr,"ERROR invalid journal type\n");
+        exit(-1);
+    }
+    index --;
+    return journal_array[index];
 }
 
-void get_input(char *ServiceURL, char *conutryCode) {
+void get_input(char *ServiceURL, char *journal) {
 
     // Getting all the input
     // ask for Service URL
     printf("Please enter the serviceurl of the fiskaltrust.Service: ");
     fgets(ServiceURL, STRING_LENGTH - 1, stdin);
 
-    // get county Code
-    printf("Please enter the countyCode of the fiskaltrust.Queue: ");
-    fgets(conutryCode, STRING_LENGTH - 1, stdin);
+    // get journal type
+    printf("Please choose the journal you want to request\
+                                                    \n1: \"AT DEP7\" \"0x4154 0000 0000 0001\"\
+                                                    \n2: \"FR Ticket\" \"0x4652 0000 0000 0001\"\
+                                                    \n: ");
+    fgets(journal,STRING_LENGTH-1,stdin);
 
     // trim the input strings
     trim(ServiceURL, NULL);
-    trim(conutryCode, NULL);
-
-    //check countyCode length
-    if (strlen(conutryCode) != 2) {
-        printf("The countrycode must have length two.\n");
-        exit(EXIT_FAILURE);
-    }
+    trim(journal, NULL);
 
     // if ServiceURL end with '/' -> delete it
     if (ServiceURL[strlen(ServiceURL) - 1] == '/') {
@@ -110,16 +110,16 @@ int main() {
     printf("This example sends a sign request to the fiskaltrust.Service via SOAP\n");
 
     char ServiceURL[STRING_LENGTH];
-    char countycode[STRING_LENGTH];
+    char journal[STRING_LENGTH];
 
     struct type_Journal_request Journal_request;
     struct type_Journal_response Journal_response;
 
     struct soap *ft = soap_new1(SOAP_XML_INDENT); // init handler
 
-    get_input(ServiceURL, countycode);
+    get_input(ServiceURL, journal);
 
-    int64_t journal_type = build_Journal_type(countycode);
+    int64_t journal_type = build_journal_type(journal);
 
     Set_request_data(&Journal_request, journal_type);
 
