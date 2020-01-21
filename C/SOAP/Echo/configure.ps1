@@ -27,7 +27,7 @@ if(!(Test-Path $(Join-Path -Path $PATH_gSOAP -ChildPath "gsoap"))) {
 
 #WSDL
 if(!$WSDL_PATH) {
-    $WSDL_PATH = Read-Host -Prompt "location to WSDL file"
+    $WSDL_PATH = Read-Host -Prompt "location to WSDL file (default: .\src\fiskaltrust_fiskaltrust.interface.1.0.16298.1022.wsdl"
     if(!($WSDL_PATH)) { $WSDL_PATH = ".\src\fiskaltrust_fiskaltrust.interface.1.0.16298.1022.wsdl"}
 }
 
