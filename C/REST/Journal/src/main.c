@@ -182,9 +182,6 @@ void send_request(char *ServiceURL, char *cashboxid, char *accesstoken, struct r
         curl_easy_setopt(curl, CURLOPT_CAINFO, cer_name); //add curl certificate
         curl_easy_setopt(curl, CURLOPT_CAPATH, cer_path); //path to certificate
         #endif
-         
-        // get header with callback
-        //curl_easy_setopt(curl, CURLOPT_HEADER, 1);
 
         // set response
         //set callback function
