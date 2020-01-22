@@ -9,15 +9,15 @@ LDFLAGS += -l:$(wildcard build/libssh*)
 LDFLAGS += -l:$(wildcard build/libssl*)
 LDFLAGS += -l:$(wildcard build/libz*)
 
-echo.exe: src\main.c
+journal.exe: src\main.c
 	mkdir build || echo "dir exisit"
-	gcc.exe src\main.c -o build\echo.exe $(CFLAGS) $(LDFLAGS) -ggdb -Wall
+	gcc.exe src\main.c -o build\journal.exe $(CFLAGS) $(LDFLAGS) -ggdb -Wall
 
 #Linux
 else
 
-main: src/main.c
+journal: src/main.c
 	mkdir build -p
-	gcc src/main.c -o build/echo -lcurl
+	gcc src/main.c -o build/journal -lcurl
 
 endif

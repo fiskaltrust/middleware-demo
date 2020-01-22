@@ -11,8 +11,8 @@ Write-Output "Configuring Project"
 
 #libcurl
 if(!$PATH_libcurl) {
-    $PATH_libcurl = Read-Host -Prompt "Please enter path to gsaop lib (default: .\lib\curl)"
-    if(!($PATH_gSOAP)) { $PATH_gSOAP = ".\lib\curl"}
+    $PATH_libcurl = Read-Host -Prompt "Please enter path to curl lib (default: .\lib\curl)"
+    if(!($PATH_libcurl)) { $PATH_libcurl = ".\lib\curl"}
 }
 if(!(Test-Path $PATH_libcurl)) {
     Write-Output "curl lib not found at: $PATH_libcurl"
