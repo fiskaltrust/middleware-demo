@@ -50,6 +50,11 @@ Install the library via your distributions package manager.
 
 ## Windows
 
-  1. Run the `.\configure.ps1`
-
+  1. Run the powershell script `configure.ps1` and follow the instructions.
   2. Run the `make` command.
+
+> _**Example:**_
+> ```
+> .\configure.ps1
+> make
+> ```

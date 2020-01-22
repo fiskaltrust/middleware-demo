@@ -136,7 +136,7 @@ void set_zero_body(struct type_Sign_request *Sign_request,  char *cashBoxId, cha
     Sign_request->data->ftPosSystemId = calloc(128, sizeof(char));
     Sign_request->data->cbTerminalID = calloc(128, sizeof(char));
     Sign_request->data->cbReceiptReference = calloc(128, sizeof(char));
-    //Sign_request->data->cbReceiptMoment muss be set bevor sending call
+    //Sign_request->data->cbReceiptMoment muss be set before sending call
     Sign_request->data->cbChargeItems = calloc(1, sizeof(struct ns3__ArrayOfChargeItem));
     Sign_request->data->cbChargeItems->__sizeChargeItem = 1; //one empty Charge Item
 
@@ -167,7 +167,7 @@ void set_cash_body(struct type_Sign_request *Sign_request,  char *cashBoxId,  ch
     Sign_request->data->ftPosSystemId = calloc(128, sizeof(char));
     Sign_request->data->cbTerminalID = calloc(128, sizeof(char));
     Sign_request->data->cbReceiptReference = calloc(128, sizeof(char));
-    //Sign_request->data->cbReceiptMoment muss be set bevor sending call
+    //Sign_request->data->cbReceiptMoment muss be set before sending call
     Sign_request->data->cbChargeItems = calloc(1, sizeof(struct ns3__ArrayOfChargeItem));
     Sign_request->data->cbChargeItems->__sizeChargeItem = 1; //one Charge Item
     Sign_request->data->cbChargeItems->ChargeItem = calloc(1, sizeof(struct ns3__ChargeItem));
