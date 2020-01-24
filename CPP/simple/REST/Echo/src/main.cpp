@@ -9,7 +9,7 @@
 #ifndef CPPHTTPLIB_OPENSSL_SUPPORT
 #define CPPHTTPLIB_OPENSSL_SUPPORT
 #endif
-#include "../lib/cpp-httplib/out/httplib.h"
+#include <httplib.h>
 
 using namespace std;
 using namespace httplib;
