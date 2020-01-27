@@ -6,7 +6,7 @@ echo.exe: src\main.cpp
 
 else #Linux
 
-main: src/main.cpp
+echo: src/main.cpp
 	mkdir build -p
-	gcc src/main.cpp -o build/echo
+	g++ src/main.cpp -o build/echo "$(PATH_cpp_httplib)/out/httplib.cc" -I"$(PATH_cpp_httplib)/out" -D CPPHTTPLIB_OPENSSL_SUPPORT -std=c++14
 endif

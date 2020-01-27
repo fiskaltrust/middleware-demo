@@ -1,7 +1,7 @@
 #!/bin/bash
 if [ "$1" = "-h" ]; then
     echo "help"
-    echo "   -WSDL_PATH [PATH/to/file.WSDL]"
+    echo "   -PATH-httplib [PATH/to/cpp-httplib]"
     exit 0
 fi
 
@@ -16,18 +16,28 @@ do
         echo "invalid syntax"
         exit -1
     fi
-    if [ ${!i} = "-WSDL_PATH" ]; then
+    if [ ${!i} = "-PATH-httplib" ]; then
         #echo "WSDL"
-        WSDL_PATH=${!tmp}
+        PARH_httplib=${!tmp}
     fi
 done
 
-if [ -z $WSDL_PATH ]; then 
-    echo "location to WSDL file: "
-    read WSDL_PATH
+if [ -z $PARH_httplib ]; then 
+    echo "location to cpp-httplib (default:./lib/cpp-httplib): "
+    read PARH_httplib
+    if [ -z $PARH_httplib ]; then 
+        PARH_httplib="./lib/cpp-httplib"
+    fi
 fi
-if [ ! -f "$WSDL_PATH" ]; then
-    echo "wsdl file not found at: $WSDL_PATH"
+
+#cut '/' if at end of path
+if [ "${PARH_httplib: -1}" == "/" ]; then
+    PARH_httplib="${PARH_httplib::-1}"
+fi
+
+#check existance
+if [ ! -d "$PARH_httplib" ]; then
+    echo "cpp-httplib not found at: $PARH_httplib"
     exit -1
 fi
 
@@ -35,8 +45,11 @@ fi
 IN=`cat Makefile.in`
 
 rm Makefile
-echo "PATH_to_WSDL = $WSDL_PATH" >> Makefile
+echo "PATH_cpp_httplib = $PARH_httplib" >> Makefile
 echo -e "" >> Makefile #newline
 echo "$IN" >> Makefile
+
+#create cpp-httplib .cc and .h
+cd "$PARH_httplib" ; python3 split.py
 
 echo "Configuration sucessfull"
