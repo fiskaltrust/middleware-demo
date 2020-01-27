@@ -59,8 +59,8 @@ void get_input(string *ServiceURL, string *cashboxid, string *accesstoken, strin
     }
 
     // if ServiceURL start with 'https://' -> delete it (library demands the URL without 'https://')
-    if((*ServiceURL).find("https://",8)) { (*ServiceURL).erase(0,8); }
-    else if((*ServiceURL).find("http://",7)) { (*ServiceURL).erase(0,7); }
+    if((*ServiceURL).find("http://",7)) { (*ServiceURL).erase(0,7); }
+    else if((*ServiceURL).find("https://",8)) { (*ServiceURL).erase(0,8); }
 
     //add " to beginning and end of string
     *body = "\"" + *body + "\"";
@@ -69,16 +69,15 @@ void get_input(string *ServiceURL, string *cashboxid, string *accesstoken, strin
 void send_request(string *ServiceURL, string *cashboxid, string *accesstoken, string *body, string *response, int *response_code) {
     
     Headers head = {
-        //{"Content-Type", "application/json"},
         {"cashboxid", cashboxid->c_str()},
         {"accesstoken", accesstoken->c_str()}
     };
 
-    //string requestURL = *ServiceURL + "/json/echo";
-    SSLClient ft("signaturcloud-sandbox.fiskaltrust.at");
+    SSLClient ft(ServiceURL->c_str());
     ft.set_follow_location(true);
 
     cout << "performing request... ";
+    cout.flush();
 
     auto res = ft.Post("/json/echo", head, *body, "application/json");
 

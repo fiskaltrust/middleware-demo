@@ -32,19 +32,17 @@ please copy `libssl*.dll`, `libcrypto*.dll` and `zlib*.a` to the `.\build\` fold
 
 ### Linux
 
-Install the library via your distributions package manager.
+cpp-httplib needs the openssl library in order to make secure web calls.
 
-| Distribution  | Command                    |
-|---------------|----------------------------|
-| Ubuntu/Debian | `apt-get install libcurl4 libcurl4-openssl-dev` |
-| Fedora        | `dnf install libcurl`                           |
-| OpenSUSE      | `zypper install libcurl4 libcurl4-openssl-dev`  |
+please download openssl via a packmanager.
 
 # Building
 
 ## Linux
 
-  1. Run the `make` command.
+  1. Run the `./configure.sh`
+
+  2. Run the `make` command.
 
 ## Windows
 
