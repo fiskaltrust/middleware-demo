@@ -2,6 +2,7 @@
 //#include <stdlib.h> /* exit, atoi, malloc, free */
 
 #include <inttypes.h> //int64_t
+#include 
 
 #include <iostream>
 #include <string>
@@ -59,8 +60,8 @@ void get_input(string *ServiceURL, string *cashboxid, string *accesstoken, strin
     }
 
     // if ServiceURL start with 'https://' -> delete it (library demands the URL without 'https://')
-    if((*ServiceURL).find("http://",7)) { (*ServiceURL).erase(0,7); }
-    else if((*ServiceURL).find("https://",8)) { (*ServiceURL).erase(0,8); }
+    if((*ServiceURL).find("http://",0)) { (*ServiceURL).erase(0,7); }
+    else if((*ServiceURL).find("https://",0)) { (*ServiceURL).erase(0,8); }
 
     //add " to beginning and end of string
     *body = "\"" + *body + "\"";
@@ -73,7 +74,15 @@ void send_request(string *ServiceURL, string *cashboxid, string *accesstoken, st
         {"accesstoken", accesstoken->c_str()}
     };
 
-    SSLClient ft(ServiceURL->c_str());
+    //Client ft("localhost", 1200);
+    SSLClient ft("localhost:1200/test");
+
+    //if((*ServiceURL).find("localhost",9)) {
+    //    ft(ServiceURL->c_str(), 1200); }
+    //else {
+    //    ft(ServiceURL->c_str());
+    //}
+    
     ft.set_follow_location(true);
 
     cout << "performing request... ";
@@ -97,9 +106,9 @@ int main()
 {
     cout << "This example sends an echo request to the fiskaltrust.Service via REST" << endl;
 
-    string ServiceURL, cashboxid, accesstoken, body, response;
+    string ServiceURL, cashboxid="3c44932f-5d4e-4bd0-827b-463b789f34ee", accesstoken="BHlNcXOtDgNpDH++MfmSu1DXZw+/AJ259I1IUjRLGdUS5wjN+AJrs/Rz5TQWdPuuTkks0j08hR0CUK6v6arRIYk=", body="\"some\"", response;
 
-    get_input(&ServiceURL, &cashboxid, &accesstoken, &body);
+    //get_input(&ServiceURL, &cashboxid, &accesstoken, &body);
 
     int response_code;
 
