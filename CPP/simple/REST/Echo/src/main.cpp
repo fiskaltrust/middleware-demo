@@ -74,25 +74,29 @@ void send_request(string *ServiceURL, string *cashboxid, string *accesstoken, st
     regex expression("^(https?):\\/\\/([^\\/:]*)(?::([0-9]+))?(\\/.*)?$");
     smatch resault;
 
+    //get parts of the Service URL
+    //http://localhost:1200/test
+    //| 1 |  |   2    || 3 |  4
     regex_search(*ServiceURL, resault ,expression);
 
-    if(resault.str(1) == "http") { //http Client
+    if(resault.str(1) == "http") { //unsecure Client
         ft = new Client(resault.str(2), stoi(resault.str(3)));
     }
-    else if(resault.str(1) == "https") {
+    else if(resault.str(1) == "https") { //secure Client
         ft = new SSLClient(resault.str(2));
     }
     else {
         cerr << "ERROR not supported protocol" << endl;
     }
     
-    ft->set_follow_location(true);
+    ft->set_follow_location(true); 
 
     cout << "performing request... ";
     cout.flush();
 
     string requestURL = resault.str(4) + "/json/echo";
 
+    //set path, headers, body, Content-Type | make request
     auto res = ft->Post(requestURL.c_str(), head, *body, "application/json");
 
     if (res) {
