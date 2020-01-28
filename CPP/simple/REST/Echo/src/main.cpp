@@ -2,15 +2,15 @@
 //#include <stdlib.h> /* exit, atoi, malloc, free */
 
 #include <inttypes.h> //int64_t
-#include 
-
-#include <iostream>
-#include <string>
 
 #ifndef CPPHTTPLIB_OPENSSL_SUPPORT
 #define CPPHTTPLIB_OPENSSL_SUPPORT
 #endif
 #include <httplib.h>
+
+#include <iostream>
+#include <string>
+#include <regex>
 
 using namespace std;
 using namespace httplib;
@@ -59,36 +59,41 @@ void get_input(string *ServiceURL, string *cashboxid, string *accesstoken, strin
         (*ServiceURL).pop_back();
     }
 
-    // if ServiceURL start with 'https://' -> delete it (library demands the URL without 'https://')
-    if((*ServiceURL).find("http://",0)) { (*ServiceURL).erase(0,7); }
-    else if((*ServiceURL).find("https://",0)) { (*ServiceURL).erase(0,8); }
-
     //add " to beginning and end of string
     *body = "\"" + *body + "\"";
 }
 
 void send_request(string *ServiceURL, string *cashboxid, string *accesstoken, string *body, string *response, int *response_code) {
     
+    Client *ft;
     Headers head = {
         {"cashboxid", cashboxid->c_str()},
         {"accesstoken", accesstoken->c_str()}
     };
 
-    //Client ft("localhost", 1200);
-    SSLClient ft("localhost:1200/test");
+    regex expression("^(https?):\\/\\/([^\\/:]*)(?::([0-9]+))?(\\/.*)?$");
+    smatch resault;
 
-    //if((*ServiceURL).find("localhost",9)) {
-    //    ft(ServiceURL->c_str(), 1200); }
-    //else {
-    //    ft(ServiceURL->c_str());
-    //}
+    regex_search(*ServiceURL, resault ,expression);
+
+    if(resault.str(1) == "http") { //http Client
+        ft = new Client(resault.str(2), stoi(resault.str(3)));
+    }
+    else if(resault.str(1) == "https") {
+        ft = new SSLClient(resault.str(2));
+    }
+    else {
+        cerr << "ERROR not supported protocol" << endl;
+    }
     
-    ft.set_follow_location(true);
+    ft->set_follow_location(true);
 
     cout << "performing request... ";
     cout.flush();
 
-    auto res = ft.Post("/json/echo", head, *body, "application/json");
+    string requestURL = resault.str(4) + "/json/echo";
+
+    auto res = ft->Post(requestURL.c_str(), head, *body, "application/json");
 
     if (res) {
         cout << "OK" << endl;
@@ -106,9 +111,9 @@ int main()
 {
     cout << "This example sends an echo request to the fiskaltrust.Service via REST" << endl;
 
-    string ServiceURL, cashboxid="3c44932f-5d4e-4bd0-827b-463b789f34ee", accesstoken="BHlNcXOtDgNpDH++MfmSu1DXZw+/AJ259I1IUjRLGdUS5wjN+AJrs/Rz5TQWdPuuTkks0j08hR0CUK6v6arRIYk=", body="\"some\"", response;
+    string ServiceURL, cashboxid, accesstoken, body, response;
 
-    //get_input(&ServiceURL, &cashboxid, &accesstoken, &body);
+    get_input(&ServiceURL, &cashboxid, &accesstoken, &body);
 
     int response_code;
 
@@ -122,5 +127,6 @@ int main()
         cout << "Response Code: " << response_code << endl;
         cout << "Body:" << endl << response << endl;
     }
+    
     return 0;
 }
