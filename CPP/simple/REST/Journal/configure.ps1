@@ -24,8 +24,6 @@ if($PATH_cpp_httplib.Substring($PATH_cpp_httplib.get_Length()-1) -eq "\") {
     $PATH_cpp_httplib = $PATH_cpp_httplib.Substring(0,$PATH_cpp_httplib.get_Length()-1)
 }
 
-$PATH_cpp_httplib
-
 #write makefile
 $IN = (Get-Content -Path .\Makefile.in -Raw)
 
