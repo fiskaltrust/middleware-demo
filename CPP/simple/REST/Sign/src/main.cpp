@@ -101,14 +101,10 @@ int get_conuty_index(string country) {
 	    c = ::toupper(c);
     });
 
-    cout << "case: " << country << endl;
-    exit(1);
-
     if(country == "AT") {return 0;}
     if(country == "DE") {return 1;}
     if(country == "FR") {return 2;}
 
-    
     cerr << "ERROR unknow country" << endl;
     exit(-1);
 }
