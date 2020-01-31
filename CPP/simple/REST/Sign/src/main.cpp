@@ -97,9 +97,17 @@ void get_input(string *ServiceURL, string *cashboxid, string *accesstoken, strin
 }
 
 int get_conuty_index(string country) {
+    std::for_each(country.begin(), country.end(), [](char & c){
+	    c = ::toupper(c);
+    });
+
+    cout << "case: " << country << endl;
+    exit(1);
+
     if(country == "AT") {return 0;}
     if(country == "DE") {return 1;}
     if(country == "FR") {return 2;}
+
     
     cerr << "ERROR unknow country" << endl;
     exit(-1);
