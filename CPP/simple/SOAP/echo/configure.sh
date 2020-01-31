@@ -1,7 +1,7 @@
 #!/bin/bash
 if [ "$1" = "-h" ]; then
     echo "help"
-    echo "   -WSDL_PATH [PATH/to/file.WSDL]"
+    echo "   -PATH_WSDL [PATH/to/file.WSDL]"
     exit 0
 fi
 
@@ -16,18 +16,19 @@ do
         echo "invalid syntax"
         exit -1
     fi
-    if [ ${!i} = "-WSDL_PATH" ]; then
+    if [ ${!i} = "-PATH_WSDL" ]; then
         #echo "WSDL"
-        WSDL_PATH=${!tmp}
+        PATH_WSDL=${!tmp}
     fi
 done
 
-if [ -z $WSDL_PATH ]; then 
+#WSDL
+if [ -z $PATH_WSDL ]; then 
     echo "location to WSDL file: "
-    read WSDL_PATH
+    read PATH_WSDL
 fi
-if [ ! -f "$WSDL_PATH" ]; then
-    echo "wsdl file not found at: $WSDL_PATH"
+if [ ! -f "$PATH_WSDL" ]; then
+    echo "wsdl file not found at: $PATH_WSDL"
     exit -1
 fi
 
@@ -35,7 +36,7 @@ fi
 IN=`cat Makefile.in`
 
 rm Makefile
-echo "PATH_to_WSDL = $WSDL_PATH" >> Makefile
+echo "PATH_to_WSDL = \"$PATH_WSDL\"" >> Makefile
 echo -e "" >> Makefile #newline
 echo "$IN" >> Makefile
 

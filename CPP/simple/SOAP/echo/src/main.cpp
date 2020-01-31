@@ -1,5 +1,9 @@
 #include <BasicHttpBinding_USCOREIPOS.nsmap>
-#include <soapBasicHttpBinding_USCOREIPOSProxy.h>
+#ifdef _WIN32
+    #include <soapBasicHttpBinding_USCOREIPOSProxy.h>
+#else
+    #include <soapH.h>
+#endif
 //#include <inttypes.h> //int64_t, uint64_t
 //#include <stdio.h>    /* printf, sprintf */
 //#include <stdlib.h>   /* exit, atoi, malloc, free */
@@ -11,11 +15,11 @@ using namespace std;
 #ifdef _WIN32
 #define type_Echo_request _ns1__Echo
 #define type_Echo_response _ns1__EchoResponse
-#define soap_call_echo(soap, endpoint, action, Echo_request, Echo_response) soap_call___ns1__Echo(soap, endpoint, action, Echo_request, Echo_response)
+#define new_echo_request(soap, message) soap_new_set__ns1__Echo(soap, message)
 #else //Linux
 #define type_Echo_request _tempuri__Echo
 #define type_Echo_response _tempuri__EchoResponse
-#define soap_call_echo(soap, endpoint, action, Echo_request, Echo_response) soap_call___tempuri__Echo(soap, endpoint, action, Echo_request, Echo_response)
+#define new_echo_request(soap, message) soap_new_set__tempuri__Echo(soap, message)
 #endif
 
 std::string &ltrim(std::string &str, const std::string &chars = "\t\n\v\f\r ") {
@@ -56,34 +60,36 @@ void get_input(string *ServiceURL, string *message) {
 int main() {
     cout << "This example sends a echo to the fiskaltrust.Service via SOAP\n";
 
-    string ServiceURL;
-    string message;
-
-    //char ServiceURL[] = "http://localhost:1200/test";
-    //char message[] = "testmsg";
+    string ServiceURL, message;
 
     get_input(&ServiceURL, &message);
 
     //init echo class
     struct soap *ft = soap_new();
 
-    class _ns1__Echo *Echo_request = soap_new_set__ns1__Echo(ft, (char*)message.c_str());
+    class type_Echo_request *Echo_request = new_echo_request(ft, (char*)message.c_str());
 
-    class _ns1__EchoResponse Echo_response;
+    class type_Echo_response Echo_response;
 
-    //set service URL
-    BasicHttpBinding_USCOREIPOSProxy echo_handler(ServiceURL.c_str());
-
+    //make call
     cout << "making call... ";
 
-    if (echo_handler.Echo(Echo_request, Echo_response) == SOAP_OK) {
+    #ifdef _WIN32
+        BasicHttpBinding_USCOREIPOSProxy echo_handler(ServiceURL.c_str());
+
+        if (echo_handler.Echo(Echo_request, Echo_response) == SOAP_OK) {
+    #else
+        if (soap_call___tempuri__Echo(ft,ServiceURL.c_str(),NULL, Echo_request, Echo_response) == SOAP_OK) {
+        
+    #endif
+
         cout << "OK" << endl;
         cout << "Response: " << Echo_response.EchoResult << endl;
     } else {
         cout << "done" << endl;
         soap_print_fault(ft, stderr);
     }
-    
+
     soap_destroy(ft); // dealloc serialization data
     soap_end(ft);     // dealloc temp data
     soap_free(ft);    // dealloc 'soap' engine context

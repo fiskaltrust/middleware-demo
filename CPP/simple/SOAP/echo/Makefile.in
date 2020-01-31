@@ -8,9 +8,9 @@ soapC.cpp:
 	"$(PATH_to_gSOAP)\gsoap\bin\win32\soapcpp2.exe" -CL -c++ -1 "$(PATH_to_gSOAP)\gsoap\bin\win32\ftservice.h" -I"$(PATH_to_gSOAP)\gsoap\import" -r  -d"$(PATH_to_gSOAP)\gsoap\bin\win32"
 
 else
-echo: src/main.c lib/soapC.cpp
+echo: src/main.cpp lib/soapC.cpp
 	mkdir build -p
-	gcc -o build/echo src/main.cpp "./lib/soapC.cpp" "./lib/soapClient.cpp" /usr/share/gsoap/custom/duration.cpp -I"./lib" -Wall -L/usr/lib/x86_64-linux-gnu -l:libgsoap.a -lstdc++
+	g++ -o build/echo src/main.cpp "./lib/soapC.cpp" "./lib/soapClient.cpp" /usr/share/gsoap/custom/duration.c -I"./lib" -Wall -L/usr/lib/x86_64-linux-gnu -l:libgsoap.a -lstdc++
 
 lib/soapC.cpp:
 	mkdir lib -p
