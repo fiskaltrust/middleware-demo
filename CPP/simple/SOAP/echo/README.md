@@ -10,7 +10,7 @@ This example can be used as a starting point to implement the [fiskaltrust.Inter
 
 ## Toolchain
 
-To compile the example the `C` compiler [`gcc`](https://gcc.gnu.org/install/) and the buildtool [`make`](https://www.gnu.org/software/make/) is needed.
+To compile the example the `C++` compiler [`g++`](http://www.mingw.org/) and the buildtool [`make`](https://www.gnu.org/software/make/) is needed.
 
 > _**Note:** On windows we recomend installing these with a package manager like [scoop](https://scoop.sh/) or [chocolatey](https://chocolatey.org/)_
 
@@ -37,7 +37,9 @@ Install the library via your distributions package manager.
 
 To build the SOAP interface the wsdl file for the fiskaltrust.Interface is needed.
 
-You can find this file in the folder [`/dist/WSDL`](https://github.com/fiskaltrust/interface-doc/tree/master/dist/WSDL) in the [fiskaltrust.Interface](https://github.com/fiskaltrust/interface-doc) repository.
+It is provided in the `./src` folder.
+
+You can also find this file in the folder [`/dist/WSDL`](https://github.com/fiskaltrust/interface-doc/tree/master/dist/WSDL) in the [fiskaltrust.Interface](https://github.com/fiskaltrust/interface-doc) repository.
 
 #### Manual
 
