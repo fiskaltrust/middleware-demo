@@ -18,7 +18,7 @@ To configure the example [Python3](https://www.python.org/) is needed.
 
 ## cpp-httplib
 
-Please download the from [here](https://github.com/yhirose/cpp-httplib).
+Please download the library from [here](https://github.com/yhirose/cpp-httplib).
 
 > _**Note:** The configure script will ask the location of the library (default: .\lib\cpp-httplib)_
 
@@ -34,7 +34,7 @@ please copy `libssl*.dll`, `libcrypto*.dll` and `zlib*.a` to the `.\build\` fold
 
 cpp-httplib needs the openssl library in order to make secure web calls.
 
-please download openssl via a packmanager.
+please download openssl via a packmanager (also the dev package for the hpp files).
 
 # Building
 
