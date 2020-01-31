@@ -45,7 +45,7 @@ fi
 IN=`cat Makefile.in`
 
 rm Makefile
-echo "PATH_cpp_httplib = $PARH_httplib" >> Makefile
+echo "PATH_cpp_httplib = \"$PARH_httplib\"" >> Makefile
 echo -e "" >> Makefile #newline
 echo "$IN" >> Makefile
 

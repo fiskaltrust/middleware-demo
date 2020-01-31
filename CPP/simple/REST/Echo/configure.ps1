@@ -27,7 +27,7 @@ if($PATH_cpp_httplib.Substring($PATH_cpp_httplib.get_Length()-1) -eq "\") {
 #write makefile
 $IN = (Get-Content -Path .\Makefile.in -Raw)
 
-$VARS = "PATH_cpp_httplib = $PATH_cpp_httplib"
+$VARS = "PATH_cpp_httplib = `"$PATH_cpp_httplib`""
 
 $OUT = "$VARS`n`n$IN"
 Out-File -FilePath .\Makefile -InputObject $OUT -Encoding utf8
