@@ -74,15 +74,15 @@ int main() {
     //make call
     cout << "making call... ";
 
+    int soap_response;
     #ifdef _WIN32
         BasicHttpBinding_USCOREIPOSProxy echo_handler(ServiceURL.c_str());
 
-        if (echo_handler.Echo(Echo_request, Echo_response) == SOAP_OK) {
+        soap_response = echo_handler.Echo(Echo_request, Echo_response);
     #else
-        if (soap_call___tempuri__Echo(ft,ServiceURL.c_str(),NULL, Echo_request, Echo_response) == SOAP_OK) {
-        
+        soap_response = soap_call___tempuri__Echo(ft,ServiceURL.c_str(),NULL, Echo_request, Echo_response));
     #endif
-
+    if(soap_response == SOAP_OK) {
         cout << "OK" << endl;
         cout << "Response: " << Echo_response.EchoResult << endl;
     } else {
