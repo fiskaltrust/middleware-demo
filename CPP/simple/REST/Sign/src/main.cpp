@@ -219,20 +219,9 @@ int main()
 
     int response_code, receipt;
 
-    #ifdef DEBUG
-        ServiceURL = "https://fiskaltrust.free.beeceptor.com";
-        cashboxid = "a37ce376-62be-42c6-b560-1aa0a6700211";
-        accesstoken = "BJ6ZufH6hcCHmu2yzc9alH45FjdlCUT1YDlAf83gTydHKj1ZWcMibPlheky1WLMc+E9WeHYanQ8vS5oCirhI6Ck=";
-        country_code = "AT";
-        POSSID = "62c5930f-da1f-ea11-a810-000d3abac826";
-        receipt = 3;
-    #endif
-
     json request, response;
 
-    #ifndef DEBUG
     get_input(&ServiceURL, &cashboxid, &accesstoken, &country_code, &POSSID, &receipt);
-    #endif
 
     if(receipt == 3 ) {
         request = build_cash_body(cashboxid, country_code, POSSID, receipt);
