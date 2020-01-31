@@ -34,7 +34,7 @@ please copy `libssl*.dll`, `libcrypto*.dll` and `zlib*.a` to the `.\build\` fold
 
 cpp-httplib needs the openssl library in order to make secure web calls.
 
-please download openssl via a packmanager.
+please download openssl/libssl via a packmanager (also the dev package for the hpp files).
 
 # Building
 
