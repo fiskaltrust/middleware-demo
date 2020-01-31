@@ -7,6 +7,7 @@
 #define CPPHTTPLIB_OPENSSL_SUPPORT
 #endif
 #include <httplib.h>
+#include <nlohmann/json.hpp>
 
 #include <iostream>
 #include <string>
@@ -14,6 +15,19 @@
 
 using namespace std;
 using namespace httplib;
+using json = nlohmann::json;
+
+vector<vector<int64_t>> cases = {
+            //{zero, start, cash}
+    /*AT*/{0x4154000000000002,0x4154000000000003,0x4154000000000001},
+    /*DE*/{0x4445000000000002,0x4445000000000003,/*pos OR implicit flag*/0x444500000000001 | 0x0000000100000000},
+    /*FR*/{0x465200000000000F,0x4652000000000010,0x4652000000000001}
+};
+                                //AT undefinded 10% ,DE undefinded 19% ,FR undefinded 10%
+vector<int64_t> ChargeItemCase = {0x4154000000000001,0x4445000000000001,0x4652000000000002};
+
+                              //AT default       ,DE default        ,FR default
+vector<int64_t> PayItemCase = {0x4154000000000000,0x4445000000000000,0x4652000000000000};
 
 std::string &ltrim(std::string &str, const std::string &chars = "\t\n\v\f\r ") {
     str.erase(0, str.find_first_not_of(chars));
@@ -29,8 +43,15 @@ std::string &trim(std::string &str, const std::string &chars = "\t\n\v\f\r ") {
     return ltrim(rtrim(str, chars), chars);
 }
 
-void get_input(string *ServiceURL, string *cashboxid, string *accesstoken, string *body) {
+void string_to_UPPERcase(char *target) {
+    for(int i = 0; target[i] != 0 ;i++) {
+        if(target[i] <= 'z' && target[i] >= 'a') { target[i] &= (~(1<<5));} //the differenc from UPPER case to lower case is 32 so we unset the 5th bit 
+    }
+}
+
+void get_input(string *ServiceURL, string *cashboxid, string *accesstoken, string *country, string *POSSID, int *receipt) {
     
+    string temp;
     //Getting all the input
     //ask for Service URL
     cout << "Please enter the serviceurl of the fiskaltrust.Service: ";
@@ -44,26 +65,105 @@ void get_input(string *ServiceURL, string *cashboxid, string *accesstoken, strin
     cout << "Please enter the accesstoken of the fiskaltrust.CashBox: ";
     getline(cin, *accesstoken);
 
-    // get message
-    cout << "Please enter the message to send in the echo request: ";
-    getline(cin, *body);
+    //get POS system ID
+    cout << "Please enter the POS system ID of the fiskaltrust.CashBox: ";
+    getline(cin, *POSSID);
+
+    // country code
+    cout << "Please enter the country of the fiskaltrust.Queue (e.g. \"AT,DE,FR\"): ";
+    getline(cin, *country);
+
+    cout << "please choose the receipt you want to send \
+        \n1: zero receipt \
+        \n2: start receipt \
+        \n3: cash transaction \
+        \n: ";
+    getline(cin, temp);
+    if(!sscanf(temp.c_str(), "%d",receipt) || *receipt > 3) {
+        cerr << "ERROR wrong input" << endl;
+        exit(-1);
+    }
 
     //trim the input strings
     trim(*ServiceURL);
     trim(*cashboxid);
     trim(*accesstoken);
-    trim(*body);
+    trim(*country);
 
     // if ServiceURL end with '/' -> delete it
     if ((*ServiceURL).back() == '/') {
         (*ServiceURL).pop_back();
     }
-
-    //add " to beginning and end of string
-    *body = "\"" + *body + "\"";
 }
 
-void send_request(string *ServiceURL, string *cashboxid, string *accesstoken, string *body, string *response, int *response_code) {
+int get_conuty_index(string country) {
+    if(country == "AT") {return 0;}
+    if(country == "DE") {return 1;}
+    if(country == "FR") {return 2;}
+    
+    cerr << "ERROR unknow country" << endl;
+    exit(-1);
+}
+
+json build_zero_body(string cashboxid, string country, string POSSID, int receipt) {
+    string timestamp = "/Date(" + to_string(time(nullptr)) + ")/";
+    json root;
+    root["ftCashBoxID"] = cashboxid;
+    root["ftPosSystemId"] = POSSID;
+    root["cbTerminalID"] = "1";
+    root["cbReceiptReference"] = "1";
+    root["cbReceiptMoment"] = timestamp;
+    root["cbChargeItems"] = json::array();
+    root["cbPayItems"] = json::array();
+    root["ftReceiptCase"] = cases[get_conuty_index(country)][receipt-1];
+    return root;
+}
+
+json build_cash_body(string cashboxid, string country, string POSSID, int receipt) {
+    string timestamp = "/Date(" + to_string(time(nullptr)) + ")/";
+    int conuty_index = get_conuty_index(country);
+
+    //create cbChargeItems array
+    //create ChargeItem
+    json ChargeItem;
+    ChargeItem["Quantity"] = 10.0;
+    ChargeItem["Description"] = "Food";
+    ChargeItem["Amount"] = 5.0;
+    ChargeItem["VATRate"] = 10.0;
+    ChargeItem["ftChargeItemCase"] = ChargeItemCase[conuty_index];
+    ChargeItem["ProductNumber"] = "1";
+
+    //add item to array
+    json ChargeItems = json::array();
+    ChargeItems.push_back(ChargeItem);
+
+    //create cbPayItems array
+    //creat cbPayItem
+    json PayItem;
+    PayItem["Quantity"] = 10.0;
+    PayItem["Description"] = "Cash";
+    PayItem["Amount"] = 5.0;
+    PayItem["ftPayItemCase"] = PayItemCase[conuty_index];
+
+    //add item to array
+    json PayItems = json::array();
+    PayItems.push_back(PayItem);
+
+    //create root object
+    json root;
+    root["ftCashBoxID"] = cashboxid;
+    root["ftPosSystemId"] = POSSID;
+    root["cbTerminalID"] = "1";
+    root["cbReceiptReference"] = "1";
+    root["cbReceiptMoment"] = timestamp;
+    root["cbChargeItems"] = ChargeItems;
+    root["cbPayItems"] = PayItems;
+    root["ftReceiptCase"] = cases[conuty_index][receipt-1];
+
+    return root;
+}
+
+void send_request(string *ServiceURL, string *cashboxid, string *accesstoken, string body, string *response, int *response_code) {
     
     Client *ft;
     Headers head = {
@@ -94,10 +194,10 @@ void send_request(string *ServiceURL, string *cashboxid, string *accesstoken, st
     cout << "performing request... ";
     cout.flush();
 
-    string requestURL = resault.str(4) + "/json/echo";
+    string requestURL = resault.str(4) + "/json/sign";
 
     //set path, headers, body, Content-Type | make request
-    auto res = ft->Post(requestURL.c_str(), head, *body, "application/json");
+    auto res = ft->Post(requestURL.c_str(), head, body, "application/json");
 
     if (res) {
         cout << "OK" << endl;
@@ -113,24 +213,49 @@ void send_request(string *ServiceURL, string *cashboxid, string *accesstoken, st
 
 int main()
 {
-    cout << "This example sends an echo request to the fiskaltrust.Service via REST" << endl;
+    cout << "This example sends a sign request to the fiskaltrust.Service via REST" << endl;
 
-    string ServiceURL, cashboxid, accesstoken, body, response;
+    string ServiceURL, cashboxid, accesstoken, country_code, POSSID, response_body;
 
-    get_input(&ServiceURL, &cashboxid, &accesstoken, &body);
+    int response_code, receipt;
 
-    int response_code;
+    #ifdef DEBUG
+        ServiceURL = "https://fiskaltrust.free.beeceptor.com";
+        cashboxid = "a37ce376-62be-42c6-b560-1aa0a6700211";
+        accesstoken = "BJ6ZufH6hcCHmu2yzc9alH45FjdlCUT1YDlAf83gTydHKj1ZWcMibPlheky1WLMc+E9WeHYanQ8vS5oCirhI6Ck=";
+        country_code = "AT";
+        POSSID = "62c5930f-da1f-ea11-a810-000d3abac826";
+        receipt = 3;
+    #endif
 
-    send_request(&ServiceURL, &cashboxid, &accesstoken, &body, &response, &response_code);
+    json request, response;
+
+    #ifndef DEBUG
+    get_input(&ServiceURL, &cashboxid, &accesstoken, &country_code, &POSSID, &receipt);
+    #endif
+
+    if(receipt == 3 ) {
+        request = build_cash_body(cashboxid, country_code, POSSID, receipt);
+    }
+    else {
+        request = build_zero_body(cashboxid, country_code, POSSID, receipt);
+    }
+
+    send_request(&ServiceURL, &cashboxid, &accesstoken, request.dump(), &response_body, &response_code);
 
     //print Response
-    if(response.empty()) {
+    if(response_body.empty()) {
         cout << "No Response" << endl;
     }
     else {
         cout << "Response Code: " << response_code << endl;
-        cout << "Body:" << endl << response << endl;
+        //Print response
+        response = json::parse(response_body);
+        cout << response.dump(4) << endl;
+        if(response.count("ftState")) { //check if enty is available
+            cout << "ftState: " << response.at("/ftState"_json_pointer) << endl;
+        }
     }
-    
+
     return 0;
 }
