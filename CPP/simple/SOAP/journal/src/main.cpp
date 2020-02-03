@@ -22,7 +22,7 @@ using namespace std;
 #define type_journal_request _tempuri__Echo
 #define type_journal_response _tempuri__EchoResponse
 #define new_echo_request soap_new_set__tempuri__Echo
-#define soap_journal_call
+#define soap_journal_call soap_call___tempuri__Journal
 #endif
 
 vector<int64_t> journal_list = {4707387510509010945 ,5067112530745229313};
@@ -99,17 +99,7 @@ int main() {
     //make call
     cout << "making call... ";
 
-    int soap_response;
-    #ifdef _WIN32
-
-        soap_response = soap_call___ns1__Journal(ft, ServiceURL.c_str(), nullptr, journal_request, journal_response);
-        //BasicHttpBinding_USCOREIPOSProxy journal_handler(request_URL.c_str());
-
-        //soap_response = journal_handler.Journal(journal_request, journal_response);
-    #else
-        soap_response = soap_call___tempuri__Echo(ft,ServiceURL.c_str(),NULL, Echo_request, Echo_response));
-    #endif
-    if(soap_response == SOAP_OK) {
+    if(soap_journal_call(ft, ServiceURL.c_str(), nullptr, journal_request, journal_response) == SOAP_OK) {
         cout << "OK" << endl;
         cout << "Response: " << journal_response.JournalResult.__ptr << endl;
     } else {
