@@ -26,7 +26,7 @@ do
 done
 
 if [ -z $PARH_httplib ]; then 
-    echo "location to cpp-httplib (default:./lib/cpp-httplib): "
+    echo -n "location to cpp-httplib (default:./lib/cpp-httplib): "
     read PARH_httplib
     if [ -z $PARH_httplib ]; then 
         PARH_httplib="./lib/cpp-httplib"
@@ -45,7 +45,7 @@ if [ ! -d "$PARH_httplib" ]; then
 fi
 
 if [ -z $PARH_json ]; then 
-    echo "location to json lib (default:./lib/json): "
+    echo -n "location to json lib (default:./lib/json): "
     read PARH_json
     if [ -z $PARH_json ]; then 
         PARH_json="./lib/json"

@@ -23,7 +23,7 @@ do
 done
 
 if [ -z $PARH_httplib ]; then 
-    echo "location to cpp-httplib (default:./lib/cpp-httplib): "
+    echo -n "location to cpp-httplib (default:./lib/cpp-httplib): "
     read PARH_httplib
     if [ -z $PARH_httplib ]; then 
         PARH_httplib="./lib/cpp-httplib"
