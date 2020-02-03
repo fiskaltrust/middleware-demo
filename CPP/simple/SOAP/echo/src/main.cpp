@@ -15,11 +15,13 @@ using namespace std;
 #ifdef _WIN32
 #define type_Echo_request _ns1__Echo
 #define type_Echo_response _ns1__EchoResponse
-#define new_echo_request(soap, message) soap_new_set__ns1__Echo(soap, message)
+#define new_echo_request soap_new_set__ns1__Echo
+#define soap_echo_call soap_call___ns1__Echo
 #else //Linux
 #define type_Echo_request _tempuri__Echo
 #define type_Echo_response _tempuri__EchoResponse
-#define new_echo_request(soap, message) soap_new_set__tempuri__Echo(soap, message)
+#define new_echo_request) soap_new_set__tempuri__Echo
+#define soap_echo_call soap_call___tempuri__Echo
 #endif
 
 std::string &ltrim(std::string &str, const std::string &chars = "\t\n\v\f\r ") {
@@ -74,15 +76,7 @@ int main() {
     //make call
     cout << "making call... ";
 
-    int soap_response;
-    #ifdef _WIN32
-        BasicHttpBinding_USCOREIPOSProxy echo_handler(ServiceURL.c_str());
-
-        soap_response = echo_handler.Echo(Echo_request, Echo_response);
-    #else
-        soap_response = soap_call___tempuri__Echo(ft,ServiceURL.c_str(),NULL, Echo_request, Echo_response));
-    #endif
-    if(soap_response == SOAP_OK) {
+    if(soap_echo_call(ft,ServiceURL.c_str(),NULL, Echo_request, Echo_response) == SOAP_OK) {
         cout << "OK" << endl;
         cout << "Response: " << Echo_response.EchoResult << endl;
     } else {
