@@ -38,20 +38,28 @@ std::string &trim(std::string &str, const std::string &chars = "\t\n\v\f\r ") {
     return ltrim(rtrim(str, chars), chars);
 }
 
-void get_input(string *ServiceURL, string *message) {
+void get_input(string *ServiceURL,  int *receipt) {
 
+    string temp;
     // Getting all the input
     // ask for Service URL
     cout << "Please enter the serviceurl of the fiskaltrust.Service: ";
     getline(cin, *ServiceURL);
 
     // get message
-    cout << "Please enter the message to send in the echo request: ";
-    getline(cin, *message);
+    cout << "please choose the receipt you want to send \
+        \n1: zero receipt \
+        \n2: start receipt \
+        \n3: cash transaction \
+        \n: ";
+    getline(cin, temp);
+    if(!sscanf(temp.c_str(), "%d",receipt) || *receipt > 3) {
+        cerr << "ERROR wrong input" << endl;
+        exit(-1);
+    }
 
     // trim the input strings
     trim(*ServiceURL);
-    trim(*message);
 
     // if ServiceURL end with '/' -> delete it
     if ((*ServiceURL).back() == '/') {
@@ -62,9 +70,12 @@ void get_input(string *ServiceURL, string *message) {
 int main() {
     cout << "This example sends a echo to the fiskaltrust.Service via SOAP\n";
 
-    string ServiceURL, message;
+    string ServiceURL;
+    int receipt;
 
-    get_input(&ServiceURL, &message);
+    get_input(&ServiceURL, &receipt);
+
+    //Continue here
 
     //init echo class
     struct soap *ft = soap_new();
