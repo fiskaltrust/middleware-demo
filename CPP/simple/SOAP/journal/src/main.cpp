@@ -16,12 +16,12 @@ using namespace std;
 #ifdef _WIN32
 #define type_journal_request _ns1__Journal
 #define type_journal_response _ns1__JournalResponse
-#define new_journal_request soap_new__ns1__Journal
+#define new_journal_request soap_new_set__ns1__Journal
 #define soap_journal_call soap_call___ns1__Journal
 #else //Linux
-#define type_journal_request _tempuri__Echo
-#define type_journal_response _tempuri__EchoResponse
-#define new_echo_request soap_new_set__tempuri__Echo
+#define type_journal_request _tempuri__Journal
+#define type_journal_response _tempuri__JournalResponse
+#define new_journal_request soap_new_set__tempuri__Journal
 #define soap_journal_call soap_call___tempuri__Journal
 #endif
 
@@ -92,7 +92,7 @@ int main() {
     //init echo class
     struct soap *ft = soap_new();
 
-    class type_journal_request *journal_request = soap_new_set__ns1__Journal(ft, get_journal_type(journal_type), &from, &to);
+    class type_journal_request *journal_request = new_journal_request(ft, get_journal_type(journal_type), &from, &to);
 
     class type_journal_response journal_response;
 

@@ -20,7 +20,7 @@ using namespace std;
 #else //Linux
 #define type_Echo_request _tempuri__Echo
 #define type_Echo_response _tempuri__EchoResponse
-#define new_echo_request) soap_new_set__tempuri__Echo
+#define new_echo_request soap_new_set__tempuri__Echo
 #define soap_echo_call soap_call___tempuri__Echo
 #endif
 
