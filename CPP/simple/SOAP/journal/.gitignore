@@ -2,4 +2,4 @@ lib
 .vscode
 build
 Makefile
-.pdf
+*.pdf
