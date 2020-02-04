@@ -140,7 +140,7 @@ namespace csConsoleApplicationJournalREST
                     {
                         readCount = (readCount / 2) + 1;
                     }
-                } while (pointer >= 0 & readCount > 50);
+                } while (pointer >= 0 && readCount > 50);
             }
             else
             {
@@ -370,9 +370,6 @@ namespace csConsoleApplicationJournalREST
                 {
                     var ms = new System.IO.MemoryStream();
                     webresp.GetResponseStream().CopyTo(ms);
-
-                    ms.Position = 0;
-
                     Console.WriteLine("{0:G} journal response len {1}", DateTime.Now, ms.Length); // to show journal text use text instead of text.length
 
                     ms.Position = 0;
@@ -436,9 +433,6 @@ namespace csConsoleApplicationJournalREST
                 {
                     var ms = new System.IO.MemoryStream();
                     webresp.GetResponseStream().CopyTo(ms);
-
-                    ms.Position = 0;
-
                     Console.WriteLine("{0:G} journal response len {1}", DateTime.Now, ms.Length); // to show journal text use text instead of text.length
 
                     ms.Position = 0;
