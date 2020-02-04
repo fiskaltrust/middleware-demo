@@ -16,6 +16,8 @@ namespace csConsoleApplicationJournalREST
     {
         public const string FileExtension_JSON = "json";
         public const string FileExtension_CSV = "csv";
+        public const long MinimunRecordsToBeDownloaded = 50;
+        public const long DownloadingRecordIncrease = 50;
         private static string url = "https://signaturcloud-sandbox.fiskaltrust.at/";
         private static Guid cashboxid = Guid.Empty;
         private static string accesstoken;
@@ -133,14 +135,19 @@ namespace csConsoleApplicationJournalREST
 
                         if (readCount < maxReadCount)
                         {
-                            readCount += 50;
+                            readCount += DownloadingRecordIncrease;
                         }
                     }
-                    catch (Exception x)
+                    catch (Exception ex)
                     {
                         readCount = (readCount / 2) + 1;
+                        if (readcount < MinimunRecordsToBeDownloaded)
+                        {
+                            Console.WriteLine($"Journal {item.Description} cannot be downloaded. Reported error message: {ex.Message}");
+                            return;
+                        }
                     }
-                } while (pointer >= 0 && readCount > 50);
+                } while (pointer >= 0);
             }
             else
             {
