@@ -10,7 +10,9 @@
 #include <nlohmann/json.hpp>
 
 #include <iostream>
+#include <algorithm> // for_each
 #include <string>
+#include <vector>
 #include <regex>
 
 using namespace std;
