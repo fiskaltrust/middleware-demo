@@ -136,20 +136,24 @@ type_Sign_request *build_cash_body(struct soap *ft, string cashboxid, string POS
 
     //create cbChargeItems array
     //create ChargeItem
-    ns3__ChargeItem *ChargeItem = soap_new_req_ns3__ChargeItem(ft,
+    ns3__ChargeItem **ChargeItem = (ns3__ChargeItem**)malloc(sizeof(ns3__ChargeItem*));
+    ChargeItem[0] = soap_new_req_ns3__ChargeItem(ft,
                     "10.0",
                     "Food",
                     "5.0",
                     "10.0",
                     ChargeItemCase[conuty_index]
     );
-    //ChargeItem["ProductNumber"] = "1";
+
     //add item to array
-    ns3__ArrayOfChargeItem *ChargeItems = soap_new_set_ns3__ArrayOfChargeItem(ft, 1, ,ChargeItem); //not working
+    ns3__ArrayOfChargeItem *ChargeItems = soap_new_ns3__ArrayOfChargeItem(ft);
+    ChargeItems->ChargeItem = ChargeItem;
+    ChargeItems->__sizeChargeItem = 1;
 
     //create cbPayItems array
     //creat cbPayItem
-    ns3__PayItem *PayItem = soap_new_req_ns3__PayItem(ft,
+    ns3__PayItem **PayItem = (ns3__PayItem**)malloc(sizeof(ns3__PayItem*));
+    PayItem[0] = soap_new_req_ns3__PayItem(ft,
                     "10.0",
                     "Cash",
                     "5.0",
@@ -157,8 +161,9 @@ type_Sign_request *build_cash_body(struct soap *ft, string cashboxid, string POS
     );
 
     //add item to array
-    ns3__ArrayOfPayItem *PayItems = soap_new_ns3__ArrayOfPayItem(ft); //not working
-    PayItems->PayItem = &PayItem;
+    ns3__ArrayOfPayItem *PayItems = soap_new_ns3__ArrayOfPayItem(ft);
+    PayItems->PayItem = PayItem;
+    PayItems->__sizePayItem = 1;
 
     //copy strings to new Char arrays
     char *temp = new char [cashboxid.length()+1];
@@ -224,7 +229,9 @@ int main() {
         Sign_request = build_zero_body(ft, cashboxid, POSSID, country, receipt);
     }    
 
-    //cout << "CBI: " << Sign_request->data->ftCashBoxID << endl;
+    cout << "CBI: " << Sign_request->data->ftCashBoxID << endl;
+    cout << "Chargeitem name: " << Sign_request->data->cbChargeItems->ChargeItem[0]->Description << endl;
+    cout << "Payitem name: " << Sign_request->data->cbPayItems->PayItem[0]->Description << endl;
 
     //make call
     cout << "making call... ";
