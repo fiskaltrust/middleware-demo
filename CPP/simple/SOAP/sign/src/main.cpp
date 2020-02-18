@@ -15,15 +15,41 @@
 using namespace std;
 
 #ifdef _WIN32
-#define type_Sign_request _ns1__Sign
-#define type_Sign_response _ns1__SignResponse
-#define new_Sign_request soap_new_set__ns1__Sign
-#define soap_Sign_call soap_call___ns1__Sign
+    #define type_Sign_request _ns1__Sign
+    #define type_Sign_response _ns1__SignResponse
+    #define type_ReceiptRequest ns3__ReceiptRequest
+    #define type_ChargeItem ns3__ChargeItem
+    #define type_ArrayOfChargeItem ns3__ArrayOfChargeItem
+    #define type_PayItem ns3__PayItem
+    #define type_ArrayOfPayItem ns3__ArrayOfPayItem
+
+    #define new_Sign_request soap_new_set__ns1__Sign
+    #define soap_Sign_call soap_call___ns1__Sign
+    #define soap_new_ReceiptRequest soap_new_req_ns3__ReceiptRequest
+    #define soap_new_ArrayOfChargeItem soap_new_ns3__ArrayOfChargeItem
+    #define soap_new_ArrayOfPayItem soap_new_ns3__ArrayOfPayItem
+    #define soap_new_req_ChargeItem soap_new_req_ns3__ChargeItem
+    #define soap_new_ArrayOfChargeItem soap_new_ns3__ArrayOfChargeItem
+    #define soap_new_req_PayItem soap_new_req_ns3__PayItem
+    #define soap_new_ArrayOfPayItem soap_new_ns3__ArrayOfPayItem
 #else //Linux
-#define type_Sign_request _tempuri__Sign
-#define type_Sign_response _tempuri__SignResponse
-#define new_Sign_request soap_new_set__tempuri__Sign
-#define soap_Sign_call soap_call___tempuri__Sign
+    #define type_Sign_request _tempuri__Sign
+    #define type_Sign_response _tempuri__SignResponse
+    #define type_ReceiptRequest ns1__ReceiptRequest
+    #define type_ChargeItem ns1__ChargeItem
+    #define type_ArrayOfChargeItem ns1__ArrayOfChargeItem
+    #define type_PayItem ns1__PayItem
+    #define type_ArrayOfPayItem ns1__ArrayOfPayItem
+
+    #define new_Sign_request soap_new_set__tempuri__Sign
+    #define soap_Sign_call soap_call___tempuri__Sign
+    #define soap_new_ReceiptRequest soap_new_req_ns1__ReceiptRequest
+    #define soap_new_ArrayOfChargeItem soap_new_ns1__ArrayOfChargeItem
+    #define soap_new_ArrayOfPayItem soap_new_ns1__ArrayOfPayItem
+    #define soap_new_req_ChargeItem soap_new_req_ns1__ChargeItem
+    #define soap_new_ArrayOfChargeItem soap_new_ns1__ArrayOfChargeItem
+    #define soap_new_req_PayItem soap_new_req_ns1__PayItem
+    #define soap_new_ArrayOfPayItem soap_new_ns1__ArrayOfPayItem
 #endif
 
 vector<vector<int64_t>> cases = {
@@ -117,14 +143,14 @@ type_Sign_request *build_zero_body(struct soap *ft, string cashboxid, string POS
     strcpy(cbReceiptReference, "1");
 
     //create request data class
-    ns3__ReceiptRequest *data = soap_new_req_ns3__ReceiptRequest(ft,
+    type_ReceiptRequest *data = soap_new_ReceiptRequest(ft,
             temp,
             //"3c44932f-5d4e-4bd0-827b-463b789f34ee",
             cbTerminalID,
             cbReceiptReference,
             time(nullptr),
-            soap_new_ns3__ArrayOfChargeItem(ft),
-            soap_new_ns3__ArrayOfPayItem(ft),
+            soap_new_ArrayOfChargeItem(ft),
+            soap_new_ArrayOfPayItem(ft),
             cases[get_conuty_index(country)][receipt-1]
             );
     
@@ -136,8 +162,8 @@ type_Sign_request *build_cash_body(struct soap *ft, string cashboxid, string POS
 
     //create cbChargeItems array
     //create ChargeItem
-    ns3__ChargeItem **ChargeItem = (ns3__ChargeItem**)malloc(sizeof(ns3__ChargeItem*));
-    ChargeItem[0] = soap_new_req_ns3__ChargeItem(ft,
+    type_ChargeItem **ChargeItem = (type_ChargeItem**)malloc(sizeof(type_ChargeItem*));
+    ChargeItem[0] = soap_new_req_ChargeItem(ft,
                     "10.0",
                     "Food",
                     "5.0",
@@ -146,14 +172,14 @@ type_Sign_request *build_cash_body(struct soap *ft, string cashboxid, string POS
     );
 
     //add item to array
-    ns3__ArrayOfChargeItem *ChargeItems = soap_new_ns3__ArrayOfChargeItem(ft);
+    type_ArrayOfChargeItem *ChargeItems = soap_new_ArrayOfChargeItem(ft);
     ChargeItems->ChargeItem = ChargeItem;
     ChargeItems->__sizeChargeItem = 1;
 
     //create cbPayItems array
     //creat cbPayItem
-    ns3__PayItem **PayItem = (ns3__PayItem**)malloc(sizeof(ns3__PayItem*));
-    PayItem[0] = soap_new_req_ns3__PayItem(ft,
+    type_PayItem **PayItem = (type_PayItem**)malloc(sizeof(type_PayItem*));
+    PayItem[0] = soap_new_req_PayItem(ft,
                     "10.0",
                     "Cash",
                     "5.0",
@@ -161,7 +187,7 @@ type_Sign_request *build_cash_body(struct soap *ft, string cashboxid, string POS
     );
 
     //add item to array
-    ns3__ArrayOfPayItem *PayItems = soap_new_ns3__ArrayOfPayItem(ft);
+    type_ArrayOfPayItem *PayItems = soap_new_ArrayOfPayItem(ft);
     PayItems->PayItem = PayItem;
     PayItems->__sizePayItem = 1;
 
@@ -174,7 +200,7 @@ type_Sign_request *build_cash_body(struct soap *ft, string cashboxid, string POS
     strcpy(cbReceiptReference, "1");
 
     //create request data class
-    ns3__ReceiptRequest *data = soap_new_req_ns3__ReceiptRequest(ft,
+    type_ReceiptRequest *data = soap_new_ReceiptRequest(ft,
             temp,
             //"3c44932f-5d4e-4bd0-827b-463b789f34ee",
             cbTerminalID,
@@ -208,8 +234,8 @@ int main() {
     string ServiceURL, cashboxid, country, POSSID;
     int receipt;
 
-    ServiceURL = "http://localhost:1200/c5b315c4-0e49-46d9-8558-df475fe5c680";
-    cashboxid = "3c44932f-5d4e-4bd0-827b-463b789f34ee";
+    ServiceURL = "http://localhost:1201/e025c59e-1f55-47e8-b76c-1acd56d620fc";
+    cashboxid = "979d226d-1a2a-4d38-a518-30b3744630d3";
     country = "AT";
     POSSID = "some id";
     receipt = 3;
@@ -227,11 +253,7 @@ int main() {
     }
     else {
         Sign_request = build_zero_body(ft, cashboxid, POSSID, country, receipt);
-    }    
-
-    cout << "CBI: " << Sign_request->data->ftCashBoxID << endl;
-    cout << "Chargeitem name: " << Sign_request->data->cbChargeItems->ChargeItem[0]->Description << endl;
-    cout << "Payitem name: " << Sign_request->data->cbPayItems->PayItem[0]->Description << endl;
+    }
 
     //make call
     cout << "making call... ";
