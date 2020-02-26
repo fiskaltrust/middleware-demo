@@ -233,12 +233,6 @@ int main() {
     string ServiceURL, cashboxid, country, POSSID;
     int receipt;
     
-    //ServiceURL = "http://localhost:1200/c5b315c4-0e49-46d9-8558-df475fe5c680";
-    //cashboxid = "3c44932f-5d4e-4bd0-827b-463b789f34ee";
-    //country = "AT";
-    //POSSID = "some id";
-    //receipt = 3;
-    
     get_input(&ServiceURL, &cashboxid, &country, &POSSID, &receipt);
 
     //init echo class
@@ -253,9 +247,6 @@ int main() {
     else {
         Sign_request = build_zero_body(ft, &cashboxid, &POSSID, country, receipt);
     }
-
-    cout << "Quantity: " << Sign_request->data->cbChargeItems->ChargeItem[0]->Quantity << endl;
-    cout << "case: " << Sign_request->data->cbPayItems->PayItem[0]->ftPayItemCase << endl;
 
     //make call
     cout << "making call... ";
