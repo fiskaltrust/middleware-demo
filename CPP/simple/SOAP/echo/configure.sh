@@ -24,7 +24,7 @@ done
 
 #WSDL
 if [ -z $PATH_WSDL ]; then 
-    echo "location to WSDL file: "
+    echo -n "location to WSDL file: "
     read PATH_WSDL
     if [ -z $PATH_WSDL ]; then 
         PATH_WSDL="./src/fiskaltrust_fiskaltrust.interface.1.0.16298.1022.wsdl"
