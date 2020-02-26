@@ -1,13 +1,6 @@
 #include <BasicHttpBinding_USCOREIPOS.nsmap>
-#ifdef _WIN32
-    #include <soapH.h>
-    //#include <soapBasicHttpBinding_USCOREIPOSProxy.h>
-#else
-    #include <soapH.h>
-#endif
-//#include <inttypes.h> //int64_t, uint64_t
-//#include <stdio.h>    /* printf, sprintf */
-//#include <stdlib.h>   /* exit, atoi, malloc, free */
+#include <soapH.h>
+
 #include <iostream>
 #include <string>
 

@@ -5,8 +5,6 @@
     #include <soapH.h>
 #endif
 #include <inttypes.h> //int64_t, uint64_t
-//#include <stdio.h>    /* printf, sprintf */
-//#include <stdlib.h>   /* exit, atoi, malloc, free */
 #include <iostream>
 #include <string>
 #include <vector>
