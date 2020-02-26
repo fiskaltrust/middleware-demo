@@ -10,13 +10,13 @@ soapC.cpp:
 	"$(PATH_to_gSOAP)\gsoap\bin\win32\soapcpp2.exe" -CL -c++11 -1 "$(PATH_to_gSOAP)\gsoap\bin\win32\ftservice.h" -I"$(PATH_to_gSOAP)\gsoap\import" -r  -d"$(PATH_to_gSOAP)\gsoap\bin\win32"
 
 else
-journal: src/main.cpp lib/soapC.cpp
+journal: src/main.cpp lib/gsoap/soapC.cpp
 	mkdir build -p
-	g++ -o build/journal src/main.cpp "./lib/soapC.cpp" "./lib/soapClient.cpp" /usr/share/gsoap/custom/duration.c -I"./lib" -Wall -L/usr/lib/x86_64-linux-gnu -l:libgsoap.a -lstdc++
+	g++ -o build/journal src/main.cpp "./lib/gsoap/soapC.cpp" "./lib/gsoap/soapClient.cpp" /usr/share/gsoap/custom/duration.c -I"./lib/gsoap" -Wall -L/usr/lib/x86_64-linux-gnu -l:libgsoap.a -lstdc++ -std=c++11
 
-lib/soapC.cpp:
-	mkdir lib -p
-	wsdl2h -c++11 -o "./lib/ftservice.h" "$(PATH_to_WSDL)"
-	soapcpp2 -C -c++11 -1 "./lib/ftservice.h" -I"/usr/share/gsoap" -r -d./lib
+lib/gsoap/soapC.cpp:
+	mkdir lib/gsoap -p
+	wsdl2h -c++11 -o "./lib/gsoap/ftservice.h" "$(PATH_to_WSDL)"
+	soapcpp2 -C -c++11 -1 "./lib/gsoap/ftservice.h" -I"/usr/share/gsoap" -r -d./lib/gsoap
 	
 endif
