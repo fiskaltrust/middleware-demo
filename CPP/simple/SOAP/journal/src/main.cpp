@@ -72,7 +72,7 @@ int64_t *get_journal_type(string journal_type) {
         exit(-1);
     }
 
-    if(index > journal_list.size()) {
+    if((size_t)index > journal_list.size()) {
         cerr << "ERROR invalid journal type" << endl;
         exit(-1);
     }
@@ -101,7 +101,7 @@ int main() {
 
     if(soap_journal_call(ft, ServiceURL.c_str(), nullptr, journal_request, journal_response) == SOAP_OK) {
         cout << "OK" << endl;
-        cout << "Response: " << journal_response.JournalResult.__ptr << endl;
+        cout << "Response: " << endl << journal_response.JournalResult.__ptr << endl;
     } else {
         cout << "done" << endl;
         soap_print_fault(ft, stderr);
