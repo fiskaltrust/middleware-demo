@@ -1,20 +1,22 @@
 ifeq ($(OS),Windows_NT)
 echo.exe: src\main.cpp soapC.cpp
-	mkdir build || echo "dir exisit"
-	gcc -o build\echo.exe src\main.cpp "$(PATH_to_gSOAP)\gsoap\stdsoap2.cpp" "$(PATH_to_gSOAP)\gsoap\bin\win32\soapC.cpp" "$(PATH_to_gSOAP)\gsoap\bin\win32\soapBasicHttpBinding_USCOREIPOSProxy.cpp" "$(PATH_to_gSOAP)\gsoap\bin\win32\soapClient.cpp" -I"$(PATH_to_gSOAP)\gsoap\bin\win32" -I"$(PATH_to_gSOAP)\gsoap" -L"$(PATH_to_libwsock32)" -l:libwsock32.a -lstdc++ -Wall
+	mkdir build\out || echo "dir exisit"
+	g++ -o build\out\stdsoap2.o -c "$(PATH_to_gSOAP)\gsoap\stdsoap2.cpp" -I"$(PATH_to_gSOAP)\gsoap\bin\win32" -I"$(PATH_to_gSOAP)\gsoap"
+
+	g++ -o build\echo.exe src\main.cpp "$(PATH_to_gSOAP)\gsoap\bin\win32\soapC.cpp" "$(PATH_to_gSOAP)\gsoap\bin\win32\soapClient.cpp" -I"$(PATH_to_gSOAP)\gsoap\bin\win32" -I"$(PATH_to_gSOAP)\gsoap" -L.\build\out -L"$(PATH_to_libwsock32)" -l:stdsoap2.o -l:libwsock32.a -lstdc++ -Wall -std=c++11
 
 soapC.cpp:
-	"$(PATH_to_gSOAP)\gsoap\bin\win32\wsdl2h.exe" -c++ -s -o "$(PATH_to_gSOAP)\gsoap\bin\win32\ftservice.h" "$(PATH_to_WSDL)"
-	"$(PATH_to_gSOAP)\gsoap\bin\win32\soapcpp2.exe" -CL -c++ -1 "$(PATH_to_gSOAP)\gsoap\bin\win32\ftservice.h" -I"$(PATH_to_gSOAP)\gsoap\import" -r  -d"$(PATH_to_gSOAP)\gsoap\bin\win32"
+	"$(PATH_to_gSOAP)\gsoap\bin\win32\wsdl2h.exe" -c++11 -o "$(PATH_to_gSOAP)\gsoap\bin\win32\ftservice.h" "$(PATH_to_WSDL)"
+	"$(PATH_to_gSOAP)\gsoap\bin\win32\soapcpp2.exe" -CL -c++11 -1 "$(PATH_to_gSOAP)\gsoap\bin\win32\ftservice.h" -I"$(PATH_to_gSOAP)\gsoap\import" -r  -d"$(PATH_to_gSOAP)\gsoap\bin\win32"
 
 else
 echo: src/main.cpp lib/soapC.cpp
 	mkdir build -p
-	g++ -o build/echo src/main.cpp "./lib/soapC.cpp" "./lib/soapClient.cpp" /usr/share/gsoap/custom/duration.c -I"./lib" -Wall -L/usr/lib/x86_64-linux-gnu -l:libgsoap.a -lstdc++
+	g++ -o build/echo src/main.cpp "./lib/soapC.cpp" "./lib/soapClient.cpp" /usr/share/gsoap/custom/duration.c -I"./lib" -Wall -L/usr/lib/x86_64-linux-gnu -l:libgsoap.a -lstdc++ -std=c++11
 
 lib/soapC.cpp:
 	mkdir lib -p
-	wsdl2h -c++ -s -o "./lib/ftservice.h" "$(PATH_to_WSDL)"
-	soapcpp2 -C -c++ -1 "./lib/ftservice.h" -I"/usr/share/gsoap" -r -d./lib
+	wsdl2h -c++11 -o "./lib/ftservice.h" "$(PATH_to_WSDL)"
+	soapcpp2 -C -c++11 -1 "./lib/ftservice.h" -I"/usr/share/gsoap" -r -d./lib
 
 endif

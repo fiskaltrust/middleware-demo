@@ -1,6 +1,7 @@
 #include <BasicHttpBinding_USCOREIPOS.nsmap>
 #ifdef _WIN32
-    #include <soapBasicHttpBinding_USCOREIPOSProxy.h>
+    #include <soapH.h>
+    //#include <soapBasicHttpBinding_USCOREIPOSProxy.h>
 #else
     #include <soapH.h>
 #endif
@@ -69,7 +70,7 @@ int main() {
     //init echo class
     struct soap *ft = soap_new();
 
-    class type_Echo_request *Echo_request = new_echo_request(ft, (char*)message.c_str());
+    class type_Echo_request *Echo_request = new_echo_request(ft, &message);
 
     class type_Echo_response Echo_response;
 
@@ -78,7 +79,7 @@ int main() {
 
     if(soap_echo_call(ft,ServiceURL.c_str(),NULL, Echo_request, Echo_response) == SOAP_OK) {
         cout << "OK" << endl;
-        cout << "Response: " << Echo_response.EchoResult << endl;
+        cout << "Response: " << (*Echo_response.EchoResult) << endl;
     } else {
         cout << "done" << endl;
         soap_print_fault(ft, stderr);
