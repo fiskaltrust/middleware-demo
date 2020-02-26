@@ -64,6 +64,18 @@ vector<int64_t> ChargeItemCase = {0x4154000000000001,0x4445000000000001,0x465200
                               //AT default       ,DE default        ,FR default
 vector<int64_t> PayItemCase = {0x4154000000000000,0x4445000000000000,0x4652000000000000};
 
+string cbTerminalID = "1";
+string cbReceiptReference = "1";
+
+string ChargeItem_Quantity = "10.0";
+string ChargeItem_Description = "Food";
+string ChargeItem_Amount = "5.0";
+string ChargeItem_VATRate = "10.0";
+
+string PayItem_Quantity = "10.0";
+string PayItem_Description = "Cash";
+string PayItem_Amount = "5.0";
+
 std::string &ltrim(std::string &str, const std::string &chars = "\t\n\v\f\r ") {
     str.erase(0, str.find_first_not_of(chars));
     return str;
@@ -133,89 +145,76 @@ int get_conuty_index(string country) {
     exit(-1);
 }
 
-type_Sign_request *build_zero_body(struct soap *ft, string cashboxid, string POSSID, string country, int receipt) {
-    //copy strings to new Char arrays
-    char *temp = new char [cashboxid.length()+1];
-    strcpy(temp, cashboxid.c_str());
-	char *cbTerminalID = new char [2];
-    strcpy(cbTerminalID, "1");
-	char *cbReceiptReference = new char [2];
-    strcpy(cbReceiptReference, "1");
+type_Sign_request *build_zero_body(struct soap *ft, string *cashboxid, string *POSSID, string country, int receipt) {
 
     //create request data class
     type_ReceiptRequest *data = soap_new_ReceiptRequest(ft,
-            temp,
-            //"3c44932f-5d4e-4bd0-827b-463b789f34ee",
-            cbTerminalID,
-            cbReceiptReference,
+            cashboxid,
+            &cbTerminalID,
+            &cbReceiptReference,
             time(nullptr),
             soap_new_ArrayOfChargeItem(ft),
             soap_new_ArrayOfPayItem(ft),
             cases[get_conuty_index(country)][receipt-1]
             );
     
+    data->ftPosSystemId = POSSID;
+    
     return new_Sign_request(ft, data);
 }
 
-type_Sign_request *build_cash_body(struct soap *ft, string cashboxid, string POSSID, string country, int receipt) {
+type_Sign_request *build_cash_body(struct soap *ft, string *cashboxid, string *POSSID, string country, int receipt) {
     int conuty_index = get_conuty_index(country);
-
     //create cbChargeItems array
     //create ChargeItem
-    type_ChargeItem **ChargeItem = (type_ChargeItem**)malloc(sizeof(type_ChargeItem*));
-    ChargeItem[0] = soap_new_req_ChargeItem(ft,
-                    "10.0",
-                    "Food",
-                    "5.0",
-                    "10.0",
-                    ChargeItemCase[conuty_index]
-    );
 
+    vector<type_ChargeItem*> ChargeItem = { 
+        new type_ChargeItem
+    };
+
+    ChargeItem[0]->Quantity = ChargeItem_Quantity;
+    ChargeItem[0]->Description = &ChargeItem_Description;
+    ChargeItem[0]->Amount = ChargeItem_Amount;
+    ChargeItem[0]->VATRate = ChargeItem_VATRate;
+    ChargeItem[0]->ftChargeItemCase = ChargeItemCase[conuty_index];
+    
     //add item to array
     type_ArrayOfChargeItem *ChargeItems = soap_new_ArrayOfChargeItem(ft);
     ChargeItems->ChargeItem = ChargeItem;
-    ChargeItems->__sizeChargeItem = 1;
-
+    
     //create cbPayItems array
     //creat cbPayItem
-    type_PayItem **PayItem = (type_PayItem**)malloc(sizeof(type_PayItem*));
-    PayItem[0] = soap_new_req_PayItem(ft,
-                    "10.0",
-                    "Cash",
-                    "5.0",
-                    PayItemCase[conuty_index]
-    );
+
+    vector<type_PayItem*> PayItem = { new type_PayItem};
+
+    PayItem[0]->Quantity = PayItem_Quantity;
+    PayItem[0]->Description = &PayItem_Description;
+    PayItem[0]->Amount = PayItem_Amount;
+    PayItem[0]->ftPayItemCase = PayItemCase[conuty_index];
 
     //add item to array
     type_ArrayOfPayItem *PayItems = soap_new_ArrayOfPayItem(ft);
     PayItems->PayItem = PayItem;
-    PayItems->__sizePayItem = 1;
-
-    //copy strings to new Char arrays
-    char *temp = new char [cashboxid.length()+1];
-    strcpy(temp, cashboxid.c_str());
-	char *cbTerminalID = new char [2];
-    strcpy(cbTerminalID, "1");
-	char *cbReceiptReference = new char [2];
-    strcpy(cbReceiptReference, "1");
-
+    
     //create request data class
     type_ReceiptRequest *data = soap_new_ReceiptRequest(ft,
-            temp,
-            //"3c44932f-5d4e-4bd0-827b-463b789f34ee",
-            cbTerminalID,
-            cbReceiptReference,
+            cashboxid,
+            &cbTerminalID,
+            &cbReceiptReference,
             time(nullptr),
             ChargeItems,
             PayItems,
             cases[conuty_index][receipt-1]
             );
+
+    data->ftPosSystemId = POSSID;
+
     return new_Sign_request(ft, data);
 }
 
 void print_response(type_Sign_response Sign_response, struct soap *ft) {
     if(Sign_response.SignResult->ftSignatures) { 
-        for(int i = 0; Sign_response.SignResult->ftSignatures->__sizeSignaturItem > i; i++) {
+        for(std::vector<int>::size_type i = 0; i != Sign_response.SignResult->ftSignatures->SignaturItem.size(); i++) {
             cout << "Signature" << endl;
             cout << "\tftSignatureFormat \"" << Sign_response.SignResult->ftSignatures->SignaturItem[i]->ftSignatureFormat << "\"" << endl;
             cout << "\tftSignatureType \"" << Sign_response.SignResult->ftSignatures->SignaturItem[i]->ftSignatureType << "\"" << endl;
@@ -225,7 +224,7 @@ void print_response(type_Sign_response Sign_response, struct soap *ft) {
         
     }
     cout << "ftState: " << Sign_response.SignResult->ftState << endl;
-    cout << "ftStateData: " << Sign_response.SignResult->ftStateData << endl;
+    cout << "ftStateData: " << (*Sign_response.SignResult->ftStateData) << endl;
 }
 
 int main() {
@@ -233,14 +232,14 @@ int main() {
 
     string ServiceURL, cashboxid, country, POSSID;
     int receipt;
-
-    ServiceURL = "http://localhost:1201/e025c59e-1f55-47e8-b76c-1acd56d620fc";
-    cashboxid = "979d226d-1a2a-4d38-a518-30b3744630d3";
-    country = "AT";
-    POSSID = "some id";
-    receipt = 3;
-
-    //get_input(&ServiceURL, &cashboxid, &country, &POSSID, &receipt);
+    
+    //ServiceURL = "http://localhost:1200/c5b315c4-0e49-46d9-8558-df475fe5c680";
+    //cashboxid = "3c44932f-5d4e-4bd0-827b-463b789f34ee";
+    //country = "AT";
+    //POSSID = "some id";
+    //receipt = 3;
+    
+    get_input(&ServiceURL, &cashboxid, &country, &POSSID, &receipt);
 
     //init echo class
     struct soap *ft = soap_new();
@@ -249,11 +248,14 @@ int main() {
     class type_Sign_response Sign_response;
 
     if(receipt == 3) {
-        Sign_request = build_cash_body(ft, cashboxid, POSSID, country, receipt);
+        Sign_request = build_cash_body(ft, &cashboxid, &POSSID, country, receipt);
     }
     else {
-        Sign_request = build_zero_body(ft, cashboxid, POSSID, country, receipt);
+        Sign_request = build_zero_body(ft, &cashboxid, &POSSID, country, receipt);
     }
+
+    cout << "Quantity: " << Sign_request->data->cbChargeItems->ChargeItem[0]->Quantity << endl;
+    cout << "case: " << Sign_request->data->cbPayItems->PayItem[0]->ftPayItemCase << endl;
 
     //make call
     cout << "making call... ";
