@@ -119,17 +119,18 @@ int main()
 
     get_input(&ServiceURL, &cashboxid, &accesstoken, &body);
 
-    int response_code;
+    int response_code = 0;
 
     send_request(&ServiceURL, &cashboxid, &accesstoken, &body, &response, &response_code);
 
     //print Response
-    if(response.empty()) {
+    if (response_code == 0) {
         cout << "No Response" << endl;
-    }
-    else {
+    } else {
         cout << "Response Code: " << response_code << endl;
-        cout << "Body:" << endl << response << endl;
+        if (!response.empty()) {
+            cout << response << endl;
+        }
     }
     
     return 0;
