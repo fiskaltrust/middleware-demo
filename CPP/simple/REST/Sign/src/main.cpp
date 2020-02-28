@@ -9,27 +9,26 @@
 #include <httplib.h>
 #include <nlohmann/json.hpp>
 
-#include <iostream>
 #include <algorithm> // for_each
+#include <iostream>
+#include <regex>
 #include <string>
 #include <vector>
-#include <regex>
 
 using namespace std;
 using namespace httplib;
 using json = nlohmann::json;
 
 vector<vector<int64_t>> cases = {
-            //{zero, start, cash}
-    /*AT*/{0x4154000000000002,0x4154000000000003,0x4154000000000001},
-    /*DE*/{0x4445000000000002,0x4445000000000003,/*pos OR implicit flag*/0x444500000000001 | 0x0000000100000000},
-    /*FR*/{0x465200000000000F,0x4652000000000010,0x4652000000000001}
-};
-                                //AT undefinded 10% ,DE undefinded 19% ,FR undefinded 10%
-vector<int64_t> ChargeItemCase = {0x4154000000000001,0x4445000000000001,0x4652000000000002};
+    //{zero, start, cash}
+    /*AT*/ {0x4154000000000002, 0x4154000000000003, 0x4154000000000001},
+    /*DE*/ {0x4445000000000002, 0x4445000000000003, /*pos OR implicit flag*/ 0x444500000000001 | 0x0000000100000000},
+    /*FR*/ {0x465200000000000F, 0x4652000000000010, 0x4652000000000001}};
+//AT undefinded 10% ,DE undefinded 19% ,FR undefinded 10%
+vector<int64_t> ChargeItemCase = {0x4154000000000001, 0x4445000000000001, 0x4652000000000002};
 
-                              //AT default       ,DE default        ,FR default
-vector<int64_t> PayItemCase = {0x4154000000000000,0x4445000000000000,0x4652000000000000};
+//AT default       ,DE default        ,FR default
+vector<int64_t> PayItemCase = {0x4154000000000000, 0x4445000000000000, 0x4652000000000000};
 
 std::string &ltrim(std::string &str, const std::string &chars = "\t\n\v\f\r ") {
     str.erase(0, str.find_first_not_of(chars));
@@ -46,13 +45,15 @@ std::string &trim(std::string &str, const std::string &chars = "\t\n\v\f\r ") {
 }
 
 void string_to_UPPERcase(char *target) {
-    for(int i = 0; target[i] != 0 ;i++) {
-        if(target[i] <= 'z' && target[i] >= 'a') { target[i] &= (~(1<<5));} //the differenc from UPPER case to lower case is 32 so we unset the 5th bit 
+    for (int i = 0; target[i] != 0; i++) {
+        if (target[i] <= 'z' && target[i] >= 'a') {
+            target[i] &= (~(1 << 5));
+        } //the differenc from UPPER case to lower case is 32 so we unset the 5th bit
     }
 }
 
 void get_input(string *ServiceURL, string *cashboxid, string *accesstoken, string *country, string *POSSID, int *receipt) {
-    
+
     string temp;
     //Getting all the input
     //ask for Service URL
@@ -81,7 +82,7 @@ void get_input(string *ServiceURL, string *cashboxid, string *accesstoken, strin
         \n3: cash transaction \
         \n: ";
     getline(cin, temp);
-    if(!sscanf(temp.c_str(), "%d",receipt) || *receipt > 3) {
+    if (!sscanf(temp.c_str(), "%d", receipt) || *receipt > 3) {
         cerr << "ERROR wrong input" << endl;
         exit(-1);
     }
@@ -99,13 +100,19 @@ void get_input(string *ServiceURL, string *cashboxid, string *accesstoken, strin
 }
 
 int get_conuty_index(string country) {
-    std::for_each(country.begin(), country.end(), [](char & c){
-	    c = ::toupper(c);
+    std::for_each(country.begin(), country.end(), [](char &c) {
+        c = ::toupper(c);
     });
 
-    if(country == "AT") {return 0;}
-    if(country == "DE") {return 1;}
-    if(country == "FR") {return 2;}
+    if (country == "AT") {
+        return 0;
+    }
+    if (country == "DE") {
+        return 1;
+    }
+    if (country == "FR") {
+        return 2;
+    }
 
     cerr << "ERROR unknow country" << endl;
     exit(-1);
@@ -121,7 +128,9 @@ json build_zero_body(string cashboxid, string country, string POSSID, int receip
     root["cbReceiptMoment"] = timestamp;
     root["cbChargeItems"] = json::array();
     root["cbPayItems"] = json::array();
-    root["ftReceiptCase"] = cases[get_conuty_index(country)][receipt-1];
+    root["ftReceiptCase"] = cases[get_conuty_index(country)][receipt - 1];
+
+    cout << root.dump(4);
     return root;
 }
 
@@ -164,18 +173,17 @@ json build_cash_body(string cashboxid, string country, string POSSID, int receip
     root["cbReceiptMoment"] = timestamp;
     root["cbChargeItems"] = ChargeItems;
     root["cbPayItems"] = PayItems;
-    root["ftReceiptCase"] = cases[conuty_index][receipt-1];
+    root["ftReceiptCase"] = cases[conuty_index][receipt - 1];
 
     return root;
 }
 
 void send_request(string *ServiceURL, string *cashboxid, string *accesstoken, string body, string *response, int *response_code) {
-    
+
     Client *ft;
     Headers head = {
         {"cashboxid", cashboxid->c_str()},
-        {"accesstoken", accesstoken->c_str()}
-    };
+        {"accesstoken", accesstoken->c_str()}};
 
     regex expression("^(https?):\\/\\/([^\\/:]*)(?::([0-9]+))?(\\/.*)?$");
     smatch resault;
@@ -183,19 +191,17 @@ void send_request(string *ServiceURL, string *cashboxid, string *accesstoken, st
     //get parts of the Service URL
     //http://localhost:1200/test
     //| 1 |  |   2    || 3 |  4
-    regex_search(*ServiceURL, resault ,expression);
+    regex_search(*ServiceURL, resault, expression);
 
-    if(resault.str(1) == "http") { //unsecure Client
+    if (resault.str(1) == "http") { //unsecure Client
         ft = new Client(resault.str(2), stoi(resault.str(3)));
-    }
-    else if(resault.str(1) == "https") { //secure Client
+    } else if (resault.str(1) == "https") { //secure Client
         ft = new SSLClient(resault.str(2));
-    }
-    else {
+    } else {
         cerr << "ERROR not supported protocol" << endl;
     }
-    
-    ft->set_follow_location(true); 
+
+    ft->set_follow_location(true);
 
     cout << "performing request... ";
     cout.flush();
@@ -209,48 +215,44 @@ void send_request(string *ServiceURL, string *cashboxid, string *accesstoken, st
         cout << "OK" << endl;
         *response_code = res->status;
         *response = res->body;
-    }
-    else {
+    } else {
         cout << "failed" << endl;
         cerr << "ERROR connection failed" << endl;
     }
-    
 }
 
-int main()
-{
+int main() {
     cout << "This example sends a sign request to the fiskaltrust.Service via REST" << endl;
 
     string ServiceURL, cashboxid, accesstoken, country_code, POSSID, response_body;
 
-    int response_code, receipt;
+    int response_code = 0, receipt;
 
     json request, response;
 
     get_input(&ServiceURL, &cashboxid, &accesstoken, &country_code, &POSSID, &receipt);
 
-    if(receipt == 3 ) {
+    if (receipt == 3) {
         request = build_cash_body(cashboxid, country_code, POSSID, receipt);
-    }
-    else {
+    } else {
         request = build_zero_body(cashboxid, country_code, POSSID, receipt);
     }
 
     send_request(&ServiceURL, &cashboxid, &accesstoken, request.dump(), &response_body, &response_code);
 
     //print Response
-    if(response_body.empty()) {
+    if (response_code == 0) {
         cout << "No Response" << endl;
-    }
-    else {
+    } else {
         cout << "Response Code: " << response_code << endl;
         //Print response
-        response = json::parse(response_body);
-        cout << response.dump(4) << endl;
-        if(response.count("ftState")) { //check if enty is available
-            cout << "ftState: " << response.at("/ftState"_json_pointer) << endl;
+        if (!response_body.empty()) {
+            response = json::parse(response_body);
+            cout << response.dump(4) << endl;
+            if (response.count("ftState")) { //check if enty is available
+                cout << "ftState: " << response.at("/ftState"_json_pointer) << endl;
+            }
         }
     }
-
     return 0;
 }

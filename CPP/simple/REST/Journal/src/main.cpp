@@ -142,17 +142,19 @@ int main()
 
     uint64_t journal_type = build_journal_type(&journal);
 
-    int response_code;
+    int response_code = 0;
 
     send_request(&ServiceURL, &cashboxid, &accesstoken, journal_type, &response, &response_code);
 
     //print Response
-    if(response.empty()) {
+    if(response_code == 0) {
         cout << "No Response" << endl;
     }
     else {
         cout << "Response Code: " << response_code << endl;
-        cout << "Body:" << endl << response << endl;
+        if(!response.empty()) {
+            cout << "Body:" << endl << response << endl;
+        }
     }
     return 0;
 }
