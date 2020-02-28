@@ -210,7 +210,7 @@ type_Sign_request *build_cash_body(struct soap *ft, string *cashboxid, string *P
     return new_Sign_request(ft, data);
 }
 
-void print_response(type_Sign_response Sign_response, struct soap *ft) {
+void print_response(type_Sign_response Sign_response) {
     if(Sign_response.SignResult->ftSignatures) { 
         for(std::vector<int>::size_type i = 0; i != Sign_response.SignResult->ftSignatures->SignaturItem.size(); i++) {
             cout << "Signature" << endl;
@@ -222,7 +222,7 @@ void print_response(type_Sign_response Sign_response, struct soap *ft) {
         
     }
     cout << "ftState: " << Sign_response.SignResult->ftState << endl;
-    cout << "ftStateData: " << (*Sign_response.SignResult->ftStateData) << endl;
+    if(Sign_response.SignResult->ftStateData) {cout << "ftStateData: " << (*Sign_response.SignResult->ftStateData) << endl;}
 }
 
 int main() {
@@ -252,7 +252,7 @@ int main() {
     if(soap_Sign_call(ft,ServiceURL.c_str(),NULL, Sign_request, Sign_response) == SOAP_OK) {
         cout << "OK" << endl;
         cout << "Response: " << endl;
-        print_response(Sign_response, ft);
+        print_response(Sign_response);
     } else {
         cout << "done" << endl;
         soap_print_fault(ft, stderr);
