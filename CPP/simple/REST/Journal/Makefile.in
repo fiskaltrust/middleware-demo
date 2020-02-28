@@ -8,5 +8,5 @@ else #Linux
 
 journal: src/main.cpp
 	mkdir build -p
-	g++ src/main.cpp -o build/journal "$(PATH_cpp_httplib)/out/httplib.cc" -I"$(PATH_cpp_httplib)/out" -D CPPHTTPLIB_OPENSSL_SUPPORT -lssl -lcrypto -pthread
+	g++ src/main.cpp -o build/journal "$(PATH_cpp_httplib)/out/httplib.cc" -I"$(PATH_cpp_httplib)/out" -D CPPHTTPLIB_OPENSSL_SUPPORT -lssl -lcrypto -pthread -std=c++14
 endif
