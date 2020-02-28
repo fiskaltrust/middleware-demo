@@ -6,6 +6,8 @@ An echo request with a custom message is sent to a specified url and CashBox and
 
 This example can be used as a starting point to implement the [fiskaltrust.Interface](https://github.com/fiskaltrust/interface-doc).
 
+> _**Note:** This example has yet not be tested for Germany._
+
 # Requirements
 
 ## Toolchain
