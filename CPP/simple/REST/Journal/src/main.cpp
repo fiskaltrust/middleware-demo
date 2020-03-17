@@ -88,7 +88,7 @@ void send_request(string *ServiceURL, string *cashboxid, string *accesstoken, ui
         {"accesstoken", accesstoken->c_str()}
     };
 
-    regex expression("^(https?):\\/\\/([^\\/:]*)(?::([0-9]+))?(\\/.*)?$");
+    regex expression("^(https?|rest):\\/\\/([^\\/:]*)(?::([0-9]+))?(\\/.*)?$");
     smatch resault;
 
     //get parts of the Service URL
@@ -96,7 +96,7 @@ void send_request(string *ServiceURL, string *cashboxid, string *accesstoken, ui
     //| 1 |  |   2    || 3 |  4
     regex_search(*ServiceURL, resault ,expression);
 
-    if(resault.str(1) == "http") { //unsecure Client
+    if(resault.str(1) == "http" || resault.str(1) == "rest") { //unsecure Client
         ft = new Client(resault.str(2), stoi(resault.str(3)));
     }
     else if(resault.str(1) == "https") { //secure Client
