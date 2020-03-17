@@ -1,5 +1,5 @@
 # Console Application for France
-The existing projects relate exclusively to the Austrian market and legislation.
+The existing projects relate exclusively to the French market and legislation.
 You need a configured and active queue for the applications, which is creatable in [Portal](https://portal.fiskaltrust.fr).
 
 For all available executable applications you need the CashBoxId and the AccessToken.
@@ -62,7 +62,7 @@ Um die Queue zu testen können bis zu 999 Barumsatzbelege in einem Durchgang erz
 Alle möglichen Vorgänge werden auf Basis des SOAP-Protokolls durchgeführt.
 
 # Console Application pour la France
-Les projets existants concernent exclusivement le marché et la législation autrichiens.
+Les projets existants concernent exclusivement le marché et la législation française.
 Vous avez besoin d'une file d'attente configurée et active pour les applications,
 que vous pouvez créer dans [portail](https://portal.fiskaltrust.fr).
 
