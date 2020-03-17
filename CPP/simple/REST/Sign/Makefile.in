@@ -1,0 +1,12 @@
+ifeq ($(OS),Windows_NT) #Windows
+
+sign.exe: src\main.cpp
+	mkdir build || echo "dir exisit"
+	g++ -o build\sign.exe src\main.cpp "$(PATH_cpp_httplib)\out\httplib.cc" -I"$(PATH_cpp_httplib)\out" -I"$(PATH_json)\include" -D CPPHTTPLIB_OPENSSL_SUPPORT -L.\ -l:"$(wildcard ./build/libssl*)" -l:"$(wildcard ./build/libcrypto*)" -lws2_32 -std=c++14 -ggdb 
+
+else #Linux
+
+sign: src/main.cpp
+	mkdir build -p
+	g++ src/main.cpp -o build/sign "$(PATH_cpp_httplib)/out/httplib.cc" -I"$(PATH_cpp_httplib)/out" -I"$(PATH_json)/include" -D CPPHTTPLIB_OPENSSL_SUPPORT -lssl -lcrypto -pthread -std=c++14
+endif

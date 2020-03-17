@@ -1,0 +1,7 @@
+*.dll
+.vscode
+build
+lib
+curl-ca-bundle.crt
+Makefile
+*.pdf

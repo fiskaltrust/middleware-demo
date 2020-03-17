@@ -1,0 +1,22 @@
+ifeq ($(OS),Windows_NT)
+sign.exe: src\main.cpp soapC.cpp
+	mkdir build\out || echo "dir exisit"
+	g++ -o build\out\stdsoap2.o -c "$(PATH_to_gSOAP)\gsoap\stdsoap2.cpp" -I"$(PATH_to_gSOAP)\gsoap\bin\win32" -I"$(PATH_to_gSOAP)\gsoap"
+
+	g++ -o build\sign.exe src\main.cpp "$(PATH_to_gSOAP)\gsoap\bin\win32\soapC.cpp" "$(PATH_to_gSOAP)\gsoap\bin\win32\soapClient.cpp" -I"$(PATH_to_gSOAP)\gsoap\bin\win32" -I"$(PATH_to_gSOAP)\gsoap" -L.\build\out -L"$(PATH_to_libwsock32)" -l:stdsoap2.o -l:libwsock32.a -lstdc++ -Wall -std=c++11
+
+soapC.cpp:
+	"$(PATH_to_gSOAP)\gsoap\bin\win32\wsdl2h.exe" -c++ -o "$(PATH_to_gSOAP)\gsoap\bin\win32\ftservice.h" "$(PATH_to_WSDL)"
+	"$(PATH_to_gSOAP)\gsoap\bin\win32\soapcpp2.exe" -CL -c++ -1 "$(PATH_to_gSOAP)\gsoap\bin\win32\ftservice.h" -I"$(PATH_to_gSOAP)\gsoap\import" -r  -d"$(PATH_to_gSOAP)\gsoap\bin\win32"
+
+else
+sign: src/main.cpp lib/gsoap/soapC.cpp
+	mkdir build -p
+	g++ -o build/sign src/main.cpp "./lib/gsoap/soapC.cpp" "./lib/gsoap/soapClient.cpp" /usr/share/gsoap/custom/duration.c -I"./lib/gsoap" -Wall -L/usr/lib/x86_64-linux-gnu -l:libgsoap.a -lstdc++ -std=c++11
+
+lib/gsoap/soapC.cpp:
+	mkdir lib/gsoap -p
+	wsdl2h -c++11 -o "./lib/gsoap/ftservice.h" "$(PATH_to_WSDL)"
+	soapcpp2 -C -c++11 -1 "./lib/gsoap/ftservice.h" -I"/usr/share/gsoap" -r -d./lib/gsoap
+
+endif
