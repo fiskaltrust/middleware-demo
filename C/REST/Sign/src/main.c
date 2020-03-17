@@ -91,7 +91,7 @@ void string_to_UPPERcase(char *target) {
     }
 }
 
-void get_input(char *ServiceURL, char *cashboxid, char *accesstoken, char *country, int *receipt) {
+void get_input(char *ServiceURL, char *cashboxid, char *accesstoken, char *country, char *POSsystemID, int *receipt) {
     
     char temp[STRING_LENGTH] = {0};
     //Getting all the input
@@ -106,6 +106,10 @@ void get_input(char *ServiceURL, char *cashboxid, char *accesstoken, char *count
     //get accesstoken
     printf("Please enter the accesstoken of the fiskaltrust.CashBox: ");
     fgets(accesstoken,STRING_LENGTH-1,stdin);
+
+    // get POSsystemID
+    printf("Please enter your POS System ID: ");
+    fgets(POSsystemID, STRING_LENGTH - 1, stdin);
 
     //get country
     printf("Please enter the country of the fiskaltrust.Queue (e.g. \"AT,DE,FR\"): ");
@@ -127,6 +131,7 @@ void get_input(char *ServiceURL, char *cashboxid, char *accesstoken, char *count
     trim(ServiceURL, NULL);
     trim(cashboxid, NULL);
     trim(accesstoken, NULL);
+    trim(POSsystemID, NULL);
     trim(country, NULL);
 
     string_to_UPPERcase(country);
@@ -151,11 +156,12 @@ int64_t get_receipt_case(char *countryCode, int receipt) {
     }
 }
 
-json_object *set_zero_body(char *cashboxid, int64_t receipt_case) {
+json_object *set_zero_body(char *cashboxid, char *POSsystemID, int64_t receipt_case) {
     char buffer[128];
 
     json_object *root = json_object_new_object();
     json_object_object_add(root,"ftCashBoxID",json_object_new_string(cashboxid));
+    json_object_object_add(root,"ftPosSystemId",json_object_new_string(POSsystemID));
     json_object_object_add(root,"cbTerminalID",json_object_new_string("1"));
     json_object_object_add(root,"cbReceiptReference",json_object_new_string("1"));
     sprintf(buffer,"/Date(%lu)/",(unsigned long)time(NULL));
@@ -166,7 +172,7 @@ json_object *set_zero_body(char *cashboxid, int64_t receipt_case) {
     return root;
 }
 
-json_object *set_cash_body(char *cashboxid, int64_t receipt_case, char *country) {
+json_object *set_cash_body(char *cashboxid, char *POSsystemID, int64_t receipt_case, char *country) {
     char buffer[128];
     int country_index;
     if(strcmp(country, "AT") == 0) {country_index = 0;}
@@ -204,7 +210,7 @@ json_object *set_cash_body(char *cashboxid, int64_t receipt_case, char *country)
     //create root object
     json_object *root = json_object_new_object();
     json_object_object_add(root,"ftCashBoxID",json_object_new_string(cashboxid));
-    //json_object_object_add(root,"ftPosSystemId",json_object_new_string(POSSID));
+    json_object_object_add(root,"ftPosSystemId",json_object_new_string(POSsystemID));
     json_object_object_add(root,"cbTerminalID",json_object_new_string("1"));
     json_object_object_add(root,"cbReceiptReference",json_object_new_string("1"));
     sprintf(buffer,"/Date(%lu)/",(unsigned long)time(NULL));
@@ -313,9 +319,10 @@ int main()
     char cashboxid[STRING_LENGTH];
     char accesstoken[STRING_LENGTH];
     char country[STRING_LENGTH];
+    char POSsystemID[STRING_LENGTH];
     int receipt;
 
-    get_input(ServiceURL, cashboxid, accesstoken, country, &receipt);
+    get_input(ServiceURL, cashboxid, accesstoken, country, POSsystemID, &receipt);
     
     int64_t response_code;
 
@@ -327,10 +334,10 @@ int main()
 
     json_object *body;
     if(receipt == 3) { //cash signing
-        body = set_cash_body(cashboxid, receip_case, country);
+        body = set_cash_body(cashboxid, POSsystemID, receip_case, country);
     }
     else{
-        body = set_zero_body(cashboxid, receip_case);
+        body = set_zero_body(cashboxid, POSsystemID, receip_case);
     }
         
     

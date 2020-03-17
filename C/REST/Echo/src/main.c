@@ -227,7 +227,11 @@ int main()
         printf("No Response\n");
     }
     else {
-        printf("Response Code: %ld\n",response_code);
+        #ifdef _WIN32
+            printf("Response Code: %I64d\n",response_code);
+        #else
+            printf("Response Code: %ld\n",response_code);
+        #endif
         printf("Body:\n%s\n", s.ptr);
         free(s.ptr);
     }

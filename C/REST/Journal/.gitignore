@@ -3,3 +3,4 @@
 build
 lib
 curl-ca-bundle.crt
+Makefile

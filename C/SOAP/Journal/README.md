@@ -6,6 +6,8 @@ A journal request is sent to a specified url and CashBox and the response is pri
 
 This example can be used as a starting point to implement the [fiskaltrust.Interface](https://github.com/fiskaltrust/interface-doc).
 
+> _**Note:** The german journal is being implemented at the moment in the fiskaltrust.Service. Since the implementation is similar, you can use the austrian service for testing._
+
 # Requirements
 
 ## Toolchain
@@ -52,7 +54,7 @@ You can manually install the library according to [these instructions](https://w
 
 > _**Example:**_
 > ```
-> ./configure.ps1
+> .\configure.ps1
 > make
 > ```
 

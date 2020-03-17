@@ -1,10 +1,6 @@
 # Intro
 
-This example sends a echo request to the fiskaltrust.Service via REST.
-
-An echo request with a custom message is sent to a specified url and CashBox and the response is printed.
-
-This example can be used as a starting point to implement the [fiskaltrust.Interface](https://github.com/fiskaltrust/interface-doc).
+This example sends an echo request to the fiskaltrust.Service via REST. An echo request with a custom message is sent to a specified url and CashBox and the response is printed. This example can be used as a starting point to implement the [fiskaltrust.Interface](https://github.com/fiskaltrust/interface-doc).
 
 # Requirements
 
@@ -12,25 +8,23 @@ This example can be used as a starting point to implement the [fiskaltrust.Inter
 
 To compile the example the `C` compiler [`gcc`](https://gcc.gnu.org/install/) and the buildtool [`make`](https://www.gnu.org/software/make/) is needed.
 
-> _**Note:** On windows we recomend installing these with a package manager like [scoop](https://scoop.sh/) or [chocolatey](https://chocolatey.org/)_
+> _**Note:** On Windows, we recommend installing them with a package manager like [scoop](https://scoop.sh/) or [chocolatey](https://chocolatey.org/)_
 
 ## curl
 
-To build the example, the [curl library](https://curl.haxx.se/libcurl/) needs to be available. You can download this library from [here](https://curl.haxx.se/download.html).
+To build the example, the [curl library](https://curl.haxx.se/libcurl/) needs to be available.
 
-> _**Note:** We tested the example with version 7.x.x other versions may not work._
+> _**Note:** We tested the example with version 7.x.x, other versions may not work._
 
 ### Windows
 
-Building the curl library for windows is a complicated process. [This](https://albertino80.github.io/building.html) guide is a good starting point.
+The curl library can be downloaded as pre compiled libraries. Please downlaod the prebuild libraries (curl, OpenSSL, brotli, libssh2, nghttp2, zlib) from [here](https://curl.haxx.se/windows/)
 
-After the library is compiled, the following files have to be copied to `C:\Windows\System32` or to `.\build\`.<br>`libcrypto-1_1.dll, zlibwapi.dll, nghttp2.dll, libssl-1_1.dll, libssh2.dll, libcurl.dll`
+Please copy `libbrotlicommon-static.a`, `libcurl*.dll`, `libnghttp*.a`, `libssh*.dll`,`libssl*.dll`, `libcrypto*.dll` and `libz*.a` to the `.\build\` folder
 
-> _**Note:** If the program is executed from window it throws error about the dll it is missing._
+> _**Note:** This list of libraries will be reminded by executing the program from a window, in the error message._
 
-Also the curl certificate has to be obtained.<br> Downloaded the Windows curl from [curl](https://curl.haxx.se/windows/) and copy the `curl-ca-bundle.crt` to the project folder.
-
-> _**Note:** We do not recommend working with C and REST on windows since building curl takes a lot of effort._
+curl certificate is included in the curl zip file, next to the libcurl*.dll, copy  `curl-ca-bundle.crt` to this project folder.
 
 ### Linux
 
@@ -50,6 +44,11 @@ Install the library via your distributions package manager.
 
 ## Windows
 
-  1. Adapt the file paths in the makefile to your locations for libcurl.
-
+  1. Run the powershell script `configure.ps1` and follow the instructions.
   2. Run the `make` command.
+
+> _**Example:**_
+> ```
+> .\configure.ps1
+> make
+> ```
