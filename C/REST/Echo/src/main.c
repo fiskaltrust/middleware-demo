@@ -56,6 +56,10 @@ char *trim(char *str, const char *seps) {
     return ltrim(rtrim(str, seps), seps);
 }
 
+void rest_to_http(char *URL) {
+    //get "rest" pointer
+}
+
 // https://curl.haxx.se/libcurl/c/CURLOPT_WRITEFUNCTION.html
 size_t write_callback(char *ptr, size_t size, size_t nmemb, struct response *s) {
     size_t new_len = s->len + size*nmemb;
@@ -69,17 +73,6 @@ size_t write_callback(char *ptr, size_t size, size_t nmemb, struct response *s) 
     s->len = new_len;
 
     return size*nmemb;
-}
-
-void add_Qotes(char *body) {
-    body[0] = 34; //ASCII for >"<
-    for(int i = 0; ;i++) {
-        if(body[i] == 0) {
-            body[i] = 34; //ASCII for >"<
-            body[i+1] = 0;
-            break;
-        }
-    }
 }
 
 void get_input(char *ServiceURL, char *cashboxid, char *accesstoken, char *body) {
@@ -113,8 +106,6 @@ void get_input(char *ServiceURL, char *cashboxid, char *accesstoken, char *body)
 
     //if ServiceURL end with '/' -> delete it
     if(ServiceURL[strlen(ServiceURL) -1] == '/') {ServiceURL[strlen(ServiceURL) -1] = 0;}
-
-    //add_Qotes(body);
 }
 
 void send_request(char *ServiceURL, char *cashboxid, char *accesstoken, char *body, struct response *s, int64_t *response_code) {
@@ -128,6 +119,9 @@ void send_request(char *ServiceURL, char *cashboxid, char *accesstoken, char *bo
         //init socket for Windows
         curl_global_init(CURL_GLOBAL_ALL);
     #endif
+
+    //replace "rest" with "http" in ServiceURL
+
 
     //init curl
     curl = curl_easy_init();
