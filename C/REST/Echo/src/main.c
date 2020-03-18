@@ -57,7 +57,9 @@ char *trim(char *str, const char *seps) {
 }
 
 void rest_to_http(char *URL) {
-    //get "rest" pointer
+    char *rest;
+    if ((rest = strstr(URL, "rest")) == NULL) {return;}
+    memcpy(rest, "http", 4);
 }
 
 // https://curl.haxx.se/libcurl/c/CURLOPT_WRITEFUNCTION.html
@@ -75,7 +77,7 @@ size_t write_callback(char *ptr, size_t size, size_t nmemb, struct response *s) 
     return size*nmemb;
 }
 
-void get_input(char *ServiceURL, char *cashboxid, char *accesstoken, char *body) {
+void get_input(char *ServiceURL, char *cashboxid, char *accesstoken, char *body, char *countrycode) {
     
     char buffer[STRING_LENGTH];
     //Getting all the input
@@ -91,6 +93,10 @@ void get_input(char *ServiceURL, char *cashboxid, char *accesstoken, char *body)
     printf("Please enter the accesstoken of the fiskaltrust.CashBox: ");
     fgets(accesstoken,STRING_LENGTH-1,stdin);
 
+    //get countycode
+    printf("Please enter the countycode of the fiskaltrust.CashBox (AT,DE,FR): ");
+    fgets(countrycode,STRING_LENGTH-1,stdin);
+
     //get echo body
     printf("Please enter the body to send in the echo request(no more then %d caracters): ",(STRING_LENGTH-3));
     fgets(buffer,STRING_LENGTH-3,stdin);
@@ -100,6 +106,7 @@ void get_input(char *ServiceURL, char *cashboxid, char *accesstoken, char *body)
     trim(cashboxid, NULL);
     trim(accesstoken, NULL);
     trim(buffer, NULL);
+    trim(countrycode, NULL);
 
     // add quotes to beginning and end of body
     sprintf(body, "\"%s\"",buffer);
@@ -108,7 +115,7 @@ void get_input(char *ServiceURL, char *cashboxid, char *accesstoken, char *body)
     if(ServiceURL[strlen(ServiceURL) -1] == '/') {ServiceURL[strlen(ServiceURL) -1] = 0;}
 }
 
-void send_request(char *ServiceURL, char *cashboxid, char *accesstoken, char *body, struct response *s, int64_t *response_code) {
+void send_request(char *ServiceURL, char *cashboxid, char *accesstoken, char *body, char *countrycode, struct response *s, int64_t *response_code) {
     
     CURL *curl = NULL;
     CURLcode res;
@@ -121,7 +128,7 @@ void send_request(char *ServiceURL, char *cashboxid, char *accesstoken, char *bo
     #endif
 
     //replace "rest" with "http" in ServiceURL
-
+    rest_to_http(ServiceURL);
 
     //init curl
     curl = curl_easy_init();
@@ -132,7 +139,12 @@ void send_request(char *ServiceURL, char *cashboxid, char *accesstoken, char *bo
     #endif
     char requestURL[STRING_LENGTH];
     strcpy(requestURL, ServiceURL);
-    strcat(requestURL, "/json/echo"); //add endpoint
+    if(strcmp(countrycode, "DE") == 0 || strcmp(countrycode, "de") == 0) {
+        strcat(requestURL, "/json/V0/echo"); //add german endpoint
+    }
+    else {
+        strcat(requestURL, "/json/echo"); //add endpoint
+    }
 
     if (curl)
     {
@@ -205,8 +217,9 @@ int main()
     char cashboxid[STRING_LENGTH];
     char accesstoken[STRING_LENGTH];
     char body[STRING_LENGTH];
+    char countrycode[STRING_LENGTH];
 
-    get_input(ServiceURL, cashboxid, accesstoken, body);
+    get_input(ServiceURL, cashboxid, accesstoken, body, countrycode);
 
     //init response struct
     struct response s;
@@ -214,7 +227,7 @@ int main()
 
     int64_t response_code;
 
-    send_request(ServiceURL, cashboxid, accesstoken, body, &s, &response_code);
+    send_request(ServiceURL, cashboxid, accesstoken, body, countrycode, &s, &response_code);
 
     //print Response
     if(s.ptr[0] == 0) {
