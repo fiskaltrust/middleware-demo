@@ -114,7 +114,7 @@ void get_input(char *ServiceURL, char *cashboxid, char *accesstoken, char *body)
     //if ServiceURL end with '/' -> delete it
     if(ServiceURL[strlen(ServiceURL) -1] == '/') {ServiceURL[strlen(ServiceURL) -1] = 0;}
 
-    add_Qotes(body);
+    //add_Qotes(body);
 }
 
 void send_request(char *ServiceURL, char *cashboxid, char *accesstoken, char *body, struct response *s, int64_t *response_code) {
