@@ -10,12 +10,20 @@ Begin VB.Form echo
    ScaleWidth      =   14790
    StartUpPosition =   3  'Windows Default
    Begin VB.ComboBox ComboCC 
-      Height          =   315
+      Height          =   280
       Left            =   720
       TabIndex        =   12
       Text            =   "DE"
-      Top             =   4920
+      Top             =   5040
       Width           =   855
+   End
+   Begin VB.Frame Frame5 
+      Caption         =   "Country"
+      Height          =   610
+      Left            =   600
+      TabIndex        =   13
+      Top             =   4800
+      Width           =   1090
    End
    Begin VB.CommandButton close 
       Caption         =   "Close"
@@ -135,6 +143,10 @@ Private Sub Form_Load()
 End Sub
 
 Private Function Set_URL(URL As String, endpoint As String) As String
+    If InStr(1, URL, "rest") Then
+        URL = Replace(URL, "rest", "http", 1, -1, vbTextCompare)
+    End If
+    
     Dim ServiceURL As String
     ServiceURL = Trim(URL)
     If Right(ServiceURL, 1) = "/" Then
@@ -153,6 +165,8 @@ Private Sub send_Click()
     Set rest = New WinHttp.WinHttpRequest
     
     'set URL and methode'
+    
+    
     If ComboCC = "DE" Then
         ServiceURL = Set_URL(URL.Text, "json/V0/echo") 'German endpoint'
     Else
@@ -168,7 +182,7 @@ Private Sub send_Click()
     
     'set echo message'
     echo = Trim(Message.Text)
-    rest.send """" & echo & """"
+    rest.Send """" & echo & """"
     
 End Sub
 
