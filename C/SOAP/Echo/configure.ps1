@@ -24,6 +24,10 @@ if(!(Test-Path $(Join-Path -Path $PATH_gSOAP -ChildPath "gsoap"))) {
     Write-Output "gSAOP lib not found at $PATH_gSOAP"
     Exit
 }
+#cut '\' if at the end
+if($PATH_gSOAP.Substring($PATH_gSOAP.get_Length()-1) -eq "\") {
+    $PATH_gSOAP = $PATH_gSOAP.Substring(0,$PATH_gSOAP.get_Length()-1)
+}
 
 #WSDL
 if(!$WSDL_PATH) {
@@ -34,11 +38,6 @@ if(!$WSDL_PATH) {
 if(!(Test-Path $WSDL_PATH)) {
     Write-Output "wsdl file not found at $WSDL_PATH"
     Exit
-}
-
-#cut '\' if at the end
-if($PATH_gSOAP.Substring($PATH_gSOAP.get_Length()-1) -eq "\") {
-    $PATH_gSOAP = $PATH_gSOAP.Substring(0,$PATH_gSOAP.get_Length()-1)
 }
 
 #libwsock32.a
