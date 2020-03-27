@@ -24,7 +24,7 @@
 int64_t cases[ ][3] = {
             //{zero, start, cash}
     /*AT*/{0x4154000000000002,0x4154000000000003,0x4154000000000001},
-    /*DE*/{0x4445000000000002,0x4445000000000003,/*pos OR implicit flag*/0x444500000000001 | 0x0000000100000000},
+    /*DE*/{0x4445000000000002 | 0x0000000100000000,0x4445000000000003 | 0x0000000100000000,0x444500000000001 | 0x0000000100000000}, /*pos OR implicit flag*/
     /*FR*/{0x465200000000000F,0x4652000000000010,0x4652000000000001}
 };
                           //AT undefinded 10% ,DE undefinded 19% ,FR undefinded 10%
@@ -143,7 +143,7 @@ void set_zero_body(struct type_Sign_request *Sign_request,  char *cashBoxId, cha
     Sign_request->data->cbPayItems = calloc(1, sizeof(struct ns3__ArrayOfPayItem));
     Sign_request->data->cbPayItems->__sizePayItem = 1; //One empty Pay Item
 
-    Sign_request->data->ftReceiptCase = calloc(1, sizeof(int64_t));
+    //Sign_request->data->ftReceiptCase;// = (int64_t)calloc(1, sizeof(int64_t));
 
     //Set data
     strcpy(Sign_request->data->ftCashBoxID, cashBoxId);
@@ -176,7 +176,6 @@ void set_cash_body(struct type_Sign_request *Sign_request,  char *cashBoxId,  ch
     Sign_request->data->cbChargeItems->ChargeItem->Description = calloc(128, sizeof(char));
     Sign_request->data->cbChargeItems->ChargeItem->Amount = calloc(128, sizeof(char));
     Sign_request->data->cbChargeItems->ChargeItem->VATRate = calloc(128, sizeof(char));
-    Sign_request->data->cbChargeItems->ChargeItem->ftChargeItemCase = calloc(1, sizeof(int64_t));
     Sign_request->data->cbChargeItems->ChargeItem->ProductNumber = calloc(128, sizeof(char));
 
     Sign_request->data->cbPayItems = calloc(1, sizeof(struct ns3__ArrayOfPayItem));
@@ -186,9 +185,6 @@ void set_cash_body(struct type_Sign_request *Sign_request,  char *cashBoxId,  ch
     Sign_request->data->cbPayItems->PayItem->Quantity = calloc(128, sizeof(char));
     Sign_request->data->cbPayItems->PayItem->Description = calloc(128, sizeof(char));
     Sign_request->data->cbPayItems->PayItem->Amount = calloc(128, sizeof(char));
-    Sign_request->data->cbPayItems->PayItem->ftPayItemCase = calloc(1, sizeof(int64_t));
-
-    Sign_request->data->ftReceiptCase = calloc(1, sizeof(int64_t));
 
     // Set data
     //Receipt info
@@ -204,8 +200,8 @@ void set_cash_body(struct type_Sign_request *Sign_request,  char *cashBoxId,  ch
     strcpy(Sign_request->data->cbChargeItems->ChargeItem->Description, "Food");
     strcpy(Sign_request->data->cbChargeItems->ChargeItem->Amount, "5.0");
     strcpy(Sign_request->data->cbChargeItems->ChargeItem->VATRate, "10.0");
-    Sign_request->data->cbChargeItems->ChargeItem->ftChargeItemCase =  ChargeItemCase[country_index];
     strcpy(Sign_request->data->cbChargeItems->ChargeItem->ProductNumber, "1");
+    Sign_request->data->cbChargeItems->ChargeItem->ftChargeItemCase =  ChargeItemCase[country_index];
 
     //Pay Item
     strcpy(Sign_request->data->cbPayItems->PayItem->Quantity, "10.0");
