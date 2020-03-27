@@ -9,10 +9,18 @@ Begin VB.Form echo
    ScaleHeight     =   5880
    ScaleWidth      =   14790
    StartUpPosition =   3  'Windows Default
+   Begin VB.ComboBox ComboCC 
+      Height          =   315
+      Left            =   720
+      TabIndex        =   12
+      Text            =   "DE"
+      Top             =   4920
+      Width           =   855
+   End
    Begin VB.CommandButton close 
       Caption         =   "Close"
       Height          =   615
-      Left            =   480
+      Left            =   6600
       TabIndex        =   11
       Top             =   4800
       Width           =   2175
@@ -89,7 +97,7 @@ Begin VB.Form echo
    Begin VB.CommandButton send 
       Caption         =   "Send request"
       Height          =   615
-      Left            =   3240
+      Left            =   3120
       TabIndex        =   0
       Top             =   4800
       Width           =   2535
@@ -119,6 +127,11 @@ End Sub
 
 Private Sub Form_Load()
     Set rest = New WinHttp.WinHttpRequest
+    
+    'load colloms for county code selection'
+    ComboCC.AddItem "AT"
+    ComboCC.AddItem "DE"
+    ComboCC.AddItem "FR"
 End Sub
 
 Private Function Set_URL(URL As String, endpoint As String) As String
@@ -140,7 +153,12 @@ Private Sub send_Click()
     Set rest = New WinHttp.WinHttpRequest
     
     'set URL and methode'
-    ServiceURL = Set_URL(URL.Text, "json/echo")
+    If ComboCC = "DE" Then
+        ServiceURL = Set_URL(URL.Text, "json/V0/echo") 'German endpoint'
+    Else
+        ServiceURL = Set_URL(URL.Text, "json/echo")
+    End If
+    
     rest.Open "POST", ServiceURL, True
     
     'set headers'
