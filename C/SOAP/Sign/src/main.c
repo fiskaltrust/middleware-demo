@@ -19,6 +19,8 @@
     #define ns3__ArrayOfPayItem ns1__ArrayOfPayItem
     #define ns3__ReceiptRequest ns1__ReceiptRequest
     #define ns3__ArrayOfChargeItem ns1__ArrayOfChargeItem
+    #define ns3__PayItem ns1__PayItem
+    #define ns3__ChargeItem ns1__ChargeItem
 #endif
 
 int64_t cases[ ][3] = {
@@ -180,7 +182,7 @@ void set_cash_body(struct type_Sign_request *Sign_request,  char *cashBoxId,  ch
 
     Sign_request->data->cbPayItems = calloc(1, sizeof(struct ns3__ArrayOfPayItem));
     Sign_request->data->cbPayItems->__sizePayItem = 1; //One Pay Item
-    Sign_request->data->cbPayItems->PayItem = calloc(1, sizeof(struct ns3__ChargeItem));
+    Sign_request->data->cbPayItems->PayItem = calloc(1, sizeof(struct ns3__PayItem));
     
     Sign_request->data->cbPayItems->PayItem->Quantity = calloc(128, sizeof(char));
     Sign_request->data->cbPayItems->PayItem->Description = calloc(128, sizeof(char));
@@ -226,19 +228,19 @@ void print_response(struct type_Sign_response *Sign_response) {
     #ifdef _WIN32 
         printf("ftStat: %I64d\n", Sign_response->SignResult->ftState);
     #else
-        printf("ftStat: %I64lld\n", Sign_response->SignResult->ftState);
+        printf("ftStat: %I64ld\n", Sign_response->SignResult->ftState);
     #endif
     for(int i = 0;i < Sign_response->SignResult->ftSignatures->__sizeSignaturItem; i++) {
         printf("SignaturItem\n");
         #ifdef _WIN32 
             printf("\tftSignatureFormat: %I64d\n",Sign_response->SignResult->ftSignatures->SignaturItem[i].ftSignatureFormat);
         #else
-            printf("\tftSignatureFormat: %I64lld\n",Sign_response->SignResult->ftSignatures->SignaturItem[i].ftSignatureFormat);
+            printf("\tftSignatureFormat: %I64ld\n",Sign_response->SignResult->ftSignatures->SignaturItem[i].ftSignatureFormat);
         #endif
         #ifdef _WIN32 
             printf("\tftSignatureType: %I64d\n",Sign_response->SignResult->ftSignatures->SignaturItem[i].ftSignatureType);
         #else
-            printf("\tftSignatureType: %I64lld\n",Sign_response->SignResult->ftSignatures->SignaturItem[i].ftSignatureType);
+            printf("\tftSignatureType: %I64ld\n",Sign_response->SignResult->ftSignatures->SignaturItem[i].ftSignatureType);
         #endif
         printf("\tCaption: %s\n",Sign_response->SignResult->ftSignatures->SignaturItem[i].Caption);
         printf("\tData: %s\n",Sign_response->SignResult->ftSignatures->SignaturItem[i].Data);
