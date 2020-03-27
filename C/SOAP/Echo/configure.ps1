@@ -36,6 +36,11 @@ if(!(Test-Path $WSDL_PATH)) {
     Exit
 }
 
+#cut '\' if at the end
+if($PATH_gSOAP.Substring($PATH_gSOAP.get_Length()-1) -eq "\") {
+    $PATH_gSOAP = $PATH_gSOAP.Substring(0,$PATH_gSOAP.get_Length()-1)
+}
+
 #libwsock32.a
 if(!$libwsock32_PATH) {
     Write-Output "If you know were your libwsock32.a libray is please enter the path, if not enter nothing and we will look for it"
