@@ -1,6 +1,3 @@
-//#include <stdio.h> /* printf, sprintf */
-//#include <stdlib.h> /* exit, atoi, malloc, free */
-
 #include <inttypes.h> //int64_t
 
 #ifndef CPPHTTPLIB_OPENSSL_SUPPORT
@@ -22,7 +19,7 @@ using json = nlohmann::json;
 vector<vector<int64_t>> cases = {
     //{zero, start, cash}
     /*AT*/ {0x4154000000000002, 0x4154000000000003, 0x4154000000000001},
-    /*DE*/ {0x4445000000000002, 0x4445000000000003, /*pos OR implicit flag*/ 0x444500000000001 | 0x0000000100000000},
+    /*DE*/ {0x4445000000000002 | 0x0000000100000000, 0x4445000000000003 | 0x0000000100000000, 0x444500000000001 | 0x0000000100000000}, /*pos OR implicit flag*/
     /*FR*/ {0x465200000000000F, 0x4652000000000010, 0x4652000000000001}};
 //AT undefinded 10% ,DE undefinded 19% ,FR undefinded 10%
 vector<int64_t> ChargeItemCase = {0x4154000000000001, 0x4445000000000001, 0x4652000000000002};
@@ -44,6 +41,7 @@ std::string &trim(std::string &str, const std::string &chars = "\t\n\v\f\r ") {
     return ltrim(rtrim(str, chars), chars);
 }
 
+/*
 void string_to_UPPERcase(char *target) {
     for (int i = 0; target[i] != 0; i++) {
         if (target[i] <= 'z' && target[i] >= 'a') {
@@ -51,7 +49,7 @@ void string_to_UPPERcase(char *target) {
         } //the differenc from UPPER case to lower case is 32 so we unset the 5th bit
     }
 }
-
+*/
 void get_input(string *ServiceURL, string *cashboxid, string *accesstoken, string *country, string *POSSID, int *receipt) {
 
     string temp;
