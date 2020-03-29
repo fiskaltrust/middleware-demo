@@ -222,7 +222,7 @@ json_object *set_cash_body(char *cashboxid, char *POSsystemID, int64_t receipt_c
     return root;
 }
 
-void send_request(char *ServiceURL, char *cashboxid, char *accesstoken, const char *body, struct response *s, int64_t *response_code) {
+void send_request(char *ServiceURL, char *cashboxid, char *accesstoken, const char *body, char *country, struct response *s, int64_t *response_code) {
     
     CURL *curl = NULL;
     CURLcode res;
@@ -243,7 +243,12 @@ void send_request(char *ServiceURL, char *cashboxid, char *accesstoken, const ch
     #endif
     char requestURL[STRING_LENGTH];
     strcpy(requestURL, ServiceURL);
-    strcat(requestURL, "/json/sign"); //add endpoint
+    if(strcmp(country, "DE") == 0){
+        strcat(requestURL, "/json/V0/sign"); //add german endpoint
+    }else{
+        strcat(requestURL, "/json/sign"); //add endpoint
+    }
+    
 
     if (curl)
     {
@@ -340,8 +345,7 @@ int main()
         body = set_zero_body(cashboxid, POSsystemID, receip_case);
     }
         
-    
-    send_request(ServiceURL, cashboxid, accesstoken, json_object_to_json_string(body), &s, &response_code);
+    send_request(ServiceURL, cashboxid, accesstoken, json_object_to_json_string(body), country, &s, &response_code);
     json_object_put(body);
 
     //print Response

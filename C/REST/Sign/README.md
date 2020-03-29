@@ -14,7 +14,7 @@ This example can be used as a starting point to implement the [fiskaltrust.Inter
 
 ## Toolchain
 
-To compile the example the `C` compiler [`gcc`](https://gcc.gnu.org/install/) and the buildtool [`make`](https://www.gnu.org/software/make/) is needed.
+To compile the example the `C` compiler [`gcc`](https://gcc.gnu.org/install/) and the buildtool [`make`](https://www.gnu.org/software/make/) is needed. To build and install the joson-c library [`cmake`](https://cmake.org/) is also required
 
 > _**Note:** On windows we recommend installing these with a package manager like [scoop](https://scoop.sh/) or [chocolatey](https://chocolatey.org/)_
 

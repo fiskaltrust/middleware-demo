@@ -7,7 +7,7 @@
 
 #define STRING_LENGTH 256
 
-uint64_t journal_array[] = {4707387510509010945 ,5067112530745229313};
+uint64_t journal_array[] = {0x4154000000000001 ,0x4445000000000000 ,0x4652000000000001};
 
 struct response{
   char *ptr;
@@ -59,6 +59,12 @@ char *trim(char *str, const char *seps) {
     return ltrim(rtrim(str, seps), seps);
 }
 
+void rest_to_http(char *URL) {
+    char *rest;
+    if ((rest = strstr(URL, "rest")) == NULL) {return;}
+    memcpy(rest, "http", 4);
+}
+
 // https://curl.haxx.se/libcurl/c/CURLOPT_WRITEFUNCTION.html
 size_t write_callback(char *ptr, size_t size, size_t nmemb, struct response *s) {
     size_t new_len = s->len + size*nmemb;
@@ -98,7 +104,8 @@ void get_input(char *ServiceURL, char *cashboxid, char *accesstoken, char *journ
     //get country Code
     printf("Please choose the journal you want to request\
                                                     \n1: \"AT DEP7\" \"0x4154 0000 0000 0001\"\
-                                                    \n2: \"FR Ticket\" \"0x4652 0000 0000 0001\"\
+                                                    \n2: \"DE Info\" \"0x4445 0000 0000 0000\"\
+                                                    \n3: \"FR Ticket\" \"0x4652 0000 0000 0001\"\
                                                     \n: ");
     fgets(journal,STRING_LENGTH-1,stdin);
 
@@ -134,6 +141,9 @@ void send_request(char *ServiceURL, char *cashboxid, char *accesstoken, struct r
         curl_global_init(CURL_GLOBAL_ALL);
     #endif
 
+    //replace "rest" with "http" in ServiceURL
+    rest_to_http(ServiceURL);
+
     //init curl
     curl = curl_easy_init();
     #ifdef _WIN32
@@ -142,7 +152,12 @@ void send_request(char *ServiceURL, char *cashboxid, char *accesstoken, struct r
     #endif
     char requestURL[STRING_LENGTH], buffer[STRING_LENGTH];
     strcpy(requestURL, ServiceURL);
-    strcat(requestURL, "/json/journal"); //add endpoint
+    if(journal_type == 0x4445000000000000) {
+        strcat(requestURL, "/json/V0/journal"); //add german endpoint
+    }
+    else {
+        strcat(requestURL, "/json/journal"); //add endpoint
+    }
 
     //quert parameter
     sprintf(buffer,"?type=%"PRId64,journal_type);
