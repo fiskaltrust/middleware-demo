@@ -8,6 +8,6 @@ else
 
 main: src/main.c
 	mkdir build -p
-	gcc src/main.c -o build/journal -lcurl
+	gcc src/main.c -o build/sign -lcurl -ljson-c
 
 endif
