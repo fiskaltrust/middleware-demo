@@ -125,10 +125,10 @@ json build_zero_body(string cashboxid, string country, string POSSID, int receip
     root["cbReceiptReference"] = "1";
     root["cbReceiptMoment"] = timestamp;
     root["cbChargeItems"] = json::array();
-    root["cbPayItems"] = json::array();
     root["ftReceiptCase"] = cases[get_conuty_index(country)][receipt - 1];
+    root["cbPayItems"] = json::array();
 
-    cout << root.dump(4);
+    cout << root.dump(4) << endl;
     return root;
 }
 
@@ -176,7 +176,7 @@ json build_cash_body(string cashboxid, string country, string POSSID, int receip
     return root;
 }
 
-void send_request(string *ServiceURL, string *cashboxid, string *accesstoken, string body, string *response, int *response_code) {
+void send_request(string *ServiceURL, string *cashboxid, string *accesstoken, string countrycode, string body, string *response, int *response_code) {
 
     Client *ft;
     Headers head = {
@@ -204,7 +204,13 @@ void send_request(string *ServiceURL, string *cashboxid, string *accesstoken, st
     cout << "performing request... ";
     cout.flush();
 
-    string requestURL = resault.str(4) + "/json/sign";
+    string requestURL;
+    if(countrycode == "de" || countrycode == "DE") {
+        requestURL = resault.str(4) + "/json/V0/sign";
+    }else{
+        requestURL = resault.str(4) + "/json/sign";
+    }
+    
 
     //set path, headers, body, Content-Type | make request
     auto res = ft->Post(requestURL.c_str(), head, body, "application/json");
@@ -236,7 +242,7 @@ int main() {
         request = build_zero_body(cashboxid, country_code, POSSID, receipt);
     }
 
-    send_request(&ServiceURL, &cashboxid, &accesstoken, request.dump(), &response_body, &response_code);
+    send_request(&ServiceURL, &cashboxid, &accesstoken, country_code, request.dump(), &response_body, &response_code);
 
     //print Response
     if (response_code == 0) {

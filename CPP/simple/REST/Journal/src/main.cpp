@@ -15,7 +15,7 @@
 using namespace std;
 using namespace httplib;
 
-vector<uint64_t> journal_list = {4707387510509010945 ,5067112530745229313};
+vector<uint64_t> journal_list = {0x4154000000000001, 0x4445000000000000 ,0x4652000000000001};
 
 std::string &ltrim(std::string &str, const std::string &chars = "\t\n\v\f\r ") {
     str.erase(0, str.find_first_not_of(chars));
@@ -49,7 +49,8 @@ void get_input(string *ServiceURL, string *cashboxid, string *accesstoken, strin
     // Journal typw
     cout << "Please choose the journal you want to request\
             \n1: \"AT DEP7\" \"0x4154 0000 0000 0001\"\
-            \n2: \"FR Ticket\" \"0x4652 0000 0000 0001\"\
+            \n2: \"DE Info\" \"0x4445 0000 0000 0000\"\
+            \n3: \"FR Ticket\" \"0x4652 0000 0000 0001\"\
             \n: ";
     getline(cin, *journal);
 
@@ -111,7 +112,12 @@ void send_request(string *ServiceURL, string *cashboxid, string *accesstoken, ui
     cout << "performing request... ";
     cout.flush();
 
-    string requestURL = resault.str(4) + "/json/journal";
+    string requestURL;
+    if(journal_type == 0x4445000000000000) {/*German endpoint*/
+        requestURL = resault.str(4) + "/json/V0/journal";
+    }else{
+        requestURL = resault.str(4) + "/json/journal";
+    }
 
     //request data
     requestURL += "?type=" + to_string(journal_type) + "&from=0&to=0";

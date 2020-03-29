@@ -6,8 +6,6 @@ An echo request with a custom message is sent to a specified url and CashBox and
 
 This example can be used as a starting point to implement the [fiskaltrust.Interface](https://github.com/fiskaltrust/interface-doc).
 
-> _**Note:** This example has yet not be tested for Germany._
-
 # Requirements
 
 ## Toolchain
@@ -31,6 +29,10 @@ cpp-httplib needs the openssl and zlib library to be able to send secure https r
 please downlaod the prebuild openssl and zlib from [here](https://curl.haxx.se/windows/)
 
 please copy `libssl*.dll`, `libcrypto*.dll` and `zlib*.a` to the `.\build\` folder
+
+Also the Openssl headers are necessary, with are available in the prebuild openssl package.
+
+> _**Note:** The configure script will ask the location of the folder (default: .\lib\openssl)_
 
 ### Linux
 

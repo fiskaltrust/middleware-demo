@@ -98,11 +98,12 @@ void send_request(string *ServiceURL, string *cashboxid, string *accesstoken, st
 
     cout << "performing request... ";
     cout.flush();
+    string requestURL;
 
-    if(country == "DE" || country == "de") {
-        string requestURL = resault.str(4) + "/json/v0/echo";
+    if(*country == "DE" || *country == "de") {
+        requestURL = resault.str(4) + "/json/V0/echo";
     }else{
-        string requestURL = resault.str(4) + "/json/echo";
+        requestURL = resault.str(4) + "/json/echo";
     }
 
     //set path, headers, body, Content-Type | make request
