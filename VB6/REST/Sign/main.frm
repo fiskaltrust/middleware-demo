@@ -1,6 +1,6 @@
 VERSION 5.00
 Begin VB.Form sign 
-   Caption         =   "Form1"
+   Caption         =   "fiskaltrust.service VB6 sign example"
    ClientHeight    =   6220
    ClientLeft      =   170
    ClientTop       =   560
@@ -260,8 +260,6 @@ Private Function create_ftstate_dictionary(PayItemCase As Dictionary)
 End Function
 
 Private Sub Form_Load()
-    output.Text = (Now - DateSerial(1970, 1, 1)) * 86400
-
     Set rest = New WinHttp.WinHttpRequest
     
     'load colloms for county code selection'
@@ -324,13 +322,13 @@ Private Function init_zero(receipt_case As Variant) As Dictionary 'zero and star
     Set PayItem = New Collection
     
     'fill dictionary with content
-    sign.add "ftcashboxid", Trim(cashboxid.Text)
+    sign.add "ftCashBoxID", Trim(cashboxid.Text)
     sign.add "ftPosSystemId", Trim(POSSID.Text)
     sign.add "cbTerminalID", "1"
     sign.add "cbReceiptReference", "1"
     sign.add "cbChargeItems", ChargeItem
     sign.add "cbPayItems", PayItem
-    sign.add "cbReceiptMoment", (Now - DateSerial(1970, 1, 1)) * 86400
+    sign.add "cbReceiptMoment", "/Date(" & (Now - DateSerial(1970, 1, 1)) * 86400 & ")/"
     sign.add "ftReceiptCase", receipt_case
     
     Set init_zero = sign
@@ -370,13 +368,13 @@ Private Function init_sign(receipt_case As Variant) As Dictionary
     PayItems.add PayItem
     
     'fill dictionary with content
-    sign.add "ftcashboxid", Trim(cashboxid.Text)
+    sign.add "ftCashBoxID", Trim(cashboxid.Text)
     sign.add "ftPosSystemId", Trim(POSSID.Text)
     sign.add "cbTerminalID", "1"
     sign.add "cbReceiptReference", "1"
     sign.add "cbChargeItems", ChargeItems
     sign.add "cbPayItems", PayItems
-    sign.add "cbReceiptMoment", (Now - DateSerial(1970, 1, 1)) * 86400
+    sign.add "cbReceiptMoment", "/Date(" & (Now - DateSerial(1970, 1, 1)) * 86400 & ")/"
     sign.add "ftReceiptCase", receipt_case
     
     Set init_sign = sign
@@ -491,17 +489,8 @@ Private Sub rest_OnResponseFinished()
         'print one object of journal response'
         If Not response Is Nothing And response.Exists("ftState") Then
             output.Text = output.Text & "State: " & response.Item("ftState") & vbCrLf
-            For Each Signature In response.Item("ftSignatures")
-                output.Text = output.Text & "Signature: " & Signature.Item("data") & vbCrLf
-            Next
-            'check ftState
-            If response.Item("ftState") = ftstate.Item(ComboCC.Text).Item("ready") Then
-                'do something
-            End If
-            
-        Else
-            output.Text = output.Text & "Body:" & vbCrLf & rest.ResponseText
         End If
+        output.Text = output.Text & "Body:" & vbCrLf & rest.ResponseText
     Else
         output.Text = output.Text & vbCrLf & rest.ResponseText
     End If

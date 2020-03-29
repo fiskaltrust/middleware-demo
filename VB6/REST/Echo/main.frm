@@ -1,6 +1,6 @@
 VERSION 5.00
 Begin VB.Form echo 
-   Caption         =   "Form1"
+   Caption         =   "fiskaltrust.service VB6 echo example"
    ClientHeight    =   5880
    ClientLeft      =   60
    ClientTop       =   450

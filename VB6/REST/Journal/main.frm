@@ -1,7 +1,7 @@
 VERSION 5.00
 Begin VB.Form journal 
    AutoRedraw      =   -1  'True
-   Caption         =   "Form1"
+   Caption         =   "fiskaltrust.service VB6 journal example"
    ClientHeight    =   6220
    ClientLeft      =   170
    ClientTop       =   560
@@ -188,7 +188,7 @@ Private Sub send_Click()
     rest.SetRequestHeader "accesstoken", Trim(accesstoken.Text)
     
     'send journal request'
-    rest.send ""
+    rest.Send ""
     output.Text = "Request sent" & vbCrLf
      
 End Sub
