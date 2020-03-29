@@ -70,6 +70,12 @@ char *trim(char *str, const char *seps) {
     return ltrim(rtrim(str, seps), seps);
 }
 
+void rest_to_http(char *URL) {
+    char *rest;
+    if ((rest = strstr(URL, "rest")) == NULL) {return;}
+    memcpy(rest, "http", 4);
+}
+
 // https://curl.haxx.se/libcurl/c/CURLOPT_WRITEFUNCTION.html
 size_t write_callback(char *ptr, size_t size, size_t nmemb, struct response *s) {
     size_t new_len = s->len + size*nmemb;
@@ -233,6 +239,9 @@ void send_request(char *ServiceURL, char *cashboxid, char *accesstoken, const ch
         //init socket for Windows
         curl_global_init(CURL_GLOBAL_ALL);
     #endif
+
+    //replace "rest" with "http" in ServiceURL
+    rest_to_http(ServiceURL);
 
     //init curl
     curl = curl_easy_init();

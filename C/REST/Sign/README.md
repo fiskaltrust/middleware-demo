@@ -14,7 +14,7 @@ This example can be used as a starting point to implement the [fiskaltrust.Inter
 
 ## Toolchain
 
-To compile the example the `C` compiler [`gcc`](https://gcc.gnu.org/install/) and the buildtool [`make`](https://www.gnu.org/software/make/) is needed. To build and install the joson-c library [`cmake`](https://cmake.org/) is also required
+To compile the example the `C` compiler [`gcc`](https://gcc.gnu.org/install/) and the buildtool [`make`](https://www.gnu.org/software/make/) is needed.
 
 > _**Note:** On windows we recommend installing these with a package manager like [scoop](https://scoop.sh/) or [chocolatey](https://chocolatey.org/)_
 
@@ -50,7 +50,7 @@ Install the library via your distributions package manager.
 
 ### Windows
 
-Build the library using the following commands:
+Build the library open the VS 2015 command prompt, navigate to the json-c folder and using the following commands:
 
 ```
 mkdir build
