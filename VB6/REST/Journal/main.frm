@@ -1,14 +1,14 @@
 VERSION 5.00
 Begin VB.Form journal 
    AutoRedraw      =   -1  'True
-   Caption         =   "Form1"
-   ClientHeight    =   6225
-   ClientLeft      =   165
-   ClientTop       =   555
-   ClientWidth     =   18615
+   Caption         =   "fiskaltrust.service VB6 journal example"
+   ClientHeight    =   6220
+   ClientLeft      =   170
+   ClientTop       =   560
+   ClientWidth     =   18610
    LinkTopic       =   "Form1"
-   ScaleHeight     =   6225
-   ScaleWidth      =   18615
+   ScaleHeight     =   6220
+   ScaleWidth      =   18610
    StartUpPosition =   3  'Windows Default
    Begin VB.Frame Frame5 
       Caption         =   "Journal Type"
@@ -121,7 +121,7 @@ End Sub
 
 Private Function create_journalcase_dictionary(journalCase As Dictionary)
     journalCase.Add "AT DEP7", (CDec(&H4154) * (16 ^ 12)) + 1
-    'journalCase.Add "DE ", CDec(&H4445) * (16 ^ 12) 'not yet implemented but should work the same
+    journalCase.Add "DE Info", CDec(&H4445) * (16 ^ 12)
     journalCase.Add "FR Ticket", CDec(&H4652) * (16 ^ 12) + 1
     
 End Function
@@ -131,6 +131,7 @@ Private Sub Form_Load()
     
     'load colloms for county code selection'
     ComboCC.AddItem "AT DEP7"
+    ComboCC.AddItem "DE Info"
     ComboCC.AddItem "FR Ticket"
     
     'set values for journalType'
@@ -141,6 +142,10 @@ Private Sub Form_Load()
 End Sub
 
 Private Function Set_URL(URL As String, endpoint As String) As String
+    If InStr(1, URL, "rest") Then
+        URL = Replace(URL, "rest", "http", 1, -1, vbTextCompare)
+    End If
+
     Dim ServiceURL As String
     ServiceURL = Trim(URL)
     If Right(ServiceURL, 1) = "/" Then
@@ -165,7 +170,12 @@ Private Sub send_Click()
     Set rest = New WinHttp.WinHttpRequest
     
     'Set Methode and Add Parameter to URL'
-    ServiceURL = Set_URL(URL.Text, "json/journal")
+    If ComboCC.Text = "DE Info" Then
+        ServiceURL = Set_URL(URL.Text, "json/V0/journal") 'German endpoint'
+    Else
+        ServiceURL = Set_URL(URL.Text, "json/journal")
+    End If
+    
     ServiceURL = ServiceURL & "?type=" & journalCase.Item(ComboCC.Text)
     ServiceURL = ServiceURL & "&from=0&to=0"
     
@@ -178,7 +188,7 @@ Private Sub send_Click()
     rest.SetRequestHeader "accesstoken", Trim(accesstoken.Text)
     
     'send journal request'
-    rest.send ""
+    rest.Send ""
     output.Text = "Request sent" & vbCrLf
      
 End Sub
