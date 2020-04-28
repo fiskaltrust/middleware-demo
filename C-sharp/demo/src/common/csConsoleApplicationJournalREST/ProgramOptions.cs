@@ -25,6 +25,15 @@ namespace csConsoleApplicationJournalREST
         [Option(longName: "json", Required = true, HelpText = "Is the serialization in JSON format (true) or XML format (false).")]
         public bool? json { get; set; }
 
+        [Option(longName: "readcount", Required = false, HelpText = "Starting number of items to be requested for chunking. (min. value: 100; max. value: long.MaxValue; default: 1000)")]
+        public long readcount { get; set; } = 1000;
+
+        [Option(longName: "timeout", Required = false, HelpText = "Timeout in ms for the REST call. (default: 100000)")]
+        public int timeout { get; set; } = 100000;
+
+        [Option(longName: "serviceversion", Required = false, HelpText = "Service version to be used. (default: 1.2)")]
+        public string serviceversion { get; set; } = "1.2";
+
         public const int MaxParamValueLength = 8 * 1024;
 
         public static ProgramOptions GetOptionsFromCommandLine(string[] args)
