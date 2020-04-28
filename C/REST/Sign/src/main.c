@@ -11,7 +11,7 @@
 int64_t cases[ ][3] = {
             //{zero, start, cash}
     /*AT*/{0x4154000000000002,0x4154000000000003,0x4154000000000001},
-    /*DE*/{0x4445000000000002,0x4445000000000003,/*pos OR implicit flag*/0x444500000000001 | 0x0000000100000000},
+    /*DE*/{0x4445000000000002 | 0x0000000100000000,0x4445000000000003 | 0x0000000100000000, 0x444500000000001 | 0x0000000100000000}, /*pos OR implicit flag*/
     /*FR*/{0x465200000000000F,0x4652000000000010,0x4652000000000001}
 };
                           //AT undefinded 10% ,DE undefinded 19% ,FR undefinded 10%
@@ -68,6 +68,12 @@ char *rtrim(char *str, const char *seps) {
 
 char *trim(char *str, const char *seps) {
     return ltrim(rtrim(str, seps), seps);
+}
+
+void rest_to_http(char *URL) {
+    char *rest;
+    if ((rest = strstr(URL, "rest")) == NULL) {return;}
+    memcpy(rest, "http", 4);
 }
 
 // https://curl.haxx.se/libcurl/c/CURLOPT_WRITEFUNCTION.html
@@ -222,7 +228,7 @@ json_object *set_cash_body(char *cashboxid, char *POSsystemID, int64_t receipt_c
     return root;
 }
 
-void send_request(char *ServiceURL, char *cashboxid, char *accesstoken, const char *body, struct response *s, int64_t *response_code) {
+void send_request(char *ServiceURL, char *cashboxid, char *accesstoken, const char *body, char *country, struct response *s, int64_t *response_code) {
     
     CURL *curl = NULL;
     CURLcode res;
@@ -234,6 +240,9 @@ void send_request(char *ServiceURL, char *cashboxid, char *accesstoken, const ch
         curl_global_init(CURL_GLOBAL_ALL);
     #endif
 
+    //replace "rest" with "http" in ServiceURL
+    rest_to_http(ServiceURL);
+
     //init curl
     curl = curl_easy_init();
     
@@ -243,7 +252,12 @@ void send_request(char *ServiceURL, char *cashboxid, char *accesstoken, const ch
     #endif
     char requestURL[STRING_LENGTH];
     strcpy(requestURL, ServiceURL);
-    strcat(requestURL, "/json/sign"); //add endpoint
+    if(strcmp(country, "DE") == 0){
+        strcat(requestURL, "/json/V0/sign"); //add german endpoint
+    }else{
+        strcat(requestURL, "/json/sign"); //add endpoint
+    }
+    
 
     if (curl)
     {
@@ -340,8 +354,7 @@ int main()
         body = set_zero_body(cashboxid, POSsystemID, receip_case);
     }
         
-    
-    send_request(ServiceURL, cashboxid, accesstoken, json_object_to_json_string(body), &s, &response_code);
+    send_request(ServiceURL, cashboxid, accesstoken, json_object_to_json_string(body), country, &s, &response_code);
     json_object_put(body);
 
     //print Response

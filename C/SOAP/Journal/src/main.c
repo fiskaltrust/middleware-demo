@@ -7,7 +7,7 @@
 
 #define STRING_LENGTH 256
 
-uint64_t journal_array[] = {4707387510509010945 ,5067112530745229313};
+uint64_t journal_array[] = {0x4154000000000001 ,0x4445000000000000 ,0x4652000000000001};
 
 #ifdef _WIN32
     #define type_Journal_request _ns1__Journal
@@ -77,7 +77,8 @@ void get_input(char *ServiceURL, char *journal) {
     // get journal type
     printf("Please choose the journal you want to request\
                                                     \n1: \"AT DEP7\" \"0x4154 0000 0000 0001\"\
-                                                    \n2: \"FR Ticket\" \"0x4652 0000 0000 0001\"\
+                                                    \n2: \"DE Info\" \"0x4445 0000 0000 0000\"\
+                                                    \n3: \"FR Ticket\" \"0x4652 0000 0000 0001\"\
                                                     \n: ");
     fgets(journal,STRING_LENGTH-1,stdin);
 

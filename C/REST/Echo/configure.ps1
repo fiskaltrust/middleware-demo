@@ -31,6 +31,7 @@ $VARS = "CFLAGS = -I$PATH_libcurl"
 $VARS += "\include"
 
 $OUT = "$VARS`n`n$IN"
+Remove-Item Makefile
 Out-File -FilePath .\Makefile -InputObject $OUT -Encoding utf8
 
 Write-Output "Configuration sucessfull"

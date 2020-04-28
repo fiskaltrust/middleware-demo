@@ -50,7 +50,7 @@ Install the library via your distributions package manager.
 
 ### Windows
 
-Build the library using the following commands:
+Build the library open the VS 2015 command prompt, navigate to the json-c folder and using the following commands:
 
 ```
 mkdir build
