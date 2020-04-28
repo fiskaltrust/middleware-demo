@@ -1,6 +1,6 @@
 VERSION 5.00
 Begin VB.Form echo 
-   Caption         =   "Form1"
+   Caption         =   "fiskaltrust.service VB6 echo example"
    ClientHeight    =   5880
    ClientLeft      =   60
    ClientTop       =   450
@@ -9,10 +9,26 @@ Begin VB.Form echo
    ScaleHeight     =   5880
    ScaleWidth      =   14790
    StartUpPosition =   3  'Windows Default
+   Begin VB.ComboBox ComboCC 
+      Height          =   280
+      Left            =   720
+      TabIndex        =   12
+      Text            =   "DE"
+      Top             =   5040
+      Width           =   855
+   End
+   Begin VB.Frame Frame5 
+      Caption         =   "Country"
+      Height          =   610
+      Left            =   600
+      TabIndex        =   13
+      Top             =   4800
+      Width           =   1090
+   End
    Begin VB.CommandButton close 
       Caption         =   "Close"
       Height          =   615
-      Left            =   480
+      Left            =   6600
       TabIndex        =   11
       Top             =   4800
       Width           =   2175
@@ -89,7 +105,7 @@ Begin VB.Form echo
    Begin VB.CommandButton send 
       Caption         =   "Send request"
       Height          =   615
-      Left            =   3240
+      Left            =   3120
       TabIndex        =   0
       Top             =   4800
       Width           =   2535
@@ -119,9 +135,18 @@ End Sub
 
 Private Sub Form_Load()
     Set rest = New WinHttp.WinHttpRequest
+    
+    'load colloms for county code selection'
+    ComboCC.AddItem "AT"
+    ComboCC.AddItem "DE"
+    ComboCC.AddItem "FR"
 End Sub
 
 Private Function Set_URL(URL As String, endpoint As String) As String
+    If InStr(1, URL, "rest") Then
+        URL = Replace(URL, "rest", "http", 1, -1, vbTextCompare)
+    End If
+    
     Dim ServiceURL As String
     ServiceURL = Trim(URL)
     If Right(ServiceURL, 1) = "/" Then
@@ -140,7 +165,14 @@ Private Sub send_Click()
     Set rest = New WinHttp.WinHttpRequest
     
     'set URL and methode'
-    ServiceURL = Set_URL(URL.Text, "json/echo")
+    
+    
+    If ComboCC = "DE" Then
+        ServiceURL = Set_URL(URL.Text, "json/V0/echo") 'German endpoint'
+    Else
+        ServiceURL = Set_URL(URL.Text, "json/echo")
+    End If
+    
     rest.Open "POST", ServiceURL, True
     
     'set headers'
@@ -150,7 +182,7 @@ Private Sub send_Click()
     
     'set echo message'
     echo = Trim(Message.Text)
-    rest.send """" & echo & """"
+    rest.Send """" & echo & """"
     
 End Sub
 

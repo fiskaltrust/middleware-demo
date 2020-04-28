@@ -1,13 +1,13 @@
 VERSION 5.00
 Begin VB.Form sign 
-   Caption         =   "Form1"
-   ClientHeight    =   6225
-   ClientLeft      =   165
-   ClientTop       =   555
-   ClientWidth     =   14925
+   Caption         =   "fiskaltrust.service VB6 sign example"
+   ClientHeight    =   6220
+   ClientLeft      =   170
+   ClientTop       =   560
+   ClientWidth     =   14920
    LinkTopic       =   "Form1"
-   ScaleHeight     =   6225
-   ScaleWidth      =   14925
+   ScaleHeight     =   6220
+   ScaleWidth      =   14920
    StartUpPosition =   3  'Windows Default
    Begin VB.Frame Frame4 
       Caption         =   "POS System ID"
@@ -169,9 +169,9 @@ Private Function create_receiptcase_dictionary(signCase As Dictionary)
     
     Dim DE_cases As New Dictionary
     DE_cases.add "unknown", CDec(CDec(&H4445) * (16 ^ 12))
-    DE_cases.add "pos_receipt", CDec(CDec(&H4445) * (16 ^ 12)) + 1
     DE_cases.add "zero_receipt", CDec(CDec(&H4445) * (16 ^ 12)) + 2
     DE_cases.add "start_receipt", CDec(CDec(&H4445) * (16 ^ 12)) + 3
+    DE_cases.add "pos_receipt", CDec(CDec(&H4445) * (16 ^ 12)) + 1
     
     Dim DE_flags As New Dictionary
     DE_flags.add "implicit", CDec(CDec(&H10000) * (16 ^ 4))
@@ -279,14 +279,29 @@ Private Sub Form_Load()
      
 End Sub
 
+Private Function Set_URL(URL As String, endpoint As String) As String
+    If InStr(1, URL, "rest") Then
+        URL = Replace(URL, "rest", "http", 1, -1, vbTextCompare)
+    End If
+
+    Dim ServiceURL As String
+    ServiceURL = Trim(URL)
+    If Right(ServiceURL, 1) = "/" Then
+        Set_URL = ServiceURL & endpoint
+    Else
+        Set_URL = ServiceURL & "/" & endpoint
+    End If
+End Function
+
 Private Function set_request_parameter()
     'Set Methode and Add Parameter to URL'
     Dim ServiceURL As String
     ServiceURL = Trim(URL.Text)
-    If Right(ServiceURL, 1) = "/" Then
-        ServiceURL = ServiceURL & "json/sign"
+    
+    If ComboCC.Text = "DE" Then
+        ServiceURL = Set_URL(ServiceURL, "json/V0/sign")
     Else
-        ServiceURL = ServiceURL & "/" & "json/sign"
+        ServiceURL = Set_URL(ServiceURL, "json/sign")
     End If
     
     'set URL and methode'
@@ -307,13 +322,13 @@ Private Function init_zero(receipt_case As Variant) As Dictionary 'zero and star
     Set PayItem = New Collection
     
     'fill dictionary with content
-    sign.add "ftcashboxid", Trim(cashboxid.Text)
+    sign.add "ftCashBoxID", Trim(cashboxid.Text)
     sign.add "ftPosSystemId", Trim(POSSID.Text)
     sign.add "cbTerminalID", "1"
     sign.add "cbReceiptReference", "1"
     sign.add "cbChargeItems", ChargeItem
     sign.add "cbPayItems", PayItem
-    sign.add "cbReceiptMoment", Format(Now, "mm/dd/yyyy") & "Z" & Format(Now, "hh:mm:ss")
+    sign.add "cbReceiptMoment", "/Date(" & (Now - DateSerial(1970, 1, 1)) * 86400 & ")/"
     sign.add "ftReceiptCase", receipt_case
     
     Set init_zero = sign
@@ -353,13 +368,13 @@ Private Function init_sign(receipt_case As Variant) As Dictionary
     PayItems.add PayItem
     
     'fill dictionary with content
-    sign.add "ftcashboxid", Trim(cashboxid.Text)
+    sign.add "ftCashBoxID", Trim(cashboxid.Text)
     sign.add "ftPosSystemId", Trim(POSSID.Text)
     sign.add "cbTerminalID", "1"
     sign.add "cbReceiptReference", "1"
     sign.add "cbChargeItems", ChargeItems
     sign.add "cbPayItems", PayItems
-    sign.add "cbReceiptMoment", Format(Now, "mm/dd/yyyy") & "Z" & Format(Now, "hh:mm:ss")
+    sign.add "cbReceiptMoment", "/Date(" & (Now - DateSerial(1970, 1, 1)) * 86400 & ")/"
     sign.add "ftReceiptCase", receipt_case
     
     Set init_sign = sign
@@ -378,7 +393,7 @@ Private Sub cmdZero_Click()
     set_request_parameter
     
     'set JSON content
-    Set sign = init_zero(signCase.Item(ComboCC.Text).Item("case").Item("zero_receipt"))
+    Set sign = init_zero(flag(signCase.Item(ComboCC.Text).Item("case").Item("zero_receipt"), signCase.Item(ComboCC.Text).Item("flag").Item("implicit")))
     
     'send sign request'
     output.Text = "Request sent" & vbCrLf
@@ -398,7 +413,7 @@ Private Sub cmdStart_Click()
     set_request_parameter
     
     'set JSON content
-    Set sign = init_zero(signCase.Item(ComboCC.Text).Item("case").Item("start_receipt"))
+    Set sign = init_zero(flag(signCase.Item(ComboCC.Text).Item("case").Item("start_receipt"), signCase.Item(ComboCC.Text).Item("flag").Item("implicit")))
     
     'send sign request'
     output.Text = "Request sent" & vbCrLf
@@ -413,8 +428,6 @@ Private Sub cmdCash_Click()
     accesstoken.Locked = True
     ComboCC.Locked = True
     
-    'set URL and Header
-    set_request_parameter
     
     'set JSON content
     If ComboCC.Text = "DE" Then
@@ -422,6 +435,9 @@ Private Sub cmdCash_Click()
     Else
         Set sign = init_sign(signCase.Item(ComboCC.Text).Item("case").Item("cash_transaction"))
     End If
+    
+    'set URL and Header
+    set_request_parameter
     
     'send sign request'
     output.Text = "Request sent" & vbCrLf
@@ -473,17 +489,10 @@ Private Sub rest_OnResponseFinished()
         'print one object of journal response'
         If Not response Is Nothing And response.Exists("ftState") Then
             output.Text = output.Text & "State: " & response.Item("ftState") & vbCrLf
-            For Each Signature In response.Item("ftSignatures")
-                output.Text = output.Text & "Signature: " & Signature.Item("data") & vbCrLf
-            Next
-            'check ftState
-            If response.Item("ftState") = ftstate.Item(ComboCC.Text).Item("ready") Then
-                'do something
-            End If
-            
-        Else
-            output.Text = output.Text & "Body:" & vbCrLf & rest.ResponseText
         End If
+        output.Text = output.Text & "Body:" & vbCrLf & rest.ResponseText
+    Else
+        output.Text = output.Text & vbCrLf & rest.ResponseText
     End If
     'destroy sign
     Set sign = Nothing

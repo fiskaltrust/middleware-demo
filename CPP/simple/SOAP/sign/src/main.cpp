@@ -1,9 +1,6 @@
 #include <BasicHttpBinding_USCOREIPOS.nsmap>
-#ifdef _WIN32
-    #include <soapBasicHttpBinding_USCOREIPOSProxy.h>
-#else
-    #include <soapH.h>
-#endif
+#include <soapH.h>
+
 #include <inttypes.h> //int64_t, uint64_t
 #include <iostream>
 #include <algorithm> // for_each
@@ -53,7 +50,7 @@ using namespace std;
 vector<vector<int64_t>> cases = {
             //{zero, start, cash}
     /*AT*/{0x4154000000000002,0x4154000000000003,0x4154000000000001},
-    /*DE*/{0x4445000000000002,0x4445000000000003,/*pos OR implicit flag*/0x444500000000001 | 0x0000000100000000},
+    /*DE*/{0x4445000000000002 | 0x0000000100000000,0x4445000000000003 | 0x0000000100000000, 0x444500000000001 | 0x0000000100000000}, /*pos OR implicit flag*/
     /*FR*/{0x465200000000000F,0x4652000000000010,0x4652000000000001}
 };
                                 //AT undefinded 10% ,DE undefinded 19% ,FR undefinded 10%

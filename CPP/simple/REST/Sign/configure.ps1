@@ -6,6 +6,9 @@ param (
     [parameter(HelpMessage="path inside cpp-httplib lib folder (default: .\lib\cpp-httplib)")]
     [string]$PATH_cpp_httplib,
 
+    [parameter(HelpMessage="path inside openssl lib folder (default: .\lib\openssl)")]
+    [string]$PATH_openssl,
+
     [parameter(HelpMessage="path inside json lib folder (default: .\lib\json)")]
     [string]$PATH_json
 )
@@ -21,10 +24,23 @@ if(!(Test-Path -Path $PATH_cpp_httplib)) {
     Write-Output "cpp-httplib lib not found at $PATH_cpp_httplib"
     Exit
 }
-
 #cut '\' if at the end
 if($PATH_cpp_httplib.Substring($PATH_cpp_httplib.get_Length()-1) -eq "\") {
     $PATH_cpp_httplib = $PATH_cpp_httplib.Substring(0,$PATH_cpp_httplib.get_Length()-1)
+}
+
+#openssl
+if(!$PATH_openssl) {
+    $PATH_openssl = Read-Host -Prompt "Please enter path to cpp-httplib lib (default: .\lib\openssl)"
+    if(!($PATH_openssl)) { $PATH_openssl = ".\lib\openssl"}
+}
+if(!(Test-Path -Path $PATH_openssl)) {
+    Write-Output "openssl lib not found at $PATH_openssl"
+    Exit
+}
+#cut '\' if at the end
+if($PATH_openssl.Substring($PATH_openssl.get_Length()-1) -eq "\") {
+    $PATH_openssl = $PATH_openssl.Substring(0,$PATH_openssl.get_Length()-1)
 }
 
 #json
@@ -36,7 +52,6 @@ if(!(Test-Path -Path $PATH_json)) {
     Write-Output "json lib not found at $PATH_json"
     Exit
 }
-
 #cut '\' if at the end
 if($PATH_json.Substring($PATH_json.get_Length()-1) -eq "\") {
     $PATH_json = $PATH_json.Substring(0,$PATH_json.get_Length()-1)
@@ -46,6 +61,7 @@ if($PATH_json.Substring($PATH_json.get_Length()-1) -eq "\") {
 $IN = (Get-Content -Path .\Makefile.in -Raw)
 
 $VARS = "PATH_cpp_httplib = `"$PATH_cpp_httplib`"`n"
+$VARS += "PATH_openssl = `"$PATH_openssl`"`n"
 $VARS += "PATH_json = `"$PATH_json`""
 
 $OUT = "$VARS`n`n$IN"

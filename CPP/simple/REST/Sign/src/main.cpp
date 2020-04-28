@@ -1,6 +1,3 @@
-//#include <stdio.h> /* printf, sprintf */
-//#include <stdlib.h> /* exit, atoi, malloc, free */
-
 #include <inttypes.h> //int64_t
 
 #ifndef CPPHTTPLIB_OPENSSL_SUPPORT
@@ -22,7 +19,7 @@ using json = nlohmann::json;
 vector<vector<int64_t>> cases = {
     //{zero, start, cash}
     /*AT*/ {0x4154000000000002, 0x4154000000000003, 0x4154000000000001},
-    /*DE*/ {0x4445000000000002, 0x4445000000000003, /*pos OR implicit flag*/ 0x444500000000001 | 0x0000000100000000},
+    /*DE*/ {0x4445000000000002 | 0x0000000100000000, 0x4445000000000003 | 0x0000000100000000, 0x444500000000001 | 0x0000000100000000}, /*pos OR implicit flag*/
     /*FR*/ {0x465200000000000F, 0x4652000000000010, 0x4652000000000001}};
 //AT undefinded 10% ,DE undefinded 19% ,FR undefinded 10%
 vector<int64_t> ChargeItemCase = {0x4154000000000001, 0x4445000000000001, 0x4652000000000002};
@@ -44,6 +41,7 @@ std::string &trim(std::string &str, const std::string &chars = "\t\n\v\f\r ") {
     return ltrim(rtrim(str, chars), chars);
 }
 
+/*
 void string_to_UPPERcase(char *target) {
     for (int i = 0; target[i] != 0; i++) {
         if (target[i] <= 'z' && target[i] >= 'a') {
@@ -51,7 +49,7 @@ void string_to_UPPERcase(char *target) {
         } //the differenc from UPPER case to lower case is 32 so we unset the 5th bit
     }
 }
-
+*/
 void get_input(string *ServiceURL, string *cashboxid, string *accesstoken, string *country, string *POSSID, int *receipt) {
 
     string temp;
@@ -127,10 +125,10 @@ json build_zero_body(string cashboxid, string country, string POSSID, int receip
     root["cbReceiptReference"] = "1";
     root["cbReceiptMoment"] = timestamp;
     root["cbChargeItems"] = json::array();
-    root["cbPayItems"] = json::array();
     root["ftReceiptCase"] = cases[get_conuty_index(country)][receipt - 1];
+    root["cbPayItems"] = json::array();
 
-    cout << root.dump(4);
+    cout << root.dump(4) << endl;
     return root;
 }
 
@@ -178,14 +176,14 @@ json build_cash_body(string cashboxid, string country, string POSSID, int receip
     return root;
 }
 
-void send_request(string *ServiceURL, string *cashboxid, string *accesstoken, string body, string *response, int *response_code) {
+void send_request(string *ServiceURL, string *cashboxid, string *accesstoken, string countrycode, string body, string *response, int *response_code) {
 
     Client *ft;
     Headers head = {
         {"cashboxid", cashboxid->c_str()},
         {"accesstoken", accesstoken->c_str()}};
 
-    regex expression("^(https?):\\/\\/([^\\/:]*)(?::([0-9]+))?(\\/.*)?$");
+    regex expression("^(https?|rest):\\/\\/([^\\/:]*)(?::([0-9]+))?(\\/.*)?$");
     smatch resault;
 
     //get parts of the Service URL
@@ -193,7 +191,7 @@ void send_request(string *ServiceURL, string *cashboxid, string *accesstoken, st
     //| 1 |  |   2    || 3 |  4
     regex_search(*ServiceURL, resault, expression);
 
-    if (resault.str(1) == "http") { //unsecure Client
+    if(resault.str(1) == "http" || resault.str(1) == "rest") { //unsecure Client
         ft = new Client(resault.str(2), stoi(resault.str(3)));
     } else if (resault.str(1) == "https") { //secure Client
         ft = new SSLClient(resault.str(2));
@@ -206,7 +204,13 @@ void send_request(string *ServiceURL, string *cashboxid, string *accesstoken, st
     cout << "performing request... ";
     cout.flush();
 
-    string requestURL = resault.str(4) + "/json/sign";
+    string requestURL;
+    if(countrycode == "de" || countrycode == "DE") {
+        requestURL = resault.str(4) + "/json/V0/sign";
+    }else{
+        requestURL = resault.str(4) + "/json/sign";
+    }
+    
 
     //set path, headers, body, Content-Type | make request
     auto res = ft->Post(requestURL.c_str(), head, body, "application/json");
@@ -238,7 +242,7 @@ int main() {
         request = build_zero_body(cashboxid, country_code, POSSID, receipt);
     }
 
-    send_request(&ServiceURL, &cashboxid, &accesstoken, request.dump(), &response_body, &response_code);
+    send_request(&ServiceURL, &cashboxid, &accesstoken, country_code, request.dump(), &response_body, &response_code);
 
     //print Response
     if (response_code == 0) {

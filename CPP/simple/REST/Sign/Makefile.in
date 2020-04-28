@@ -2,7 +2,7 @@ ifeq ($(OS),Windows_NT) #Windows
 
 sign.exe: src\main.cpp
 	mkdir build || echo "dir exisit"
-	g++ -o build\sign.exe src\main.cpp "$(PATH_cpp_httplib)\out\httplib.cc" -I"$(PATH_cpp_httplib)\out" -I"$(PATH_json)\include" -D CPPHTTPLIB_OPENSSL_SUPPORT -L.\ -l:"$(wildcard ./build/libssl*)" -l:"$(wildcard ./build/libcrypto*)" -lws2_32 -std=c++14 -ggdb 
+	g++ -o build\sign.exe src\main.cpp "$(PATH_cpp_httplib)\out\httplib.cc" -I"$(PATH_cpp_httplib)\out" -I"$(PATH_openssl)/include" -I"$(PATH_json)\include" -D CPPHTTPLIB_OPENSSL_SUPPORT -L.\ -l:"$(wildcard ./build/libssl*)" -l:"$(wildcard ./build/libcrypto*)" -lws2_32 -std=c++14 -ggdb 
 
 else #Linux
 
