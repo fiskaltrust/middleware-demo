@@ -25,6 +25,11 @@ if(!(Test-Path $(Join-Path -Path $PATH_gSOAP -ChildPath "gsoap"))) {
     Exit
 }
 
+#cut '\' if at the end
+if($PATH_gSOAP.Substring($PATH_gSOAP.get_Length()-1) -eq "\") {
+    $PATH_gSOAP = $PATH_gSOAP.Substring(0,$PATH_gSOAP.get_Length()-1)
+}
+
 #WSDL
 if(!$WSDL_PATH) {
     $WSDL_PATH = Read-Host -Prompt "location to WSDL file"

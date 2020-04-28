@@ -29,7 +29,7 @@ std::string &trim(std::string &str, const std::string &chars = "\t\n\v\f\r ") {
     return ltrim(rtrim(str, chars), chars);
 }
 
-void get_input(string *ServiceURL, string *cashboxid, string *accesstoken, string *body) {
+void get_input(string *ServiceURL, string *cashboxid, string *accesstoken, string *body, string *country) {
     
     //Getting all the input
     //ask for Service URL
@@ -44,6 +44,10 @@ void get_input(string *ServiceURL, string *cashboxid, string *accesstoken, strin
     cout << "Please enter the accesstoken of the fiskaltrust.CashBox: ";
     getline(cin, *accesstoken);
 
+    // get country code
+    cout << "Please enter your County code (AT,DE,FR): ";
+    getline(cin, *country);
+
     // get message
     cout << "Please enter the message to send in the echo request: ";
     getline(cin, *body);
@@ -52,6 +56,7 @@ void get_input(string *ServiceURL, string *cashboxid, string *accesstoken, strin
     trim(*ServiceURL);
     trim(*cashboxid);
     trim(*accesstoken);
+    trim(*country);
     trim(*body);
 
     // if ServiceURL end with '/' -> delete it
@@ -63,7 +68,7 @@ void get_input(string *ServiceURL, string *cashboxid, string *accesstoken, strin
     *body = "\"" + *body + "\"";
 }
 
-void send_request(string *ServiceURL, string *cashboxid, string *accesstoken, string *body, string *response, int *response_code) {
+void send_request(string *ServiceURL, string *cashboxid, string *accesstoken, string *body, string *country, string *response, int *response_code) {
     
     Client *ft;
     Headers head = {
@@ -71,7 +76,7 @@ void send_request(string *ServiceURL, string *cashboxid, string *accesstoken, st
         {"accesstoken", accesstoken->c_str()}
     };
 
-    regex expression("^(https?):\\/\\/([^\\/:]*)(?::([0-9]+))?(\\/.*)?$");
+    regex expression("^(https?|rest):\\/\\/([^\\/:]*)(?::([0-9]+))?(\\/.*)?$");
     smatch resault;
 
     //get parts of the Service URL
@@ -79,7 +84,7 @@ void send_request(string *ServiceURL, string *cashboxid, string *accesstoken, st
     //| 1 |  |   2    || 3 |  4
     regex_search(*ServiceURL, resault ,expression);
 
-    if(resault.str(1) == "http") { //unsecure Client
+    if(resault.str(1) == "http" || resault.str(1) == "rest") { //unsecure Client
         ft = new Client(resault.str(2), stoi(resault.str(3)));
     }
     else if(resault.str(1) == "https") { //secure Client
@@ -93,8 +98,13 @@ void send_request(string *ServiceURL, string *cashboxid, string *accesstoken, st
 
     cout << "performing request... ";
     cout.flush();
+    string requestURL;
 
-    string requestURL = resault.str(4) + "/json/echo";
+    if(*country == "DE" || *country == "de") {
+        requestURL = resault.str(4) + "/json/V0/echo";
+    }else{
+        requestURL = resault.str(4) + "/json/echo";
+    }
 
     //set path, headers, body, Content-Type | make request
     auto res = ft->Post(requestURL.c_str(), head, *body, "application/json");
@@ -115,13 +125,13 @@ int main()
 {
     cout << "This example sends an echo request to the fiskaltrust.Service via REST" << endl;
 
-    string ServiceURL, cashboxid, accesstoken, body, response;
+    string ServiceURL, cashboxid, accesstoken, country, body, response;
 
-    get_input(&ServiceURL, &cashboxid, &accesstoken, &body);
+    get_input(&ServiceURL, &cashboxid, &accesstoken, &body, &country);
 
     int response_code = 0;
 
-    send_request(&ServiceURL, &cashboxid, &accesstoken, &body, &response, &response_code);
+    send_request(&ServiceURL, &cashboxid, &accesstoken, &body, &country, &response, &response_code);
 
     //print Response
     if (response_code == 0) {

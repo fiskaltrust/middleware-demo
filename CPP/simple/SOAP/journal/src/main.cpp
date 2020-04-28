@@ -1,9 +1,6 @@
 #include <BasicHttpBinding_USCOREIPOS.nsmap>
-#ifdef _WIN32
-    #include <soapBasicHttpBinding_USCOREIPOSProxy.h>
-#else
-    #include <soapH.h>
-#endif
+#include <soapH.h>
+
 #include <inttypes.h> //int64_t, uint64_t
 #include <iostream>
 #include <string>
@@ -23,7 +20,7 @@ using namespace std;
 #define soap_journal_call soap_call___tempuri__Journal
 #endif
 
-vector<int64_t> journal_list = {4707387510509010945 ,5067112530745229313};
+vector<int64_t> journal_list = {0x4154000000000001, 0x4445000000000000, 0x4652000000000001};
 
 std::string &ltrim(std::string &str, const std::string &chars = "\t\n\v\f\r ") {
     str.erase(0, str.find_first_not_of(chars));
@@ -49,7 +46,8 @@ void get_input(string *ServiceURL, string *journal_type) {
     // journal type
     cout << "Please choose the journal you want to request\
             \n1: \"AT DEP7\" \"0x4154 0000 0000 0001\"\
-            \n2: \"FR Ticket\" \"0x4652 0000 0000 0001\"\
+            \n2: \"DE Info\" \"0x4445 0000 0000 0000\"\
+            \n3: \"FR Ticket\" \"0x4652 0000 0000 0001\"\
             \n: ";
     getline(cin, *journal_type);
 
