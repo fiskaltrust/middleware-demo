@@ -1,37 +1,50 @@
-# demo
+# fiskaltrust.Middleware demos (C, C++, VB6 & Rust)
+Demo applications that demonstrate how to call the fiskaltrust.Middleware from C, C++, VB6, Rust, and from within Excel. This repository contains examples for **WCF** and **REST** based communication, using both JSON and XML.
 
-This repository contains programs and example code demonstrating how to implement the [fiskaltrust.Interface](https://github.com/fiskaltrust/interface-doc).
 
-> _**Note:** Deteiled documentation for the fiskaltrust.Interface can be found in our [interface-doc](https://github.com/fiskaltrust/interface-doc) repo. Instructions on setting up a CashBox can be found on our [youtube page](https://www.youtube.com/playlist?list=PL9QFfhi6nFj-F8jE9DMUs1y9BIMDsSH-a) or in the fiskaltrust.Portal ([AT](https://portal-sandbox.fiskaltrust.at/), [DE](https://portal-sandbox.fiskaltrust.de/), [FR](https://portal-sandbox.fiskaltrust.fr/)) sandbox._
+## Getting Started
 
-## Structure
+### Prerequisites
+In order to use these demo applications, different prerequisites need to be fulfilled due to the different programming languages. Therefore, please follow the steps described in the respective readme files in the demo subdirectories to prepare your environment.
 
-### Demo
+For more complete examples in other programming languages, please refer to the last section of this document.
 
-Our complete demo programs can be found in the [/C-sharp/demo/](/C-sharp/demo/) folder of this repo.
+### Repository Structure
+This repository contains a SOAP and a REST/HTTP sample program for each endpoint of the fiskaltrust.Middleware. 
 
-These demp programs are meant to showcase the [fiskaltrust.Interface](https://github.com/fiskaltrust/interface-doc).
-
-### Examples
-
-We provide a SOAP and a REST example program for each endpoint of the [fiskaltrust.Interface](https://github.com/fiskaltrust/interface-doc).
-
-These examples can be found at the following location `/<programming-language>/<SOAP|REST>/<Echo|Sign|Journal>/`.
+The repository is structured the following way: 
+```
+/<programming-language>/<SOAP|REST>/<Echo|Sign|Journal>/
+```
 
 > _**Example:** [`/C/REST/Sign/`](/C/REST/Sign)_
 
-These examples are meant to provide a simple starting point for implementing the [fiskaltrust.Interface](https://github.com/fiskaltrust/interface-doc).
-
-> _**Note:** We are in the process of writing these examples. Please check back later or open a [github issue](./issues) for your desired language._
-
 ### Advanced
+In addition to these simple examples, this repository also contains more advanced approaches that were partially created to demonstrate the support for specific customer demands. These can be found in:
+```
+/<programming-language>/advanced/
+```
 
-There exist advanced examples for some programing languages which do not follow the same structure.
 
-These examples can be found at the following location `/<programming-language>/advanced/`.
+## Documentation
+The full documentation for the interface can be found on https://docs.fiskaltrust.cloud. It is actively maintained and developed in our [interface-doc repository](https://github.com/fiskaltrust/interface-doc). 
 
-These examples may not be complete and are meant to provide additional insight about specific methods and special cases for implementing the [fiskaltrust.Interface](https://github.com/fiskaltrust/interface-doc).
+More information is also available after logging into the portal with a user that has the _PosCreator_ role assigned.
 
-## Issues and Contributing
+### Communication
+The fiskaltrust.Middleware supports different communication protocols, effectively giving our customers the possibility to use it on all platforms. Hence, different protocols are recommended for different platforms. For non-windows environments, we recommend the usage of gRPC. Please have a look into our other demo repositories for alternatives, e.g. HTTP/REST or SOAP.
 
-If you find a bug in one our examples feel free to create a [github issue](./issues) or a pull request.
+#### User specific protocols
+With the helper topology, it is possible to solve every scenario. Please contact our support if you required assistance for a special case scenario.
+
+## Contributions
+We welcome all kinds of contributions and feedback, e.g. via Issues or Pull Requests. 
+
+## Related resources
+Our latest samples are available in the following languages:
+<p align="center">
+  <a href="https://github.com/fiskaltrust/middleware-demo-dotnet"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/C_Sharp_logo.svg/100px-C_Sharp_logo.svg.png" alt="csharp"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <a href="https://github.com/fiskaltrust/middleware-demo-java"><img src="https://upload.wikimedia.org/wikiversity/de/thumb/b/b8/Java_cup.svg/100px-Java_cup.svg.png" alt="java"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <a href="https://github.com/fiskaltrust/middleware-demo-node"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Node.js_logo.svg/100px-Node.js_logo.svg.png" alt="node"></a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <a href="https://github.com/fiskaltrust/middleware-demo-postman"><img src="https://avatars3.githubusercontent.com/u/10251060?s=100&v=4" alt="node"></a>
+</p>
