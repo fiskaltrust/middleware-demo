@@ -253,9 +253,9 @@ void send_request(char *ServiceURL, char *cashboxid, char *accesstoken, const ch
     char requestURL[STRING_LENGTH];
     strcpy(requestURL, ServiceURL);
     if(strcmp(country, "DE") == 0){
-        strcat(requestURL, "/json/V0/sign"); //add german endpoint
+        strcat(requestURL, "/json/V1/sign"); //add german endpoint
     }else{
-        strcat(requestURL, "/json/sign"); //add endpoint
+        strcat(requestURL, "/json/V0/sign"); //add endpoint
     }
     
 
