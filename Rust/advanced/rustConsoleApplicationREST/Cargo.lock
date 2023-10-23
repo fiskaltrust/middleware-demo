@@ -321,9 +321,9 @@ dependencies = [
 
 [[package]]
 name = "image"
-version = "0.21.1"
+version = "0.21.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "293e54ce142a936a39da748ba8178ae6aa1914b82d846a4278f11590c89bf116"
+checksum = "35371e467cd7b0b3d1d6013d619203658467df12d61b0ca43cd67b743b1965eb"
 dependencies = [
  "byteorder",
  "lzw",
